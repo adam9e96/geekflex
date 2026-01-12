@@ -1,0 +1,221 @@
+/* 프로필 팝업 스타일 */
+
+.profile-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  animation: fadeIn var(--transition-fast);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.profile-popup {
+  background: var(--review-bg-secondary, #252525);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  max-width: 400px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--review-border, #404040);
+  animation: slideInUp var(--transition-normal);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-popup__close {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.profile-popup__close:hover {
+  background: var(--review-bg-tertiary, #2d2d2d);
+  color: var(--text-primary);
+}
+
+.profile-popup__loading,
+.profile-popup__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.profile-popup__loading i {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.profile-popup__error i {
+  font-size: 2rem;
+  color: var(--color-error);
+}
+
+/* 프로필 헤더 */
+.profile-popup__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--review-border, #404040);
+  margin-bottom: var(--spacing-lg);
+}
+
+.profile-popup__avatar,
+.profile-popup__avatar-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.profile-popup__avatar-placeholder {
+  background: var(--review-bg-tertiary, #2d2d2d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 2rem;
+}
+
+.profile-popup__nickname {
+  font-size: var(--font-size-xl);
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: 600;
+}
+
+.profile-popup__bio {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* 통계 정보 */
+.profile-popup__stats {
+  display: flex;
+  justify-content: space-around;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--review-border, #404040);
+  margin-bottom: var(--spacing-lg);
+}
+
+.profile-popup__stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.profile-popup__stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.profile-popup__stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* 추가 정보 */
+.profile-popup__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.profile-popup__info-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.profile-popup__info-item i {
+  color: var(--color-primary);
+  width: 20px;
+  text-align: center;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .profile-popup {
+    max-width: 90%;
+    padding: var(--spacing-lg);
+  }
+
+  .profile-popup__avatar,
+  .profile-popup__avatar-placeholder {
+    width: 60px;
+    height: 60px;
+  }
+
+  .profile-popup__stats {
+    gap: var(--spacing-sm);
+  }
+
+  .profile-popup__stat-value {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-popup {
+    padding: var(--spacing-md);
+  }
+
+  .profile-popup__nickname {
+    font-size: var(--font-size-lg);
+  }
+}
+

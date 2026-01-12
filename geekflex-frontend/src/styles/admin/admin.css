@@ -1,0 +1,118 @@
+/**
+ * 관리자 페이지 스타일
+ */
+
+.admin-page {
+  min-height: 100vh;
+  padding: var(--spacing-xl);
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.admin-page__header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.admin-page__title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.admin-page__icon {
+  font-size: var(--font-size-3xl);
+  filter: drop-shadow(0 0 10px rgba(245, 197, 24, 0.5));
+}
+
+.admin-page__subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-sm);
+}
+
+.admin-page__tabs {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--border-primary);
+  padding-bottom: var(--spacing-md);
+}
+
+.admin-page__tab {
+  flex: 1;
+  max-width: 300px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+}
+
+.admin-page__tab:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.admin-page__tab.active {
+  color: var(--color-primary);
+  background: var(--bg-secondary);
+}
+
+.admin-page__tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: calc(-1 * var(--spacing-md) - 2px);
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.admin-page__tab-icon {
+  font-size: var(--font-size-xl);
+}
+
+.admin-page__content {
+  animation: fadeIn var(--transition-normal);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .admin-page {
+    padding: var(--spacing-md);
+  }
+
+  .admin-page__title {
+    font-size: var(--font-size-2xl);
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .admin-page__tabs {
+    flex-direction: column;
+  }
+
+  .admin-page__tab {
+    max-width: 100%;
+  }
+}
+

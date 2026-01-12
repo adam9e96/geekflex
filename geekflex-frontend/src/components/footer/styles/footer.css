@@ -1,0 +1,140 @@
+/* 푸터 컴포넌트*/
+.geekflex-footer {
+  background: var(--bg-secondary); /* 푸터 배경색 */
+  border-top: 1px solid var(--border-primary); /* 푸터 테두리 */
+  padding: var(--spacing-xl) 0 var(--spacing-lg);
+  margin-top: auto;
+  position: relative;
+  min-height: 120px;
+}
+
+/*
+ * 푸터 컨테이너는 푸터의 최대 너비를 정의하고, 좌우 마진을 중앙 정렬
+*/
+.geekflex-footer__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* 하단 섹션 */
+.geekflex-footer__bottom {
+  padding-top: var(--spacing-md);
+  text-align: center;
+}
+
+/* 링크 목록 */
+.geekflex-footer__links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.geekflex-footer__divider {
+  color: var(--text-muted);
+  margin: 0 var(--spacing-sm);
+  user-select: none;
+}
+
+.geekflex-footer__link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  outline: none;
+}
+
+/* 푸터 링크 효과 */
+.geekflex-footer__link:hover,
+.geekflex-footer__link:focus-visible {
+  color: var(--color-primary);
+  text-decoration: underline;
+  background-color: rgba(245, 197, 24, 0.1);
+}
+
+.geekflex-footer__link:active {
+  background-color: rgba(245, 197, 24, 0.15);
+}
+
+@media (max-width: 768px) {
+  .geekflex-footer {
+    padding: var(--spacing-lg) 0 var(--spacing-md);
+    min-height: 100px;
+  }
+
+  .geekflex-footer__container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .geekflex-footer__links {
+    font-size: 13px;
+    gap: var(--spacing-xs);
+  }
+
+  .geekflex-footer__divider {
+    margin: 0 var(--spacing-xs);
+  }
+}
+
+@media (max-width: 600px) {
+  .geekflex-footer__links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .geekflex-footer__divider {
+    margin: 0 var(--spacing-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .geekflex-footer {
+    padding: var(--spacing-md) 0 var(--spacing-sm);
+    min-height: auto;
+  }
+
+  .geekflex-footer__container {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .geekflex-footer__links {
+    font-size: 12px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs) var(--spacing-sm);
+    line-height: 1.8;
+  }
+
+  .geekflex-footer__divider {
+    margin: 0 var(--spacing-xs);
+    font-size: 11px;
+  }
+
+  .geekflex-footer__link {
+    padding: var(--spacing-xs) 0;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .geekflex-footer__links {
+    font-size: 11px;
+    gap: var(--spacing-xs);
+  }
+
+  .geekflex-footer__divider {
+    margin: 0 2px;
+    font-size: 10px;
+  }
+}
+

@@ -1,0 +1,122 @@
+/* 이용약관 페이지 스타일 */
+
+.terms-page {
+  width: 100%;
+  min-height: calc(100vh - 200px);
+  background-color: var(--bg-content);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.terms-page__header {
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--border-primary);
+}
+
+.terms-page__title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.terms-page__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+
+.terms-page__section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.terms-page__section:last-child {
+  margin-bottom: 0;
+}
+
+.terms-page__section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.terms-page__text {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.8;
+}
+
+.terms-page__list {
+  margin: var(--spacing-md) 0;
+  padding-left: var(--spacing-xl);
+  list-style-type: disc;
+}
+
+.terms-page__list-item {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.8;
+}
+
+.terms-page__list-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .terms-page {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .terms-page {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .terms-page__title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .terms-page__section-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .terms-page__list {
+    padding-left: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-page {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .terms-page {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .terms-page__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .terms-page__subtitle {
+    font-size: var(--font-size-sm);
+  }
+
+  .terms-page__section-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .terms-page__text,
+  .terms-page__list-item {
+    font-size: var(--font-size-sm);
+  }
+}
+

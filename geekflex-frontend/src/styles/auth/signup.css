@@ -1,0 +1,1073 @@
+/* GeekFlex 회원가입 페이지 전용 스타일 */
+
+/* ============================================
+   레이아웃
+   ============================================ */
+
+.signup-page {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, hsl(0, 0%, 12%) 0%, hsl(0, 0%, 15%) 100%);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  margin: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.signup-container {
+  width: 100%;
+  max-width: 800px;
+  min-height: 90vh;
+  background: transparent;
+  border-radius: 30px;
+  overflow: hidden;
+  margin: 20px auto;
+  position: relative;
+  z-index: 1;
+}
+
+.signup-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: var(--spacing-lg);
+  position: relative;
+  z-index: 2;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 100%;
+  -webkit-overflow-scrolling: touch;
+  background: transparent;
+}
+
+/* ============================================
+   헤더
+   ============================================ */
+
+.signup-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.signup-logo-text {
+  font-size: 3rem;
+  font-weight: 900;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #F5C518 0%, #FFD700 50%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 
+    0 0 15px rgba(245, 197, 24, 0.6),
+    0 0 25px rgba(245, 197, 24, 0.4),
+    0 0 35px rgba(245, 197, 24, 0.3);
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--spacing-xs);
+  transition: all 0.3s ease;
+}
+
+.signup-logo-text::before {
+  content: 'GeekFlex';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #F5C518 0%, #FFD700 50%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: blur(3px);
+  opacity: 0.7;
+  z-index: -1;
+}
+
+.signup-logo-text::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 4px;
+  background: linear-gradient(135deg, #F5C518 0%, #FFD700 50%, #FFA500 100%);
+  border-radius: 2px;
+  box-shadow: 
+    0 0 10px rgba(245, 197, 24, 0.6),
+    0 0 20px rgba(245, 197, 24, 0.4);
+}
+
+.signup-logo:hover .signup-logo-text {
+  transform: scale(1.05);
+  letter-spacing: 4px;
+  text-shadow: 
+    0 0 20px rgba(245, 197, 24, 0.8),
+    0 0 30px rgba(245, 197, 24, 0.6),
+    0 0 40px rgba(245, 197, 24, 0.4);
+}
+
+.signup-logo:hover .signup-logo-text::after {
+  width: 90%;
+  box-shadow: 
+    0 0 15px rgba(245, 197, 24, 0.8),
+    0 0 25px rgba(245, 197, 24, 0.6);
+}
+
+.signup-subtitle {
+  color: var(--text-muted);
+  font-size: var(--font-size-lg);
+  margin: var(--spacing-sm) 0;
+}
+
+.signup-description {
+  color: #e0e0e0;
+  font-size: var(--font-size-base);
+  margin: var(--spacing-md) 0 0 0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   폼 레이아웃
+   ============================================ */
+
+.signup-form {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-section {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-xl);
+  background: hsl(0, 0%, 24%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-section:hover {
+  border-color: rgba(245, 197, 24, 0.5);
+  box-shadow: 0 8px 25px rgba(245, 197, 24, 0.2);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid rgba(245, 197, 24, 0.4);
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+}
+
+.section-title i {
+  font-size: var(--font-size-xl);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ============================================
+   폼 필드
+   ============================================ */
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: #f5f5f5;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-base);
+  transition: color var(--transition-fast);
+  letter-spacing: 0.3px;
+}
+
+.form-label:hover {
+  color: var(--color-primary);
+}
+
+.form-label i {
+  color: var(--color-primary);
+  width: 18px;
+  text-align: center;
+}
+
+.required-mark {
+  color: var(--color-error);
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.optional-mark {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: normal;
+  margin-left: 4px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px var(--spacing-md);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-md);
+  background: hsl(0, 0%, 28%);
+  color: #ffffff;
+  font-size: var(--font-size-base);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.form-input:hover {
+  border-color: rgba(245, 197, 24, 0.6);
+  background: hsl(0, 0%, 30%);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.25);
+  background: hsl(0, 0%, 30%);
+}
+
+.form-input::placeholder {
+  color: #c0c0c0;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+.form-hint {
+  font-size: var(--font-size-sm);
+  color: #d8d8d8;
+  margin-top: var(--spacing-sm);
+  padding-left: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  line-height: 1.5;
+}
+
+.form-hint::before {
+  content: "💡";
+  font-size: 0.9em;
+}
+
+/* ============================================
+   아이디 중복 검사
+   ============================================ */
+
+.form-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.form-input.with-check-button {
+  padding-right: 120px;
+}
+
+.duplicate-check-btn {
+  position: absolute;
+  right: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 16px;
+  background: var(--color-primary);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+  white-space: nowrap;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.duplicate-check-btn:hover:not(:disabled) {
+  background: var(--color-secondary);
+  box-shadow: 0 2px 8px rgba(245, 197, 24, 0.4);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.duplicate-check-btn:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.98);
+}
+
+.duplicate-check-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: translateY(-50%);
+}
+
+.duplicate-check-btn .checking-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.duplicate-check-btn .checking-text i {
+  font-size: 0.9em;
+}
+
+.duplicate-check-result {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-top: var(--spacing-sm);
+  padding-left: 4px;
+  min-height: 1.2rem;
+}
+
+.duplicate-check-result.available {
+  color: #6bffb8;
+}
+
+.duplicate-check-result.unavailable {
+  color: #ff8a8a;
+}
+
+.duplicate-check-result i {
+  font-size: var(--font-size-base);
+}
+
+/* ============================================
+   날짜 입력
+   ============================================ */
+
+.date-input {
+  position: relative;
+  cursor: pointer;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.8);
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.date-input::-webkit-datetime-edit-text,
+.date-input::-webkit-datetime-edit-month-field,
+.date-input::-webkit-datetime-edit-day-field,
+.date-input::-webkit-datetime-edit-year-field {
+  color: #ffffff;
+  padding: 0 2px;
+}
+
+/* ============================================
+   비밀번호 입력
+   ============================================ */
+
+.password-input-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.password-toggle:hover {
+  color: var(--color-primary);
+  background: rgba(245, 197, 24, 0.1);
+}
+
+/* ============================================
+   텍스트 영역
+   ============================================ */
+
+.form-textarea {
+  width: 100%;
+  padding: 14px var(--spacing-md);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-md);
+  background: hsl(0, 0%, 28%);
+  color: #ffffff;
+  font-size: var(--font-size-base);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.form-textarea:hover {
+  border-color: rgba(245, 197, 24, 0.6);
+  background: hsl(0, 0%, 30%);
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.25);
+  background: hsl(0, 0%, 30%);
+}
+
+.char-counter {
+  text-align: right;
+  font-size: var(--font-size-sm);
+  color: #d8d8d8;
+  margin-top: var(--spacing-sm);
+  transition: color var(--transition-fast);
+  font-weight: 500;
+}
+
+.char-counter:has(+ .form-textarea:focus) {
+  color: var(--color-primary);
+}
+
+/* ============================================
+   파일 업로드
+   ============================================ */
+
+.file-upload-container {
+  position: relative;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-md);
+  background: hsl(0, 0%, 28%);
+  color: #f0f0f0;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  font-weight: 500;
+}
+
+.file-upload-label:hover {
+  border-color: var(--color-primary);
+  background: rgba(245, 197, 24, 0.1);
+  color: var(--color-primary);
+}
+
+.file-upload-text {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+.file-preview {
+  position: relative;
+  margin-top: var(--spacing-md);
+  text-align: center;
+}
+
+.file-preview img {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: var(--radius-md);
+  border: 2px solid rgba(245, 197, 24, 0.3);
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(245, 197, 24, 0.2);
+}
+
+.remove-image {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--color-error);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
+  z-index: 10;
+}
+
+.remove-image:hover {
+  background: var(--color-secondary);
+  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.5);
+}
+
+/* ============================================
+   체크박스
+   ============================================ */
+
+.checkbox-row {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.checkbox-row > .chk-input + .checkbox-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.checkbox-row:hover {
+  background: rgba(245, 197, 24, 0.05);
+}
+
+.checkbox-row .form-error {
+  margin-top: var(--spacing-xs);
+  margin-left: 0;
+  width: 100%;
+}
+
+.chk-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.checkbox-container {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  gap: 12px;
+  color: #f5f5f5;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  transition: color var(--transition-fast);
+  flex: 1;
+  font-weight: 500;
+}
+
+.checkbox-row:hover .checkbox-container {
+  color: var(--text-primary);
+}
+
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  background: hsl(0, 0%, 28%);
+  position: relative;
+  pointer-events: none;
+  flex-shrink: 0;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.chk-input:checked ~ .checkbox-container .checkmark {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.2);
+}
+
+.chk-input:checked ~ .checkbox-container .checkmark::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--text-primary);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.chk-input:focus-visible ~ .checkbox-container .checkmark {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.checkbox-text {
+  flex: 1;
+}
+
+.checkbox-text a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  position: relative;
+}
+
+.checkbox-text a:hover {
+  color: var(--color-secondary);
+}
+
+/* ============================================
+   버튼
+   ============================================ */
+
+.signup-btn {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--spacing-md);
+  box-shadow: 0 4px 15px rgba(245, 197, 24, 0.3);
+  z-index: 1;
+}
+
+.signup-btn:hover {
+  box-shadow: 0 8px 25px rgba(245, 197, 24, 0.5);
+}
+
+.signup-btn:active {
+  box-shadow: 0 4px 15px rgba(245, 197, 24, 0.3);
+}
+
+.signup-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  z-index: 1;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+/* ============================================
+   메시지
+   ============================================ */
+
+.form-error {
+  color: #ff8a8a;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-top: var(--spacing-sm);
+  min-height: 1.2rem;
+  display: none;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding-left: 4px;
+}
+
+.form-error:not(:empty) {
+  display: flex;
+}
+
+.form-error::before {
+  content: "⚠";
+  font-size: var(--font-size-xs);
+}
+
+.form-success {
+  color: #6bffb8;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-top: var(--spacing-sm);
+  min-height: 1.2rem;
+  display: none;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding-left: 4px;
+}
+
+.form-success:not(:empty) {
+  display: flex;
+}
+
+/* ============================================
+   로그인 링크
+   ============================================ */
+
+.login-link {
+  text-align: center;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-link p {
+  color: #e0e0e0;
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.login-link-text {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  position: relative;
+  padding: 2px 4px;
+}
+
+.login-link-text:hover {
+  color: var(--color-secondary);
+}
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .signup-container {
+    max-width: 90%;
+    border-radius: 25px;
+    margin: 15px auto;
+  }
+
+
+  .signup-card {
+    padding: var(--spacing-lg);
+  }
+
+  .signup-logo-text {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+
+  .form-section {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .signup-container {
+    max-width: calc(100% - 32px);
+    border-radius: 20px;
+    margin: 16px;
+    margin-top: 24px;
+  }
+
+
+  .signup-card {
+    padding: var(--spacing-md);
+  }
+
+  .signup-logo-text {
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+
+  .signup-subtitle {
+    font-size: var(--font-size-base);
+  }
+
+  .signup-description {
+    font-size: var(--font-size-xs);
+  }
+
+  .form-section {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+  }
+
+  .section-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .form-input,
+  .form-textarea {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .signup-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .password-toggle {
+    width: 32px;
+    height: 32px;
+    padding: var(--spacing-xs);
+  }
+
+  .file-upload-label {
+    padding: var(--spacing-md);
+  }
+
+  .checkmark {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .signup-container {
+    margin: 12px;
+    margin-top: 20px;
+    border-radius: 15px;
+    min-height: auto;
+  }
+
+  .signup-card {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .signup-logo-text {
+    font-size: 1.75rem;
+    letter-spacing: 1.5px;
+  }
+
+  .signup-subtitle {
+    font-size: var(--font-size-sm);
+  }
+
+  .form-section {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .section-title {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .form-label {
+    font-size: var(--font-size-xs);
+  }
+
+  .form-input,
+  .form-textarea {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .signup-btn {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .login-link {
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+  }
+
+  .login-link p {
+    font-size: var(--font-size-xs);
+  }
+
+  .file-preview img {
+    max-width: 120px;
+    max-height: 120px;
+  }
+
+  .remove-image {
+    width: 28px;
+    height: 28px;
+    top: -8px;
+    right: -8px;
+  }
+
+  .form-hint {
+    font-size: 0.7rem;
+  }
+
+  .form-input.with-check-button {
+    padding-right: 100px;
+    font-size: var(--font-size-xs);
+  }
+
+  .duplicate-check-btn {
+    padding: 6px 12px;
+    font-size: var(--font-size-xs);
+    right: 4px;
+  }
+
+  .duplicate-check-result {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* ============================================
+   접근성
+   ============================================ */
+
+.form-input:focus,
+.form-textarea:focus,
+.signup-btn:focus,
+.password-toggle:focus,
+.file-upload-label:focus,
+.chk-input:focus-visible ~ .checkbox-container {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   상태
+   ============================================ */
+
+.signup-btn.loading .btn-text {
+  display: none;
+}
+
+.signup-btn.loading .btn-loading {
+  display: flex;
+}
+
+.signup-btn.success {
+  background: var(--color-success);
+  box-shadow: 0 4px 15px rgba(245, 197, 24, 0.4);
+}
+
+.signup-btn.success:hover {
+  background: var(--color-success);
+  transform: none;
+}
+
+.form-input.error,
+.form-textarea.error {
+  border-color: var(--color-error);
+  background: hsl(0, 0%, 28%);
+  box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.3);
+}
+
+.form-input.error:focus,
+.form-textarea.error:focus {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.35);
+  background: hsl(0, 0%, 30%);
+}
+
+/* ============================================
+   스크롤바
+   ============================================ */
+
+.signup-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.signup-card::-webkit-scrollbar-track {
+  background: rgba(45, 45, 45, 0.3);
+  border-radius: 4px;
+}
+
+.signup-card::-webkit-scrollbar-thumb {
+  background: rgba(245, 197, 24, 0.5);
+  border-radius: 4px;
+  transition: background-color var(--transition-fast);
+}
+
+.signup-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 197, 24, 0.7);
+}
+
+/* ============================================
+   애니메이션 감소 설정
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+}

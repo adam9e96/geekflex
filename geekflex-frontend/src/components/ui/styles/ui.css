@@ -1,0 +1,119 @@
+/* UI 컴포넌트 스타일 */
+
+/* ------------------------------ */
+/* 로딩 스피너 */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  color: var(--text-secondary);
+}
+
+.loading-spinner i {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.loading-spinner span {
+  font-size: var(--font-size-base);
+}
+
+/* ------------------------------ */
+/* 에러 메시지 */
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+}
+
+.error-message__icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-message--error .error-message__icon {
+  color: #ef4444;
+}
+
+.error-message--warning .error-message__icon {
+  color: #f59e0b;
+}
+
+.error-message--info .error-message__icon {
+  color: #3b82f6;
+}
+
+.error-message__text {
+  font-size: var(--font-size-lg);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.error-message__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.error-message__back-btn,
+.error-message__retry-btn {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.error-message__back-btn:hover,
+.error-message__retry-btn:hover {
+  box-shadow: 0 4px 12px var(--shadow-accent);
+}
+
+/* ------------------------------ */
+/* 뒤로가기 버튼 */
+.back-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.back-button:hover {
+  border-color: var(--color-primary);
+  background: rgba(245, 197, 24, 0.1);
+  color: var(--color-primary);
+}
+
+.back-button i {
+  font-size: var(--font-size-sm);
+}
+
+/* ------------------------------ */

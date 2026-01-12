@@ -1,0 +1,145 @@
+/* 개인정보 처리방침 페이지 스타일 */
+
+.privacy-page {
+  width: 100%;
+  min-height: calc(100vh - 200px);
+  background-color: var(--bg-content);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.privacy-page__header {
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--border-primary);
+}
+
+.privacy-page__title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.privacy-page__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+
+.privacy-page__section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.privacy-page__section:last-child {
+  margin-bottom: 0;
+}
+
+.privacy-page__section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.privacy-page__text {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.8;
+}
+
+.privacy-page__list {
+  margin: var(--spacing-md) 0;
+  padding-left: var(--spacing-xl);
+  list-style-type: disc;
+}
+
+.privacy-page__list-item {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.8;
+}
+
+.privacy-page__list-item:last-child {
+  margin-bottom: 0;
+}
+
+.privacy-page__contact {
+  background: var(--bg-card);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  margin-top: var(--spacing-md);
+}
+
+.privacy-page__contact-item {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.8;
+}
+
+.privacy-page__contact-item strong {
+  color: var(--color-primary);
+  margin-right: var(--spacing-xs);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .privacy-page {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .privacy-page {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .privacy-page__title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .privacy-page__section-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .privacy-page__list {
+    padding-left: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-page {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .privacy-page {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .privacy-page__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .privacy-page__subtitle {
+    font-size: var(--font-size-sm);
+  }
+
+  .privacy-page__section-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .privacy-page__text,
+  .privacy-page__list-item {
+    font-size: var(--font-size-sm);
+  }
+
+  .privacy-page__contact {
+    padding: var(--spacing-md);
+  }
+}
+

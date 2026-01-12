@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: geekflex
+  
+  devtools:
+    restart:
+      enabled: true
+      poll-interval: 2s
+      quiet-period: 1s
+  
+  # MariaDB Settings
+  datasource:
+    url: jdbc:mariadb://localhost:3306/geekflex_db
+    username: geekflex_user
+    password: ${GeekFlex_DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  
+  # JPA Settings
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    # logging.level.org.hibernate.orm.jdbc.bind=trace
+  
+  # 파일 업로드 설정
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+# TMDB API 설정
+tmdb:
+  key: ${GeekFlex_TMDB_API_KEY}
+  accessToken: ${GeekFlex_TMDB_ACCESS_TOKEN}
+
+# JWT 설정
+jwt:
+  secret-key: ${GeekFlex_JWT_SECRET_KEY}
+  # AccessToken 만료시간 (1시간 = 3600000ms)
+  access-token-expiration: 3600000
+  # RefreshToken 만료시간 (7일 = 604800000ms)
+  refresh-token-expiration: 604800000
+  # 토큰 발급자(issuer)
+  issuer: GeekFlex
+
+# 파일 업로드 디렉토리
+file:
+  upload-dir: ${GeekFlex_FILE_UPLOAD_DIR:C:/dev/pj-geekflex-dev/uploads/users}
+
+# 서버 설정
+server:
+  port: 8080
+  address: 0.0.0.0

@@ -1,0 +1,64 @@
+import { useState } from "react";
+import { getAccessToken } from "@utils/auth";
+
+/**
+ * 컬렉션 생성을 위한 커스텀 훅
+ *
+ * 반환: { createCollection, isLoading, error }
+ */
+const useCreateCollection = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  /**
+   * 컬렉션 생성
+   * @param {object} collectionData - { title, description, isPublic }
+   * @returns {Promise<object>} 생성된 컬렉션 데이터
+   */
+  const createCollection = async (collectionData) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const accessToken = getAccessToken();
+      if (!accessToken) {
+        throw new Error("로그인이 필요합니다.");
+      }
+
+      const response = await fetch("/api/v1/collections", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(collectionData),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          errorData.message || errorData.error || "컬렉션 생성에 실패했습니다.";
+        throw new Error(errorMessage);
+      }
+
+      const result = await response.json();
+      console.log("📦 컬렉션 생성 응답:", result);
+
+      // 응답 형식에 따라 데이터 추출
+      const collection = result.data || result;
+      return collection;
+    } catch (err) {
+      console.error("컬렉션 생성 실패:", err);
+      setError(err.message || "컬렉션 생성에 실패했습니다.");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { createCollection, isLoading, error };
+};
+
+export default useCreateCollection;
+

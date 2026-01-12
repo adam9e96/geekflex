@@ -1,0 +1,357 @@
+/*
+ * GeekFlex 유저 상세 페이지 전용 스타일
+ * main.css와 variables.css를 먼저 import해야 합니다
+ */
+
+/* 유저 상세 페이지 컨테이너 */
+.user-detail-page {
+  min-height: 100vh;
+  padding: var(--spacing-xl);
+  background: var(--bg-page);
+}
+
+.user-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 에러 메시지 */
+.user-detail-error {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-error);
+}
+
+.user-detail-error i {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+}
+
+/* 프로필 섹션 */
+.user-detail-profile {
+  display: flex;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-xl);
+  background: hsl(0, 0%, 16%);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-detail-profile__image {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.user-detail-profile__image img {
+  width: 150px;
+  height: 150px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 4px solid var(--color-primary);
+  box-shadow: 0 8px 25px rgba(245, 197, 24, 0.3);
+}
+
+.user-detail-profile__image-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--color-primary);
+  box-shadow: 0 8px 25px rgba(245, 197, 24, 0.3);
+  font-size: 3rem;
+  color: var(--text-muted);
+}
+
+.user-detail-profile__image-placeholder span {
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.user-detail-profile__info {
+  flex: 1;
+}
+
+.user-detail-profile__nickname {
+  font-size: var(--font-size-3xl);
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.user-detail-profile__bio {
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.6;
+}
+
+.user-detail-profile__meta {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.user-detail-profile__joined,
+.user-detail-profile__score {
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.user-detail-profile__joined i,
+.user-detail-profile__score i {
+  color: var(--color-primary);
+}
+
+.user-detail-profile__stats {
+  display: flex;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-detail-profile__stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.user-detail-profile__stat-item .stat-label {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.user-detail-profile__stat-item .stat-value {
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+}
+
+/* 섹션 */
+.user-detail-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+/* 리뷰 섹션 */
+.user-detail-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.user-detail-review-item {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: hsl(0, 0%, 16%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-detail-review-item:hover {
+  background: hsl(0, 0%, 20%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.user-detail-review-item__poster {
+  flex-shrink: 0;
+  width: 80px;
+  height: 120px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.user-detail-review-item__poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-detail-review-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.user-detail-review-item__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.user-detail-review-item__title {
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.user-detail-review-item__type {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  background: hsl(0, 0%, 22%);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.user-detail-review-item__rating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+.user-detail-review-item__comment {
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.user-detail-review-item__genre {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* 컬렉션 섹션 */
+.user-detail-collections {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.user-detail-collection-item {
+  padding: var(--spacing-md);
+  background: hsl(0, 0%, 16%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-detail-collection-item:hover {
+  background: hsl(0, 0%, 20%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.user-detail-collection-item__header {
+  margin-bottom: var(--spacing-sm);
+}
+
+.user-detail-collection-item__title {
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.user-detail-collection-item__title i {
+  color: var(--color-primary);
+}
+
+.user-detail-collection-item__description {
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: 1.5;
+}
+
+.user-detail-collection-item__meta {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-detail-collection-item__count,
+.user-detail-collection-item__views,
+.user-detail-collection-item__likes {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.user-detail-collection-item__count i,
+.user-detail-collection-item__views i,
+.user-detail-collection-item__likes i {
+  color: var(--color-primary);
+}
+
+/* 빈 상태 */
+.user-detail-empty {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-muted);
+}
+
+.user-detail-empty i {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-muted);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .user-detail-page {
+    padding: var(--spacing-md);
+  }
+
+  .user-detail-profile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .user-detail-profile__meta {
+    justify-content: center;
+  }
+
+  .user-detail-profile__stats {
+    justify-content: center;
+  }
+
+  .user-detail-collections {
+    grid-template-columns: 1fr;
+  }
+
+  .user-detail-review-item {
+    flex-direction: column;
+  }
+
+  .user-detail-review-item__poster {
+    width: 100%;
+    height: 200px;
+  }
+}
+

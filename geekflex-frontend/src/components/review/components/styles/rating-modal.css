@@ -1,0 +1,184 @@
+/**
+ * 평점만 매기기 모달 스타일
+ */
+
+.rating-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  animation: fadeIn var(--transition-fast);
+}
+
+.rating-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px var(--shadow-secondary);
+  animation: slideInUp var(--transition-normal);
+}
+
+.rating-modal__header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.rating-modal__title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.rating-modal__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.rating-modal__stars {
+  display: flex;
+  gap: var(--spacing-sm);
+  cursor: grab;
+  user-select: none;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+}
+
+.rating-modal__stars:active {
+  cursor: grabbing;
+}
+
+.rating-modal__stars:hover {
+  background: rgba(245, 197, 24, 0.1);
+}
+
+.rating-star {
+  font-size: 2.5rem;
+  color: var(--border-primary);
+  position: relative;
+  transition: color var(--transition-fast);
+  line-height: 1;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
+.rating-star.filled {
+  color: var(--color-primary);
+}
+
+.rating-star.half-filled {
+  color: var(--border-primary);
+}
+
+.rating-star.half-filled .rating-star-half {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  color: var(--color-primary);
+  display: inline-block;
+}
+
+.rating-star.half-filled .rating-star-half i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1em;
+  line-height: 1;
+  width: 1em;
+  height: 1em;
+}
+
+.rating-modal__value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rating-modal__instruction {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+.rating-modal__footer {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+}
+
+.rating-modal__button {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 100px;
+}
+
+.rating-modal__button--cancel {
+  background: var(--color-error);
+  color: #fff;
+}
+
+.rating-modal__button--cancel:hover:not(:disabled) {
+  background: var(--color-secondary-dark);
+  transform: scale(1.05);
+}
+
+.rating-modal__button--submit {
+  background: var(--color-success);
+  color: #fff;
+}
+
+.rating-modal__button--submit:hover:not(:disabled) {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+.rating-modal__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .rating-modal {
+    padding: var(--spacing-lg);
+    width: 95%;
+  }
+
+  .rating-star {
+    font-size: 2rem;
+  }
+
+  .rating-modal__value {
+    font-size: 2.5rem;
+  }
+}
+
