@@ -8,3 +8,4 @@
 # Ignore Visual Studio Code settings and extensions
 .vscode
 /docs/포트폴리오
+.claude/settings.local.json

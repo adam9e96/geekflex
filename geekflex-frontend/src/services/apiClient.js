@@ -13,7 +13,7 @@ import { getErrorMessage } from "@utils/errorUtils";
  * @type {string}
  * @since 2025-12-27
  */
-const API_BASE_URL = "";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
 /**
  * 공개 API 인스턴스 (인증 불필요)

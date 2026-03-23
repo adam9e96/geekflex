@@ -43,7 +43,8 @@ public class SecurityConfig {
                 "http://localhost:5037",
                 "http://192.168.50.153:8070",
                 "http://localhost:8070",
-                "http://192.168.0.42:8070"
+                "http://192.168.0.42:8070",
+                "https://geekflex.vercel.app"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
