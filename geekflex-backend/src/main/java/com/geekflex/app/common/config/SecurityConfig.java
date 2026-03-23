@@ -58,6 +58,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
         http
+                // CORS 설정 적용
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 // 기본 인증 기능 OFF (JWT에서는 반드시 OFF)
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
