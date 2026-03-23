@@ -4,7 +4,6 @@ import com.geekflex.app.auth.dto.LoginResponse;
 import com.geekflex.app.auth.dto.EmailRequest;
 import com.geekflex.app.auth.dto.EmailVerificationRequest;
 import com.geekflex.app.auth.service.EmailService;
-import jakarta.mail.MessagingException;
 import com.geekflex.app.common.security.jwt.JwtTokenProvider;
 import com.geekflex.app.auth.service.AuthService;
 import com.geekflex.app.auth.service.RefreshTokenService;
@@ -83,8 +82,7 @@ public class AuthController {
     }
 
     @PostMapping("/email/send")
-    public ResponseEntity<Void> sendVerificationEmail(@RequestBody EmailRequest emailRequest)
-            throws MessagingException {
+    public ResponseEntity<Void> sendVerificationEmail(@RequestBody EmailRequest emailRequest) {
         emailService.sendVerificationCode(emailRequest.getEmail());
         return ResponseEntity.ok().build();
     }
