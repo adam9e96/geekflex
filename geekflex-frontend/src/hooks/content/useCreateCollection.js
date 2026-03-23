@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getAccessToken } from "@utils/auth";
+import { collectionService } from "@services/collectionService";
 
 /**
  * 컬렉션 생성을 위한 커스텀 훅
@@ -20,33 +20,8 @@ const useCreateCollection = () => {
     setError(null);
 
     try {
-      const accessToken = getAccessToken();
-      if (!accessToken) {
-        throw new Error("로그인이 필요합니다.");
-      }
-
-      const response = await fetch("/api/v1/collections", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(collectionData),
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          errorData.message || errorData.error || "컬렉션 생성에 실패했습니다.";
-        throw new Error(errorMessage);
-      }
-
-      const result = await response.json();
-      console.log("📦 컬렉션 생성 응답:", result);
-
-      // 응답 형식에 따라 데이터 추출
-      const collection = result.data || result;
+      const collection = await collectionService.createCollection(collectionData);
+      console.log("📦 컬렉션 생성 성공:", collection);
       return collection;
     } catch (err) {
       console.error("컬렉션 생성 실패:", err);
@@ -61,4 +36,3 @@ const useCreateCollection = () => {
 };
 
 export default useCreateCollection;
-

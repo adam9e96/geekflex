@@ -118,9 +118,7 @@ export const useForgotPassword = () => {
       });
 
       if (response.status === 200) {
-        setSuccessMessage(
-          "비밀번호 재설정 링크가 이메일로 전송되었습니다. 이메일을 확인해주세요."
-        );
+        setSuccessMessage("비밀번호 재설정 링크가 이메일로 전송되었습니다. 이메일을 확인해주세요.");
         setServerError("");
         // 폼 초기화
         setFormData({ username: "", email: "" });

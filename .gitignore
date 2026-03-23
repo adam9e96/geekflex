@@ -1,2 +1,10 @@
 
+
 /uploads
+# Ignore database backup files and IDE configuration files
+/db_backup
+/db/.idea
+
+# Ignore Visual Studio Code settings and extensions
+.vscode
+/docs/포트폴리오

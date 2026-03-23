@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { authenticatedApi, publicApi, getErrorMessage } from "@services/apiClient";
+import { authenticatedApi, getErrorMessage } from "@services/apiClient";
 
 /**
  * TV 검색 커스텀 훅
@@ -28,7 +28,7 @@ export const useTvSearch = () => {
     try {
       // 토큰이 있으면 authenticatedApi, 없으면 publicApi 사용
       const api = authenticatedApi;
-      
+
       const response = await api.get(`/api/v1/tv/search`, {
         params: { keyword: keyword.trim() },
       });
@@ -48,12 +48,8 @@ export const useTvSearch = () => {
         originalTitle: tv.originalName,
         overview: tv.overview,
         releaseDate: tv.firstAirDate,
-        poster: tv.posterUrl
-          ? `https://image.tmdb.org/t/p/w500${tv.posterUrl}`
-          : null,
-        backdropUrl: tv.backdropUrl
-          ? `https://image.tmdb.org/t/p/w1280${tv.backdropUrl}`
-          : null,
+        poster: tv.posterUrl ? `https://image.tmdb.org/t/p/w500${tv.posterUrl}` : null,
+        backdropUrl: tv.backdropUrl ? `https://image.tmdb.org/t/p/w1280${tv.backdropUrl}` : null,
         rating: tv.voteAverage?.toFixed(1) || null,
         voteCount: tv.voteCount,
         popularity: tv.popularity,
@@ -64,7 +60,7 @@ export const useTvSearch = () => {
       setTvTotalCount(formattedResults.length);
     } catch (error) {
       console.error("TV 검색 오류:", error);
-      
+
       // 401 에러는 인증되지 않은 상태로 처리 (에러로 처리하지 않음)
       if (error.response?.status === 401) {
         console.log("인증되지 않은 사용자 - TV 검색 불가");
@@ -90,4 +86,3 @@ export const useTvSearch = () => {
     searchTv,
   };
 };
-

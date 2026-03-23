@@ -1,0 +1,50 @@
+name: geekflex
+
+services:
+  geekflex-db:
+    image: mariadb:latest
+    container_name: geekflex-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: root1234
+      MARIADB_DATABASE: geekflex_db
+      MARIADB_USER: geekflex_user
+      MARIADB_PASSWORD: geekflex1234!
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - geekflex_mariadb_data:/var/lib/mysql
+      - ./db_backup/geekflex_Backup.sql:/docker-entrypoint-initdb.d/01-geekflex_Backup.sql:ro
+    networks:
+      - geekflex-net
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-proot1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  geekflex-redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass "qwer3033!@" --appendonly yes
+    volumes:
+      - geekflex_redis_data:/data
+    networks:
+      - geekflex-net
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+networks:
+  geekflex-net:
+    driver: bridge
+
+volumes:
+  geekflex_mariadb_data:
+  geekflex_redis_data:
+

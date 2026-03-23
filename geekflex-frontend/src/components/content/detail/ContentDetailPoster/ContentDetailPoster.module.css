@@ -1,0 +1,116 @@
+/* 포스터 컨테이너 - 레이아웃 스타일 */
+.poster {
+  height: fit-content;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  position: sticky;
+  top: 2rem;
+}
+
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* 포스터 이미지 */
+.poster img {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 10px 30px var(--shadow-secondary);
+}
+
+/* 찜하기 버튼 스타일 */
+.favoriteBtn {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--border-primary);
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px var(--shadow-secondary);
+  z-index: 10;
+
+  &:hover {
+    background-color: var(--bg-tertiary);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px var(--shadow-accent);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+.active {
+  background-color: #e74c3c;
+  border-color: #e74c3c;
+  color: white;
+
+  &:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+    color: white;
+  }
+}
+
+.favoriteCount {
+  font-size: 0.75rem;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+/* 태블릿 반응형 */
+@media (max-width: 1024px) {
+  .poster {
+    position: static;
+  }
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .poster {
+    position: static;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .favoriteBtn {
+    width: 44px;
+    height: 44px;
+    bottom: var(--spacing-sm);
+    right: var(--spacing-sm);
+
+    i {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .favoriteBtn {
+    width: 40px;
+    height: 40px;
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+}

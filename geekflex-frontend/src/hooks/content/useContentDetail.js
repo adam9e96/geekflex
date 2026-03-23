@@ -64,4 +64,3 @@ const useContentDetail = (tmdbId, contentType = "movie") => {
 };
 
 export default useContentDetail;
-

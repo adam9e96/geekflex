@@ -36,8 +36,7 @@ const useDeleteCollection = () => {
 
       if (!response.ok && response.status !== 204) {
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          errorData.message || errorData.error || "컬렉션 삭제에 실패했습니다.";
+        const errorMessage = errorData.message || errorData.error || "컬렉션 삭제에 실패했습니다.";
         throw new Error(errorMessage);
       }
 
@@ -55,4 +54,3 @@ const useDeleteCollection = () => {
 };
 
 export default useDeleteCollection;
-

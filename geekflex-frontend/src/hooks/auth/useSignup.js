@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   validateUserId,
@@ -39,7 +39,7 @@ export const useSignup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [errors, setErrors] = useState({});
-  
+
   // 아이디 중복 검사 상태
   const [userIdCheckStatus, setUserIdCheckStatus] = useState({
     isChecking: false,
@@ -48,9 +48,33 @@ export const useSignup = () => {
     message: "",
   });
 
+  // 이메일 인증 상태
+  const [verificationState, setVerificationState] = useState({
+    status: "idle", // idle, sending, sent, verified
+    message: "",
+  });
+  const [verificationCode, setVerificationCode] = useState("");
+  const [timeLeft, setTimeLeft] = useState(0); // 초 단위 (300초 = 5분)
+
   // Refs
   const fileInputRef = useRef(null);
   const previewImageRef = useRef(null);
+  const timerRef = useRef(null);
+
+  // 타이머 로직
+  useEffect(() => {
+    if (timeLeft > 0) {
+      timerRef.current = setTimeout(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0 && verificationState.status === "sent") {
+      // 시간이 만료되면 상태 업데이트 필요 시 여기에 추가
+    }
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [timeLeft, verificationState.status]);
 
   // 자기소개 글자 수 계산 (useMemo로 변경하여 useEffect 제거)
   const bioCharCount = useMemo(() => formData.bio.length, [formData.bio]);
@@ -200,6 +224,16 @@ export const useSignup = () => {
           });
         }
 
+        // 이메일이 변경되면 인증 상태 초기화
+        if (name === "userEmail") {
+          setVerificationState({
+            status: "idle",
+            message: "",
+          });
+          setVerificationCode("");
+          setTimeLeft(0);
+        }
+
         // 실시간 유효성 검사
         validateField(name, value);
       }
@@ -326,6 +360,87 @@ export const useSignup = () => {
     }
   }, []);
 
+  // 인증 번호 발송
+  const handleSendVerificationCode = async () => {
+    if (!formData.userEmail) {
+      setErrors((prev) => ({ ...prev, userEmail: "이메일을 입력해주세요." }));
+      return;
+    }
+
+    // 이메일 형식 검사
+    const emailValidation = validateUserEmail(formData.userEmail);
+    if (!emailValidation.valid) {
+      setErrors((prev) => ({ ...prev, userEmail: emailValidation.message }));
+      return;
+    }
+
+    setVerificationState({ status: "sending", message: "" });
+
+    try {
+      await publicApi.post("/api/v1/auth/email/send", {
+        email: formData.userEmail,
+      });
+
+      setVerificationState({ status: "sent", message: "인증번호가 발송되었습니다." });
+      setTimeLeft(300); // 5분
+
+      // 이메일 에러 제거
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.userEmail;
+        return newErrors;
+      });
+    } catch (error) {
+      console.error("인증번호 발송 오류:", error);
+      setVerificationState({ status: "idle", message: "" });
+      setErrors((prev) => ({ ...prev, userEmail: getErrorMessage(error) }));
+    }
+  };
+
+  // 인증 번호 확인
+  const handleVerifyEmailCode = async () => {
+    if (!verificationCode) {
+      setErrors((prev) => ({ ...prev, verificationCode: "인증번호를 입력해주세요." }));
+      return;
+    }
+
+    // 시간이 만료되었는지 확인
+    if (timeLeft === 0) {
+      setVerificationState({
+        status: "sent",
+        message: "인증 시간이 만료되었습니다. 다시 요청해주세요.",
+      });
+      return;
+    }
+
+    try {
+      const response = await publicApi.post("/api/v1/auth/email/verify", {
+        email: formData.userEmail,
+        code: verificationCode,
+      });
+
+      const isVerified = getResponseData(response);
+
+      if (isVerified === true) {
+        setVerificationState({ status: "verified", message: "인증되었습니다." });
+        if (timerRef.current) clearTimeout(timerRef.current);
+
+        // 인증 관련 에러 제거
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors.verificationCode;
+          delete newErrors.userEmail;
+          return newErrors;
+        });
+      } else {
+        setErrors((prev) => ({ ...prev, verificationCode: "인증번호가 올바르지 않습니다." }));
+      }
+    } catch (error) {
+      console.error("인증번호 확인 오류:", error);
+      setErrors((prev) => ({ ...prev, verificationCode: getErrorMessage(error) }));
+    }
+  };
+
   // 폼 전체 유효성 검사
   const validateForm = () => {
     const newErrors = {};
@@ -346,6 +461,12 @@ export const useSignup = () => {
     const userEmailResult = validateUserEmail(formData.userEmail);
     if (!userEmailResult.valid) {
       newErrors.userEmail = userEmailResult.message;
+      isValid = false;
+    }
+
+    // 이메일 인증 확인
+    if (verificationState.status !== "verified") {
+      newErrors.userEmail = "이메일 인증이 필요합니다.";
       isValid = false;
     }
 
@@ -442,17 +563,17 @@ export const useSignup = () => {
     try {
       console.log("회원가입 요청 객체 submitData", submitData);
       console.log("UserJoinRequest 데이터:", userJoinRequest);
-      
+
       const response = await publicApi.post("/api/v1/signup", submitData);
       const responseData = response.data;
-      
+
       console.log("회원가입 요청 결과 데이터 responseData", responseData);
 
       alert("회원가입이 완료되었습니다.");
       navigate("/", { replace: true });
     } catch (error) {
       console.error("회원가입 오류:", error);
-      
+
       const responseData = error.response?.data || {};
       const newErrors = {};
 
@@ -488,6 +609,27 @@ export const useSignup = () => {
     }
   };
 
+  // 날짜 변경 핸들러 (Refactored for react-datepicker)
+  const handleDateChange = (date) => {
+    let formattedDate = "";
+
+    if (typeof date === "string") {
+      formattedDate = date;
+    } else if (date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      formattedDate = `${year}-${month}-${day}`;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      birthDate: formattedDate,
+    }));
+
+    validateField("birthDate", formattedDate);
+  };
+
   return {
     // 상태
     formData,
@@ -498,11 +640,15 @@ export const useSignup = () => {
     errors,
     bioCharCount,
     userIdCheckStatus,
+    verificationState,
+    verificationCode,
+    timeLeft,
     // Refs
     fileInputRef,
     previewImageRef,
     // 핸들러
     handleInputChange,
+    handleDateChange,
     validateField,
     handleTermsChange,
     togglePasswordVisibility,
@@ -510,5 +656,13 @@ export const useSignup = () => {
     handleRemoveImage,
     handleSubmit,
     checkUserIdAvailability,
+    handleSendVerificationCode,
+    handleVerifyEmailCode,
+    setVerificationCode,
   };
 };
+
+
+
+
+

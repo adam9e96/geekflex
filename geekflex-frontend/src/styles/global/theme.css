@@ -1,0 +1,149 @@
+/*
+ * GeekFlex 메인 스타일시트
+ * Tailwind CSS v4만 포함
+ * 전역 초기화 및 변수는 Layout.css로 이동됨
+ */
+
+/* Tailwind CSS v4 - Vite 플러그인 방식 */
+
+:root {
+  /* 기본 색상 - 영화 리뷰 사이트 테마 */
+  --color-primary: #f5c518;
+
+  /* 골드 - 영화상 느낌 */
+  --color-secondary: #dc143c;
+
+  /* 크림슨 레드 - 영화관 느낌 */
+  --color-accent: #ffd700;
+
+  /* 골드 옐로우 - 강조 */
+  --color-primary-dark: #d4af37;
+
+  /* 다크 골드 */
+  --color-secondary-dark: #b71c1c;
+
+  /* 다크 레드 */
+  --color-tag: hsl(0deg 0% 30%);
+
+  /* 작품 태그 색상 */
+
+  /* 배경 색상 */
+  --bg-page: hsl(0deg 0% 12%);
+
+  /* 가독성을 위한 밝은 배경 */
+  --bg-primary: #121212;
+
+  /* 너무 검지 않은 배경 */
+  --bg-secondary: hsl(0deg 0% 20%);
+
+  /* 더 밝은 배경 */
+  --bg-tertiary: #2a2a2a;
+  --bg-content: hsl(0deg 0% 20%);
+
+  /* 가독성을 위한 밝은 배경 */
+  --bg-card: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  --bg-header: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  --bg-modal: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  --review-bg-secondary: #252525;
+  --review-bg-tertiary: #2d2d2d;
+
+  /* 텍스트 색상 */
+  --text-primary: #fff;
+  --text-secondary: #d0d0d0;
+  --text-muted: #999;
+  --text-accent: #f5c518;
+
+  /* 골드 강조 */
+
+  /* 테두리 색상 */
+  --border-primary: #3a3a3a;
+  --border-secondary: #4a4a4a;
+  --border-accent: #f5c518;
+
+  /* 골드 테두리 */
+
+  /* 그림자 색상 */
+  --shadow-primary: rgb(0 0 0 / 40%);
+  --shadow-secondary: rgb(0 0 0 / 60%);
+  --shadow-accent: rgb(245 197 24 / 40%);
+
+  /* 골드 그림자 */
+  --shadow-secondary-accent: rgb(220 20 60 / 40%);
+
+  /* 레드 그림자 */
+
+  /* 그라데이션 */
+  --gradient-primary: linear-gradient(135deg, #f5c518 0%, #ffd700 100%);
+
+  /* 골드 그라데이션 */
+  --gradient-text: linear-gradient(135deg, #f5c518 0%, #ffd700 100%);
+  --gradient-hover: linear-gradient(90deg, transparent, rgb(245 197 24 / 10%), transparent);
+
+  /* 상태 색상 */
+  --color-success: #4caf50;
+  --color-warning: #ffd700;
+  --color-error: #dc143c;
+  --color-info: #2196f3;
+
+  /* OTT 플랫폼 색상 */
+  --color-netflix: #e50914;
+  --color-watcha: #ff0558;
+  --color-disney: #113ccf;
+  --color-tving: #ff0558;
+  --color-coupang: #ff6b35;
+  --color-wave: #00d4aa;
+
+  /* 폰트 크기 */
+  --font-size-xs: 0.8rem;
+  --font-size-sm: 0.9rem;
+  --font-size-md: 1rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.1rem;
+  --font-size-xl: 1.3rem;
+  --font-size-2xl: 1.4rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.2rem;
+
+  /* 간격 */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* 둥근 모서리 */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 15px;
+  --radius-xl: 25px;
+  --radius-full: 50%;
+
+  /* 전환 효과 */
+  --transition-fast: 0.3s ease;
+  --transition-normal: 0.5s ease;
+  --transition-slow: 1s ease;
+
+  /* Z-Index 레이어 */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+
+  /* 컨테이너 최대 너비 */
+  --container-sm: 540px;
+  --container-md: 720px;
+  --container-lg: 960px;
+  --container-xl: 1140px;
+  --container-xxl: 1320px;
+
+  /* 브레이크포인트 */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
+}

@@ -1,0 +1,27 @@
+/* InfoItem styles */
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.label {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+
+  &.code {
+    font-family: "Courier New", monospace;
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+    word-break: break-all;
+  }
+}

@@ -20,17 +20,17 @@ const saveSearchHistory = (history) => {
 
 /**
  * 검색 기능 관리 Zustand 스토어
- * 
+ *
  * @param {Object} set - Zustand의 set 함수
  * @param {Object} get - Zustand의 get 함수
  * @returns {Object} 검색 상태 관리 스토어
- * 
+ *
  * @since 2025-12-24
  * @description 검색 모달, 검색어, 검색 결과, 검색 히스토리를 관리하는 스토어
- * 
+ *
  * @usage 사용처:
- * - src/components/layout/Layout.jsx
- * - src/components/layout/SearchModal.jsx
+ * - src/layouts/AppLayout/AppLayout.jsx
+ * - src/components/search/SearchModal.jsx
  * - src/hooks/useKeyboardShortcuts.js
  */
 export const useSearchStore = create((set, get) => ({
@@ -167,15 +167,11 @@ export const useSearchStore = create((set, get) => ({
     }
 
     set({ isSearchLoading: true });
-    
+
     try {
       // 병렬로 모든 검색 실행
       if (searchUsersFn && searchMoviesFn && searchTvFn) {
-        await Promise.all([
-          searchUsersFn(query),
-          searchMoviesFn(query),
-          searchTvFn(query),
-        ]);
+        await Promise.all([searchUsersFn(query), searchMoviesFn(query), searchTvFn(query)]);
       }
     } catch (error) {
       console.error("검색 오류:", error);
@@ -228,4 +224,3 @@ export const useSearchStore = create((set, get) => ({
     get().addToSearchHistory(query);
   },
 }));
-

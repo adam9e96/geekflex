@@ -42,7 +42,7 @@ const useCollection = () => {
 
       const result = await response.json();
       console.log("📦 컬렉션 목록 응답 데이터:", result);
-      
+
       // 응답 구조: { success: true, data: [...] }
       const collectionList = result?.data && Array.isArray(result.data) ? result.data : [];
       setCollections(collectionList);
@@ -77,4 +77,3 @@ const useCollection = () => {
 };
 
 export default useCollection;
-

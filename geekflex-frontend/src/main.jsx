@@ -6,39 +6,40 @@ import "@fortawesome/fontawesome-free/css/all.css";
 // Pretendard 폰트
 import "pretendard/dist/web/static/pretendard.css";
 // 전역 스타일 (Tailwind CSS 포함)
-import "@styles/global/main.css";
+import "@styles/global/theme.css";
+import "@styles/global/global.css";
 // 전역 상태 관리 (Zustand)
-import AuthInitializer from "@components/auth/AuthInitializer";
+import AuthInitializer from "@components/auth/AuthInitializer.jsx";
 // 에러 바운더리
-import ErrorBoundary from "@components/ui/ErrorBoundary";
+import ErrorBoundary from "@components/ui/ErrorBoundary/ErrorBoundary.jsx";
 // 레이아웃 컴포넌트
-import Layout from "@components/layout/Layout";
+import AppLayout from "@layouts/AppLayout/AppLayout";
 // Pages
-import Home from "@pages/Home.jsx";
-import Login from "@pages/Login.jsx";
-import Signup from "@pages/Signup.jsx";
-import ForgotPassword from "@pages/ForgotPassword.jsx";
-import MyPage from "@pages/MyPage.jsx";
-import MyReviewsPage from "@pages/MyReviewsPage.jsx";
-import ContentDetail from "@pages/ContentDetail.jsx";
-import TvDetail from "@pages/TvDetail.jsx";
-import WriteReview from "@pages/WriteReview.jsx";
-import EditReview from "@pages/EditReview.jsx";
-import AdminPage from "@pages/AdminPage.jsx";
-import Privacy from "@pages/footer/Privacy.jsx";
-import Terms from "@pages/footer/Terms.jsx";
-import About from "@pages/footer/About.jsx";
-import MoviesCategoryPage from "@pages/MoviesCategoryPage.jsx";
-import CollectionPage from "@pages/CollectionPage.jsx";
-import CollectionDetailPage from "@pages/CollectionDetailPage.jsx";
-import UserDetailPage from "@pages/UserDetailPage.jsx";
+import Home from "@pages/home/Home.jsx";
+import Login from "@pages/auth/Login/Login.jsx";
+import Signup from "@pages/auth/Signup/Signup.jsx";
+import ForgotPassword from "@pages/auth/ForgotPassword/ForgotPassword.jsx";
+import MyPage from "@pages/user/MyPage/MyPage.jsx";
+import MyReviewsPage from "@pages/user/MyReviewsPage/MyReviewsPage.jsx";
+import ContentDetail from "@pages/content/ContentDetail/ContentDetail.jsx";
+import TvDetail from "@pages/content/TvDetail/TvDetail.jsx";
+import WriteReview from "@pages/content/WriteReview/WriteReview.jsx";
+import EditReview from "@pages/content/EditReview/EditReview.jsx";
+import AdminPage from "@pages/admin/AdminPage/AdminPage.jsx";
+import Privacy from "@pages/legal/Privacy/Privacy.jsx";
+import Terms from "@pages/legal/Terms/Terms.jsx";
+import About from "@pages/legal/About/About.jsx";
+import MoviesCategoryPage from "@pages/content/MoviesCategoryPage/MoviesCategoryPage.jsx";
+import CollectionPage from "@pages/content/CollectionPage/CollectionPage.jsx";
+import CollectionDetailPage from "@pages/content/CollectionDetailPage/CollectionDetailPage.jsx";
+import UserDetailPage from "@pages/user/UserDetailPage/UserDetailPage.jsx";
 
 /**
  *
  * 라우팅 구조:
  * - BrowserRouter: 브라우저 URL과 동기화 (필수)
  * - AuthInitializer: 전역 인증 상태 초기화 (Zustand)
- * - Layout: 공통 레이아웃 (Header, Footer)
+ * - AppLayout: 공통 레이아웃 (Header, Footer)
  * - Routes: 라우트 컨테이너
  *
  * 페이지 구조:
@@ -52,7 +53,7 @@ createRoot(document.getElementById("root")).render(
     <ErrorBoundary>
       <BrowserRouter>
         <AuthInitializer />
-        <Layout>
+        <AppLayout>
           <Routes>
             {/* ============================================
                 1. 공개 페이지
@@ -120,7 +121,7 @@ createRoot(document.getElementById("root")).render(
             {/* 사용정보 */}
             <Route path="about" element={<About />} />
           </Routes>
-        </Layout>
+        </AppLayout>
       </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>,

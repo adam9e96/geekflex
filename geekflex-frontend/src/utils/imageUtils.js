@@ -55,6 +55,19 @@ export const getProfileImageUrl = (profileImagePath) => {
     return profileImagePath;
   }
 
+  // DB에 저장된 경로가 users/... 또는 /users/... 로 시작하는 경우 (레거시 데이터 또는 잘못된 경로)
+  // 정적 리소스 경로인 /uploads/users/... 로 정규화
+  if (profileImagePath.startsWith("users/") || profileImagePath.startsWith("/users/")) {
+    const normalizedPath = profileImagePath.startsWith("/")
+      ? `/uploads${profileImagePath}`
+      : `/uploads/${profileImagePath}`;
+
+    if (BACKEND_SERVER_URL) {
+      return `${BACKEND_SERVER_URL}${normalizedPath}`;
+    }
+    return normalizedPath;
+  }
+
   // 상대 경로인 경우 (예: uploads/users/...)
   const normalizedPath = profileImagePath.startsWith("/")
     ? profileImagePath

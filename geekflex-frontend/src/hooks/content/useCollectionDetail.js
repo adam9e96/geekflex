@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAccessToken } from "@utils/auth";
+import { collectionService } from "@services/collectionService";
 import { EXAMPLE_COLLECTIONS } from "@utils/content/collectionConstants";
 
 /**
@@ -31,21 +31,13 @@ const useCollectionDetail = (id) => {
 
       // 예시 작품 목록 가져오기 (인기 영화 API 사용)
       try {
-        const response = await fetch("/api/v1/movies/popular", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        // publicAPI를 사용하여 인기 영화 가져오기
+        const { publicApi } = await import("@services/apiClient");
+        const response = await publicApi.get("/api/v1/movies/popular");
 
-        if (response.ok) {
-          const data = await response.json();
-          // 처음 6개만 표시
-          setContents(Array.isArray(data) ? data.slice(0, 6) : []);
-        } else {
-          setContents([]);
-        }
+        const data = response.data;
+        // 처음 6개만 표시
+        setContents(Array.isArray(data) ? data.slice(0, 6) : []);
       } catch (error) {
         console.error("예시 작품 목록 로딩 실패:", error);
         setContents([]);
@@ -62,40 +54,8 @@ const useCollectionDetail = (id) => {
       setError(null);
       setIsExample(false);
 
-      // GET /api/v1/collections/:id 요청
-      // is_public이 false인 경우를 위해 Bearer 토큰 헤더 추가
-      const accessToken = getAccessToken();
-      const headers = {
-        "Content-Type": "application/json",
-      };
-
-      // 토큰이 있으면 Authorization 헤더 추가
-      if (accessToken) {
-        headers.Authorization = `Bearer ${accessToken}`;
-      }
-
-      const response = await fetch(`/api/v1/collections/${collectionId}`, {
-        method: "GET",
-        headers,
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error(`컬렉션 정보를 불러오는데 실패했습니다: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("📦 컬렉션 상세 응답 데이터:", result);
-
-      // 응답 형식에 따라 데이터 추출
-      const data = result.data || result;
-      console.log("📦 컬렉션 제작자 정보:", {
-        creator: data.creator,
-        owner: data.owner,
-        user: data.user,
-        author: data.author,
-        userId: data.userId,
-      });
+      const data = await collectionService.fetchCollectionDetail(collectionId);
+      console.log("📦 컬렉션 상세 응답 데이터:", data);
 
       setCollection(data);
       // 컬렉션에 포함된 작품 목록 (items 또는 contents 또는 movies)

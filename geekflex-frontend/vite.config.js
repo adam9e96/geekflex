@@ -1,7 +1,11 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
+
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
 // /user/* 또는 /api/* (또는 /api/v1/*) 요청시 백엔드 서버로 프록시함
@@ -14,14 +18,12 @@ export default defineConfig(({ mode }) => {
   const API_BASE_URL = env.VITE_API_URL || "http://localhost:8080";
 
   return {
-    plugins: [
-      react(),
-      tailwindcss(),
-    ],
+    plugins: [react()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
         "@components": path.resolve(__dirname, "./src/components"),
+        "@layouts": path.resolve(__dirname, "./src/layouts"),
         "@pages": path.resolve(__dirname, "./src/pages"),
         "@hooks": path.resolve(__dirname, "./src/hooks"),
         "@services": path.resolve(__dirname, "./src/services"),
@@ -29,6 +31,7 @@ export default defineConfig(({ mode }) => {
         "@utils": path.resolve(__dirname, "./src/utils"),
         "@styles": path.resolve(__dirname, "./src/styles"),
         "@assets": path.resolve(__dirname, "./src/assets"),
+        "@constants": path.resolve(__dirname, "./src/constants"),
       },
     },
     server: {
@@ -42,13 +45,11 @@ export default defineConfig(({ mode }) => {
           target: API_BASE_URL,
           changeOrigin: true,
           secure: false,
-          // /api/v1/* 경로도 포함하여 프록시
         },
         "/uploads": {
           target: API_BASE_URL,
           changeOrigin: true,
           secure: false,
-          // 정적 리소스 (프로필 이미지 등) 프록시
         },
       },
     },

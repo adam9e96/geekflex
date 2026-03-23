@@ -1,0 +1,52 @@
+.container {
+  background-color: transparent;
+  padding: var(--spacing-md) 0;
+}
+
+.container h2 {
+  font-size: var(--font-size-xl);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+  font-weight: 600;
+}
+
+.text {
+  font-size: var(--font-size-base);
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin: 0;
+  word-break: keep-all;
+}
+
+.toggleBtn {
+  display: block;
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-top: var(--spacing-sm);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-primary-dark);
+  }
+}
+
+/* 모바일 반응형 */
+@media (width <=768px) {
+  .container {
+    text-align: left;
+  }
+
+  .container h2 {
+    font-size: var(--font-size-lg);
+  }
+
+  .text {
+    font-size: var(--font-size-sm);
+  }
+}

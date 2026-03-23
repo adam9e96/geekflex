@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { authenticatedApi, publicApi, getErrorMessage } from "@services/apiClient";
+import { authenticatedApi, getErrorMessage } from "@services/apiClient";
 
 /**
  * 영화 검색 커스텀 훅
@@ -28,7 +28,7 @@ export const useMovieSearch = () => {
     try {
       // 토큰이 있으면 authenticatedApi, 없으면 publicApi 사용
       const api = authenticatedApi;
-      
+
       const response = await api.get(`/api/v1/movies/search`, {
         params: { keyword: keyword.trim() },
       });
@@ -48,9 +48,7 @@ export const useMovieSearch = () => {
         originalTitle: movie.originalTitle,
         overview: movie.overview,
         releaseDate: movie.releaseDate,
-        poster: movie.posterUrl
-          ? `https://image.tmdb.org/t/p/w500${movie.posterUrl}`
-          : null,
+        poster: movie.posterUrl ? `https://image.tmdb.org/t/p/w500${movie.posterUrl}` : null,
         backdropUrl: movie.backdropUrl
           ? `https://image.tmdb.org/t/p/w1280${movie.backdropUrl}`
           : null,
@@ -64,7 +62,7 @@ export const useMovieSearch = () => {
       setMovieTotalCount(formattedResults.length);
     } catch (error) {
       console.error("영화 검색 오류:", error);
-      
+
       // 401 에러는 인증되지 않은 상태로 처리 (에러로 처리하지 않음)
       if (error.response?.status === 401) {
         console.log("인증되지 않은 사용자 - 영화 검색 불가");

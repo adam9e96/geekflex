@@ -1,0 +1,59 @@
+/* InfoSection styles */
+.section {
+  padding: var(--spacing-lg);
+  background: hsl(0deg 0% 22%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgb(255 255 255 / 10%);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+
+  &:hover {
+    border-color: rgb(245 197 24 / 50%);
+    box-shadow: 0 8px 25px rgb(245 197 24 / 20%);
+  }
+
+  /* 모바일 반응형 */
+  @media (width <=768px) {
+    padding: var(--spacing-md);
+  }
+
+  @media (width <=480px) {
+    padding: var(--spacing-sm);
+  }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid rgb(245 197 24 / 30%);
+
+  i {
+    font-size: var(--font-size-xl);
+  }
+
+  @media (width <=768px) {
+    font-size: var(--font-size-lg);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+
+  @media (width <=1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (width <=768px) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}

@@ -1,0 +1,261 @@
+/* 컬렉션 수정 모달 스타일 (CreateCollectionModal 스타일 재사용) */
+
+.createCollectionModalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
+  backdrop-filter: blur(4px);
+}
+
+.createCollectionModal {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-primary);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 50%);
+  overflow: hidden;
+}
+
+.createCollectionModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid var(--border-primary);
+
+  h2 {
+    margin: 0;
+    font-size: var(--font-size-xl);
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+}
+
+.createCollectionModalClose {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+
+  &:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+}
+
+.createCollectionModalForm {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.createCollectionModalBody {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.createCollectionModalField {
+  margin-bottom: var(--spacing-lg);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.createCollectionModalLabel {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+
+  .required {
+    color: #dc3545;
+    margin-left: 2px;
+  }
+}
+
+.createCollectionModalInput,
+.createCollectionModalTextarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgb(245 197 24 / 10%);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.createCollectionModalTextarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.createCollectionModalCheckboxLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  cursor: pointer;
+}
+
+.createCollectionModalCheckbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin-right: var(--spacing-sm);
+  accent-color: var(--color-primary);
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.createCollectionModalCheckboxText {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  font-weight: 500;
+
+  i {
+    color: var(--color-primary);
+  }
+}
+
+.createCollectionModalCheckboxHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-left: calc(18px + var(--spacing-sm));
+}
+
+.createCollectionModalError,
+.createCollectionModalSuccess {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.createCollectionModalError {
+  background: rgb(220 53 69 / 10%);
+  color: #dc3545;
+  border: 1px solid rgb(220 53 69 / 30%);
+}
+
+.createCollectionModalSuccess {
+  background: rgb(40 167 69 / 10%);
+  color: #28a745;
+  border: 1px solid rgb(40 167 69 / 30%);
+}
+
+.createCollectionModalFooter {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-top: 1px solid var(--border-primary);
+  justify-content: flex-end;
+}
+
+.createCollectionModalCancelBtn,
+.createCollectionModalSubmitBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.createCollectionModalCancelBtn {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--bg-card);
+    border-color: var(--text-secondary);
+  }
+}
+
+.createCollectionModalSubmitBtn {
+  background: var(--color-primary);
+  color: #000;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgb(245 197 24 / 40%);
+  }
+}
+
+/* 모바일 반응형 */
+@media (width <=768px) {
+  .createCollectionModal {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+
+  .createCollectionModalHeader,
+  .createCollectionModalBody,
+  .createCollectionModalFooter {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .createCollectionModalFooter {
+    flex-direction: column;
+  }
+
+  .createCollectionModalCancelBtn,
+  .createCollectionModalSubmitBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

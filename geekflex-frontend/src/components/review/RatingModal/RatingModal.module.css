@@ -1,0 +1,140 @@
+/**
+ * 평점만 매기기 모달 스타일
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  animation: fadeIn var(--transition-fast);
+}
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px var(--shadow-secondary);
+  animation: slideInUp var(--transition-normal);
+}
+
+.header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.stars {
+  display: flex;
+  gap: var(--spacing-sm);
+  cursor: grab;
+  user-select: none;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+}
+
+.stars:active {
+  cursor: grabbing;
+}
+
+.stars:hover {
+  background: rgb(245 197 24 / 10%);
+}
+
+.value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instruction {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+.footer {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+}
+
+.button {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 100px;
+}
+
+.buttonCancel {
+  background: var(--color-error);
+  color: #fff;
+}
+
+.buttonCancel:hover:not(:disabled) {
+  background: var(--color-secondary-dark);
+  transform: scale(1.05);
+}
+
+.buttonSubmit {
+  background: var(--color-success);
+  color: #fff;
+}
+
+.buttonSubmit:hover:not(:disabled) {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 반응형 */
+@media (width <=768px) {
+  .modal {
+    padding: var(--spacing-lg);
+    width: 95%;
+  }
+
+  .rating-star {
+    font-size: 2rem;
+  }
+
+  .value {
+    font-size: 2.5rem;
+  }
+}

@@ -16,6 +16,29 @@ const calculateAge = (birthDate, today) => {
 
   return age;
 };
+export const parseBirthDateValue = (birthDate) => {
+  if (!birthDate || typeof birthDate !== "string") {
+    return null;
+  }
+
+  const match = birthDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    return null;
+  }
+
+  const [, year, month, day] = match;
+  const parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
+
+  if (
+    parsedDate.getFullYear() !== Number(year) ||
+    parsedDate.getMonth() !== Number(month) - 1 ||
+    parsedDate.getDate() !== Number(day)
+  ) {
+    return null;
+  }
+
+  return parsedDate;
+};
 
 /**
  * 아이디 유효성 검사
@@ -119,7 +142,12 @@ export const validateBirthDate = (birthDate) => {
   if (!birthDate || birthDate === "") {
     return { valid: false, message: "생년월일은 필수입니다." };
   }
-  const selectedDate = new Date(birthDate);
+  const selectedDate = parseBirthDateValue(birthDate);
+  if (!selectedDate) {
+    return { valid: false, message: "올바른 생년월일을 입력해주세요." };
+  }
+
+  selectedDate.setHours(0, 0, 0, 0);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -144,3 +172,4 @@ export const validateTermsAgreement = (termsAgreement) => {
   }
   return { valid: true, message: "" };
 };
+

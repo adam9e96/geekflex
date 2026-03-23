@@ -1,0 +1,584 @@
+/* 로그인 페이지 레이아웃 */
+.loginPage {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(180deg, hsl(0deg 0% 12%) 0%, hsl(0deg 0% 15%) 100%);
+  overflow-x: hidden;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+
+  .container {
+    width: 100%;
+    max-width: 800px;
+    background: hsl(0deg 0% 20%);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgb(0 0 0 / 50%);
+    border: 1px solid rgb(255 255 255 / 15%);
+    position: relative;
+    z-index: 10;
+    margin: 20px auto;
+  }
+
+  .card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: var(--spacing-xl);
+    position: relative;
+    z-index: 20;
+    overflow: hidden auto;
+    min-height: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 헤더 */
+  .header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .logo {
+    position: relative;
+    display: inline-block;
+    margin-bottom: var(--spacing-md);
+
+    &:hover .logoText {
+      transform: scale(1.05);
+      letter-spacing: 4px;
+      text-shadow:
+        0 0 20px rgb(245 197 24 / 80%),
+        0 0 30px rgb(245 197 24 / 60%),
+        0 0 40px rgb(245 197 24 / 40%);
+    }
+  }
+
+  .logoText {
+    font-size: 3.5rem;
+    font-weight: 900;
+    font-family:
+      Pretendard,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    background: linear-gradient(135deg, #f5c518 0%, #ffd700 50%, #ffa500 100%);
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow:
+      0 0 15px rgb(245 197 24 / 60%),
+      0 0 25px rgb(245 197 24 / 40%),
+      0 0 35px rgb(245 197 24 / 30%);
+    transition: all var(--transition-fast);
+    margin: 0;
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    display: inline-block;
+
+    &::before {
+      content: "GeekFlex";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f5c518 0%, #ffd700 50%, #ffa500 100%);
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: blur(3px);
+      opacity: 0.7;
+      z-index: -1;
+    }
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+    margin: 0;
+  }
+
+  /* 로그인 폼 */
+  .form {
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+
+    .group {
+      margin-bottom: var(--spacing-xl);
+      position: relative;
+    }
+
+    .label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-sm);
+
+      i {
+        color: var(--color-primary);
+        width: 16px;
+        text-align: center;
+      }
+    }
+
+    .input {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 2px solid rgb(255 255 255 / 30%);
+      border-radius: var(--radius-md);
+      background: hsl(0deg 0% 28%);
+      color: var(--text-primary);
+      font-size: var(--font-size-base);
+      transition:
+        border-color var(--transition-fast),
+        background-color var(--transition-fast);
+      box-sizing: border-box;
+
+      &:hover {
+        border-color: rgb(245 197 24 / 60%);
+        background: hsl(0deg 0% 30%);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgb(245 197 24 / 25%);
+        background: hsl(0deg 0% 30%);
+      }
+
+      &::placeholder {
+        color: #c0c0c0;
+        opacity: 0.8;
+      }
+
+      &.error {
+        border-color: var(--color-error);
+        box-shadow: 0 0 0 3px rgb(220 20 60 / 10%);
+      }
+    }
+
+    .passwordContainer {
+      position: relative;
+    }
+
+    .passwordToggle {
+      position: absolute;
+      right: var(--spacing-md);
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #b0b0b0;
+      cursor: pointer;
+      padding: var(--spacing-xs);
+      border-radius: var(--radius-sm);
+      transition:
+        color var(--transition-fast),
+        background-color var(--transition-fast);
+
+      &:hover,
+      &:focus,
+      &:focus-visible {
+        color: var(--color-primary);
+        background: var(--bg-primary);
+      }
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xl);
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+
+    /* 체크박스 커스텀 */
+    .checkboxContainer {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: var(--font-size-sm);
+      user-select: none;
+      line-height: 1;
+
+      input[type="checkbox"] {
+        display: none;
+
+        &:checked + .checkmark {
+          background: var(--color-primary);
+          border-color: var(--color-primary);
+
+          &::after {
+            content: "";
+            position: absolute;
+            left: 4px;
+            top: 0;
+            width: 4px;
+            height: 8px;
+            border: solid var(--text-primary);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+          }
+        }
+      }
+
+      .checkmark {
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        min-height: 18px;
+        border: 2px solid rgb(255 255 255 / 40%);
+        border-radius: var(--radius-sm);
+        background: hsl(0deg 0% 28%);
+        position: relative;
+        flex-shrink: 0;
+        transition:
+          background-color var(--transition-fast),
+          border-color var(--transition-fast);
+      }
+    }
+
+    .forgotPassword {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      transition: color var(--transition-fast);
+
+      &:hover {
+        color: var(--color-secondary);
+        text-decoration: underline;
+      }
+    }
+
+    .submitBtn {
+      width: 100%;
+      padding: var(--spacing-md);
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      cursor: pointer;
+      transition: box-shadow var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      &:hover {
+        box-shadow: 0 8px 25px var(--shadow-accent);
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      &:focus,
+      &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+      }
+
+      &.loading {
+        /* 로딩 상태 스타일 */
+      }
+    }
+
+    .loadingContent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentcolor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .errorMsg {
+      color: #ff8a8a;
+      font-size: var(--font-size-sm);
+      margin-top: var(--spacing-xs);
+      min-height: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      font-weight: 500;
+      text-align: left;
+      justify-content: flex-start;
+
+      &::before {
+        content: "⚠";
+        font-size: var(--font-size-xs);
+      }
+    }
+
+    .successMsg {
+      color: #6bffb8;
+      font-size: var(--font-size-sm);
+      margin-top: var(--spacing-xs);
+      min-height: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      font-weight: 500;
+      text-align: center;
+      justify-content: center;
+
+      &::before {
+        content: "✓";
+        font-size: var(--font-size-xs);
+        margin-right: 4px;
+      }
+    }
+  }
+
+  /* 소셜 로그인 */
+  .socialLogin {
+    margin-top: var(--spacing-xl);
+
+    .divider {
+      text-align: center;
+      margin: var(--spacing-xl) 0;
+      position: relative;
+      color: var(--text-muted);
+      font-size: var(--font-size-sm);
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border-primary);
+        z-index: 1;
+      }
+
+      span {
+        padding: 0 var(--spacing-md);
+        position: relative;
+        z-index: 2;
+        background: var(--bg-secondary);
+      }
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .socialBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md);
+      border: 2px solid var(--border-primary);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      cursor: pointer;
+      transition:
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+      text-decoration: none;
+
+      i {
+        font-size: var(--font-size-lg);
+      }
+
+      &:hover {
+        box-shadow: 0 5px 15px var(--shadow-primary);
+      }
+
+      &:focus,
+      &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+      }
+
+      &.google:hover {
+        background: #db4437;
+        color: white;
+        border-color: #db4437;
+      }
+
+      &.kakao:hover {
+        background: #fee500;
+        color: #3c1e1e;
+        border-color: #fee500;
+      }
+    }
+  }
+
+  /* 회원가입 링크 */
+  .signupSection {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+
+    .linkWrapper {
+      text-align: center;
+
+      p {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    .linkText {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition-fast);
+
+      &:hover {
+        color: var(--color-secondary);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* 반응형 디자인 */
+  @media (width <=1024px) {
+    padding: var(--spacing-lg);
+
+    .container {
+      max-width: 90%;
+      border-radius: 25px;
+      margin: 15px auto;
+    }
+
+    .card {
+      padding: var(--spacing-lg);
+    }
+
+    .logoText {
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-size: var(--font-size-base);
+    }
+
+    .form {
+      .options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+      }
+    }
+  }
+
+  @media (width <=768px) {
+    padding: var(--spacing-md);
+
+    .container {
+      max-width: calc(100% - 32px);
+      border-radius: 20px;
+      margin: 24px 16px 16px;
+    }
+
+    .card {
+      padding: var(--spacing-md);
+    }
+
+    .logoText {
+      font-size: 2rem;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-size: var(--font-size-sm);
+    }
+
+    .form {
+      .submitBtn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    .socialLogin {
+      .buttons {
+        gap: var(--spacing-sm);
+      }
+
+      .socialBtn {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+      }
+    }
+  }
+
+  @media (width <=480px) {
+    padding: var(--spacing-sm) var(--spacing-md);
+
+    .container {
+      margin: 20px 12px 12px;
+      border-radius: 15px;
+      min-height: auto;
+    }
+
+    .card {
+      padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .logoText {
+      font-size: 1.75rem;
+      letter-spacing: 1.5px;
+    }
+
+    .subtitle {
+      font-size: var(--font-size-sm);
+    }
+
+    .form {
+      .submitBtn {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-xs);
+      }
+    }
+  }
+}

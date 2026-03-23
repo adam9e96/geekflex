@@ -5,8 +5,8 @@
  * - 통합 에러 처리
  */
 import axios from "axios";
-import { getAccessToken, clearTokens, updateAccessToken, saveTokens } from "@utils/auth";
-import { getErrorMessage, logError, getErrorType } from "@utils/errorUtils";
+import { getAccessToken, clearTokens, updateAccessToken } from "@utils/auth";
+import { getErrorMessage } from "@utils/errorUtils";
 
 /**
  * API 베이스 URL (프록시 사용 시 빈 문자열)
@@ -30,6 +30,22 @@ export const publicApi = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+/**
+ * 공개 API 요청 인터셉터 - FormData 처리
+ */
+publicApi.interceptors.request.use(
+  (config) => {
+    // FormData인 경우 Content-Type 제거 (브라우저가 자동 설정)
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 /**
  * 인증이 필요한 API 인스턴스
@@ -93,7 +109,7 @@ authenticatedApi.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 /**
@@ -159,7 +175,7 @@ authenticatedApi.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 /**
@@ -171,7 +187,7 @@ publicApi.interceptors.response.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 /**

@@ -1,0 +1,69 @@
+/* 에러 메시지 스타일 */
+.errorMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+
+  /* Modifiers */
+  &.error {
+    .icon {
+      color: #ef4444;
+    }
+  }
+
+  &.warning {
+    .icon {
+      color: #f59e0b;
+    }
+  }
+
+  &.info {
+    .icon {
+      color: #3b82f6;
+    }
+  }
+}
+
+.icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.text {
+  font-size: var(--font-size-lg);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.backBtn,
+.retryBtn {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  &:hover {
+    box-shadow: 0 4px 12px var(--shadow-accent);
+  }
+}

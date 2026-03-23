@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.interactive {
+  cursor: pointer;
+  touch-action: none;
+}
+
+.starWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.star {
+  color: #d1d5db;
+
+  /* text-gray-600 approx equivalent or lighter for empty star */
+}
+
+/* filled or half-filled */
+.filled {
+  color: var(--color-primary, #f5c518);
+}
+
+.empty {
+  color: var(--text-muted, #666);
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+/* Size classes */
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}

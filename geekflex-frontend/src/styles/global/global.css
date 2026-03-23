@@ -1,0 +1,199 @@
+/* ============================================
+   1. 전역 초기화
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   2. 기본 스타일
+   ============================================ */
+body {
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Tahoma,
+    Geneva,
+    Verdana,
+    sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 컨테이너 */
+.container {
+  width: 100%;
+  padding-right: var(--spacing-md);
+  padding-left: var(--spacing-md);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (width >=576px) {
+  .container {
+    max-width: var(--container-sm);
+  }
+}
+
+@media (width >=768px) {
+  .container {
+    max-width: var(--container-md);
+  }
+}
+
+@media (width >=992px) {
+  .container {
+    max-width: var(--container-lg);
+  }
+}
+
+@media (width >=1200px) {
+  .container {
+    max-width: var(--container-xl);
+  }
+}
+
+@media (width >=1400px) {
+  .container {
+    max-width: var(--container-xxl);
+  }
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+/* ============================================
+   3. 애니메이션 및 트랜지션
+   ============================================ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes highlight {
+  0% {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: rgb(245 197 24 / 30%);
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* 애니메이션 유틸리티 클래스 */
+.animation-fade-in {
+  animation: fade-in var(--transition-fast);
+}
+
+.animation-slide-in-up {
+  animation: slide-in-up var(--transition-normal);
+}
+
+.animation-slide-in-down {
+  animation: slide-in-down var(--transition-normal);
+}
+
+.animation-scale-in {
+  animation: scale-in var(--transition-fast);
+}
+
+.animation-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animation-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animation-highlight {
+  animation: highlight 2s ease-in-out;
+}

@@ -1,0 +1,56 @@
+/* 로그인 링크 섹션 스타일 */
+.loginSection {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  text-align: center;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  width: 100%;
+}
+
+.text {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  transition: all var(--transition-fast);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+
+  /* 밑줄 효과를 위한 가상 요소 */
+  &::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--color-primary);
+    transition: all var(--transition-fast);
+    transform: translateX(-50%);
+  }
+
+  &:hover {
+    color: var(--color-primary-light, #ffd700);
+    text-shadow: 0 0 10px rgb(245 197 24 / 30%);
+    background: rgb(245 197 24 / 5%);
+
+    &::after {
+      width: 100%;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}

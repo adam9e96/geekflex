@@ -1,16 +1,16 @@
 import { create } from "zustand";
-import { getAccessToken } from "@utils/auth";
+import { collectionService } from "@services/collectionService";
 
 /**
  * 컬렉션 페이지 상태 관리 Zustand 스토어
- * 
+ *
  * @param {Object} set - Zustand의 set 함수
  * @param {Object} get - Zustand의 get 함수
  * @returns {Object} 컬렉션 페이지 상태 관리 스토어
- * 
+ *
  * @since 2025-01-XX
  * @description 컬렉션 페이지의 모달 상태, 정렬, 컬렉션 데이터를 관리하는 스토어
- * 
+ *
  * @usage 사용처:
  * - src/pages/CollectionPage.jsx
  */
@@ -95,47 +95,8 @@ export const useCollectionStore = create((set, get) => ({
     set({ isLoadingMy: true, errorMy: null });
 
     try {
-      const accessToken = getAccessToken();
-      if (!accessToken) {
-        set({
-          myCollections: [],
-          errorMy: "로그인이 필요합니다.",
-          isLoadingMy: false,
-        });
-        return;
-      }
-
-      const response = await fetch("/api/v1/collections/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          set({
-            myCollections: [],
-            errorMy: "로그인이 필요합니다.",
-            isLoadingMy: false,
-          });
-        } else {
-          set({
-            myCollections: [],
-            errorMy: `내 컬렉션 데이터를 불러오는데 실패했습니다: ${response.status}`,
-            isLoadingMy: false,
-          });
-        }
-        return;
-      }
-
-      const result = await response.json();
-      console.log("📦 내 컬렉션 목록 응답 데이터:", result);
-
-      const collectionList = result.data || result;
-      const collectionsArray = Array.isArray(collectionList) ? collectionList : [];
+      const collections = await collectionService.fetchMyCollections();
+      const collectionsArray = Array.isArray(collections) ? collections : [];
 
       set({
         myCollections: collectionsArray,
@@ -144,14 +105,9 @@ export const useCollectionStore = create((set, get) => ({
       });
     } catch (error) {
       console.error("내 컬렉션 목록 데이터 로딩 실패:", error);
-      const errorMessage =
-        error.message && error.message.includes("401")
-          ? "로그인이 필요합니다."
-          : error.message || "내 컬렉션 데이터를 불러오는데 실패했습니다.";
-
       set({
         myCollections: [],
-        errorMy: errorMessage,
+        errorMy: error.message,
         isLoadingMy: false,
       });
     }
@@ -168,28 +124,7 @@ export const useCollectionStore = create((set, get) => ({
     set({ isLoadingPublic: true, errorPublic: null });
 
     try {
-      const queryParams = new URLSearchParams({
-        sortBy: params.sortBy,
-        page: params.page.toString(),
-        size: params.size.toString(),
-      });
-
-      const response = await fetch(`/api/v1/collections?${queryParams}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error(`공개 컬렉션 데이터를 불러오는데 실패했습니다: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("📦 공개 컬렉션 목록 응답 데이터:", result);
-
-      const data = result.data || result;
+      const data = await collectionService.fetchPublicCollections(params);
       const content = data.content || (Array.isArray(data) ? data : []);
 
       set({
@@ -204,7 +139,7 @@ export const useCollectionStore = create((set, get) => ({
       console.error("공개 컬렉션 목록 데이터 로딩 실패:", error);
       set({
         publicCollections: [],
-        errorPublic: error.message || "공개 컬렉션 데이터를 불러오는데 실패했습니다.",
+        errorPublic: error.message,
         isLoadingPublic: false,
       });
     }
@@ -213,27 +148,7 @@ export const useCollectionStore = create((set, get) => ({
   // 컬렉션 삭제
   deleteCollection: async (collectionId) => {
     try {
-      const accessToken = getAccessToken();
-      if (!accessToken) {
-        throw new Error("로그인이 필요합니다.");
-      }
-
-      const response = await fetch(`/api/v1/collections/${collectionId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok && response.status !== 204) {
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          errorData.message || errorData.error || "컬렉션 삭제에 실패했습니다.";
-        throw new Error(errorMessage);
-      }
-
+      await collectionService.deleteCollection(collectionId);
       console.log("📦 컬렉션 삭제 성공");
 
       // 삭제 후 목록 새로고침

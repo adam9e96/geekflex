@@ -1,0 +1,48 @@
+/* ReviewList.module.css - List Container Styles */
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+
+  i,
+  svg {
+    color: var(--color-primary);
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  color: #6b7280;
+
+  i,
+  svg {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+}
+
+.listContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

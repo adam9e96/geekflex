@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { authenticatedApi, publicApi, getResponseData, getErrorMessage } from "@services/apiClient";
+import { authenticatedApi, getResponseData, getErrorMessage } from "@services/apiClient";
 
 /**
  * 유저 상세 정보 조회 커스텀 훅
@@ -38,7 +38,7 @@ export const useUserDetail = (publicId) => {
       }
     } catch (err) {
       console.error("유저 상세 정보 조회 실패:", err);
-      
+
       // 404 에러는 유저를 찾을 수 없음
       if (err.response?.status === 404) {
         setError("유저를 찾을 수 없습니다.");
@@ -63,4 +63,3 @@ export const useUserDetail = (publicId) => {
     refetch: fetchUserDetail,
   };
 };
-
