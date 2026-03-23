@@ -38,23 +38,10 @@ spring:
       max-file-size: 10MB
       max-request-size: 20MB
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: adam9e96@gmail.com
-    password: ${GeekFlex_GMAIL_APP_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-
-    auth-code-expiration-millis: 180000
+# Resend 이메일 설정
+resend:
+  api-key: ${RESEND_API_KEY:re_test_key}
+  from-email: "GeekFlex <onboarding@resend.dev>"
 
 # TMDB API 설정
 tmdb:

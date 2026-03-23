@@ -1,15 +1,14 @@
 package com.geekflex.app.auth.service;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Log4j2
@@ -18,12 +17,15 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender emailSender;
+    private final WebClient resendWebClient;
     private final StringRedisTemplate redisTemplate;
+
+    @Value("${resend.from-email:GeekFlex <onboarding@resend.dev>}")
+    private String fromEmail;
 
     private static final long VERIFICATION_CODE_TTL_MINUTES = 5;
 
-    public void sendVerificationCode(String toEmail) throws MessagingException {
+    public void sendVerificationCode(String toEmail) {
         // 1. 인증번호 생성 (6자리 난수)
         String code = generateVerificationCode();
 
@@ -53,39 +55,24 @@ public class EmailService {
     }
 
     private String generateVerificationCode() {
-        return String.valueOf((int) (Math.random() * 900000) + 100000); // 100000 ~ 999999
+        return String.valueOf((int) (Math.random() * 900000) + 100000);
     }
 
-    public void sendEmail(String toEmail, String title, String content) throws MessagingException {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setTo(toEmail);
-        helper.setSubject(title);
-        helper.setText(content, true); // true를 설정해서 HTML을 사용 가능하게 함
-        helper.setReplyTo("qwertyqwerty33j3j@gmail.com"); // 회신 불가능한 주소 설정
+    public void sendEmail(String toEmail, String title, String content) {
+        Map<String, Object> body = Map.of(
+                "from", fromEmail,
+                "to", new String[]{toEmail},
+                "subject", title,
+                "html", content
+        );
 
-        try {
-            emailSender.send(message);
-        } catch (RuntimeException e) {
-            e.printStackTrace(); // 또는 로거를 사용해 상세한 예외 정보 로깅
-            throw new RuntimeException("이메일 전송 수 없음", e);
-        }
-    }
+        String response = resendWebClient.post()
+                .uri("/emails")
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-    // 기존 단순 메일 발송 로직 유지 (필요시)
-    public SimpleMailMessage createEmailForm(String toEmail, String title, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject(title);
-        message.setText(text);
-        return message;
+        log.info("Resend 이메일 전송 완료: to={}, response={}", toEmail, response);
     }
 }
-
-
-
-
-
-
-
-
