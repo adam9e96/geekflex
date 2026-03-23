@@ -18,9 +18,9 @@ public class MovieCacheScheduler {
 
     /**
      * NOW_PLAYING (현재 상영작) 데이터 갱신
-     * 5분마다 0초에 실행 (예: 11:00:00, 11:05:00, 11:10:00...)
+     * 2일마다 새벽 3시 00분 00초에 실행
      */
-    @Scheduled(cron = "0 */5 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 3 */2 * *", zone = "Asia/Seoul")
     public void cacheNowPlayingMovies() {
         log.info("[SCHEDULER] NOW_PLAYING 영화 데이터 캐싱 시작");
         try {
@@ -33,9 +33,9 @@ public class MovieCacheScheduler {
 
     /**
      * POPULAR (인기 영화) 데이터 갱신
-     * 5분마다 10초에 실행 (예: 11:00:10, 11:05:10, 11:10:10...)
+     * 2일마다 새벽 3시 00분 20초에 실행
      */
-    @Scheduled(cron = "10 */5 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "20 0 3 */2 * *", zone = "Asia/Seoul")
     public void cachePopularMovies() {
         log.info("[SCHEDULER] POPULAR 영화 데이터 캐싱 시작");
         try {
@@ -48,9 +48,9 @@ public class MovieCacheScheduler {
 
     /**
      * UPCOMING (개봉 예정) 데이터 갱신
-     * 5분마다 20초에 실행 (예: 11:00:20, 11:05:20, 11:10:20...)
+     * 2일마다 새벽 3시 00분 40초에 실행
      */
-    @Scheduled(cron = "20 */5 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "40 0 3 */2 * *", zone = "Asia/Seoul")
     public void cacheUpcomingMovies() {
         log.info("[SCHEDULER] UPCOMING 영화 데이터 캐싱 시작");
         try {
@@ -63,9 +63,9 @@ public class MovieCacheScheduler {
 
     /**
      * TOP_RATED (인기있는) 데이터 갱신
-     * 5분마다 30초에 실행 (예: 11:00:30, 11:05:30, 11:10:30...)
+     * 2일마다 새벽 3시 01분 00초에 실행
      */
-    @Scheduled(cron = "30 */5 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 1 3 */2 * *", zone = "Asia/Seoul")
     public void cacheTopRatedMovies() {
         log.info("[SCHEDULER] TOP_RATED 영화 데이터 캐싱 시작");
         try {
