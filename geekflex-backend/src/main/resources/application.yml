@@ -40,13 +40,14 @@ spring:
 
 # Resend 이메일 설정
 resend:
-  api-key: ${RESEND_API_KEY:re_test_key}
+  api-key: ${GeekFlex_RESEND_API_KEY:re_test_key}
   from-email: "GeekFlex <onboarding@resend.dev>"
 
 # TMDB API 설정
 tmdb:
   key: ${GeekFlex_TMDB_API_KEY}
   accessToken: ${GeekFlex_TMDB_ACCESS_TOKEN}
+  sync-interval: 24h  # TMDB API 재호출 주기 (이 기간 내에는 캐시된 데이터 사용)
 
 # JWT 설정
 jwt:

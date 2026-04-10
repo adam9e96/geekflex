@@ -9,6 +9,12 @@ spring:
     username: ${MYSQLUSER}
     password: ${MYSQLPASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 1
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-timeout: 5000
 
   # Redis Settings (Railway)
   data:
@@ -20,6 +26,7 @@ spring:
 
   # JPA Settings (배포용)
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: none
     show-sql: false
@@ -27,3 +34,29 @@ spring:
       hibernate:
         format_sql: false
         dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  tomcat:
+    threads:
+      max: 20
+      min-spare: 2
+
+app:
+  logging:
+    aspect:
+      enabled: false
+  scheduler:
+    pool-size: 1
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    root: ERROR
+    com.geekflex: ERROR
+    org.springframework: ERROR
+    org.hibernate: ERROR

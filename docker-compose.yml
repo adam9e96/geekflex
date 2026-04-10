@@ -17,6 +17,7 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     volumes:
       - geekflex_mariadb_data:/var/lib/mysql
+      - ./geekflex-backend/docs/schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
       - ./db_backup/geekflex_Backup.sql:/docker-entrypoint-initdb.d/01-geekflex_Backup.sql:ro
     networks:
       - geekflex-net
