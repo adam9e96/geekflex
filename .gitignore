@@ -12,6 +12,7 @@ uploads/
 db_backup/
 db/.idea/
 docs/포트폴리오/
+geekflex-backend/docs/
 
 # Frontend
 geekflex-frontend/logs/
