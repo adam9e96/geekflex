@@ -1,7 +1,6 @@
 package com.geekflex.app.content.service;
+
 import com.geekflex.app.content.dto.movie.MovieSearchResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

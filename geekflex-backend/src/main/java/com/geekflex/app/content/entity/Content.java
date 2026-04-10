@@ -1,5 +1,5 @@
 package com.geekflex.app.content.entity;
-import com.geekflex.app.content.dto.ContentResponse;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,7 +41,7 @@ public class Content {
     private String title; // 한글 제목
 
     @Column(name = "original_title", length = 200)
-    private String originalTitle; // 원제목 (예: Frankenstein), 한글아닐수있음
+    private String originalTitle; // 원제목
 
     @Column(name = "original_language", length = 10)
     private String originalLanguage; // 원어 코드 (예: en, ko)
@@ -50,19 +50,19 @@ public class Content {
     private String overview; // 줄거리
 
     @Column(name = "release_date")
-    private LocalDate releaseDate; // 개봉일 또는 방영일, MOVIE면 있음
+    private LocalDate releaseDate; // 개봉일 또는 방영일
 
     @Column(name = "end_date")
-    private LocalDate endDate; // 방영 종료일 (TV 시리즈용), MOVIE는 없음
+    private LocalDate endDate; // TV 시리즈 종료일
 
     @Column(name = "poster_url")
-    private String posterUrl; // 포스터 URL
+    private String posterUrl; // 포스터 URL 또는 경로
 
     @Column(name = "backdrop_url")
-    private String backdropUrl; // 배경 이미지 URL
+    private String backdropUrl; // 배경 이미지 URL 또는 경로
 
     @Column(precision = 8, scale = 3)
-    private BigDecimal popularity; // TMDB 인기 지수 (소수점 많음)
+    private BigDecimal popularity; // TMDB 인기 지수
 
     @Column(name = "vote_average", precision = 4, scale = 2)
     private BigDecimal voteAverage; // TMDB 평균 평점
@@ -71,13 +71,16 @@ public class Content {
     private Integer voteCount; // TMDB 투표 수
 
     @Column(length = 100)
-    private String genre; // 장르명액션, 애니메이션, 모험, 가족 등
+    private String genre; // 장르명
 
     @Column(name = "origin_country", length = 50)
     private String originCountry; // 제작 국가
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt; // 생성 시각
+
+    @Column(name = "last_synced_at")
+    private LocalDateTime lastSyncedAt; // TMDB API 마지막 동기화 시각
 
     @OneToMany(mappedBy = "content", fetch = FetchType.LAZY)
     @ToString.Exclude
@@ -88,62 +91,13 @@ public class Content {
         this.createdAt = LocalDateTime.now();
     }
 
-
-    private static final String TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
-    private static final String TMDB_POSTER_SIZE = "w500";
-    private static final String TMDB_BACKDROP_SIZE = "w1280";
-
-    public ContentResponse toDto() {
-        // TMDB 이미지 경로를 전체 URL로 변환
-        String fullPosterUrl = null;
-        if (this.posterUrl != null && !this.posterUrl.isEmpty()) {
-            if (this.posterUrl.startsWith("http")) {
-                // 이미 전체 URL인 경우 그대로 사용
-                fullPosterUrl = this.posterUrl;
-            } else {
-                // 상대 경로인 경우 TMDB 베이스 URL과 결합
-                fullPosterUrl = TMDB_IMAGE_BASE_URL + "/" + TMDB_POSTER_SIZE + this.posterUrl;
-            }
+    /**
+     * 마지막 TMDB 동기화 이후 지정된 주기 이내인지 판단
+     */
+    public boolean isFresh(java.time.Duration syncInterval) {
+        if (lastSyncedAt == null) {
+            return false;
         }
-
-        String fullBackdropUrl = null;
-        if (this.backdropUrl != null && !this.backdropUrl.isEmpty()) {
-            if (this.backdropUrl.startsWith("http")) {
-                // 이미 전체 URL인 경우 그대로 사용
-                fullBackdropUrl = this.backdropUrl;
-            } else {
-                // 상대 경로인 경우 TMDB 베이스 URL과 결합
-                fullBackdropUrl = TMDB_IMAGE_BASE_URL + "/" + TMDB_BACKDROP_SIZE + this.backdropUrl;
-            }
-        }
-
-        return ContentResponse.builder()
-                .id(this.id)
-                .tmdbId(this.tmdbId)
-                .contentType(this.contentType)
-                .title(this.title)
-                .originalTitle(this.originalTitle)
-                .originalLanguage(this.originalLanguage)
-                .overview(this.overview)
-                .releaseDate(this.releaseDate)
-                .endDate(this.endDate)
-                .posterUrl(fullPosterUrl)
-                .backdropUrl(fullBackdropUrl)
-                .popularity(this.popularity)
-                .voteAverage(this.voteAverage)
-                .voteCount(this.voteCount)
-                .genre(this.genre)
-                .originCountry(this.originCountry)
-                .build();
+        return java.time.Duration.between(lastSyncedAt, LocalDateTime.now()).compareTo(syncInterval) < 0;
     }
-
 }
-
-
-
-
-
-
-
-
-

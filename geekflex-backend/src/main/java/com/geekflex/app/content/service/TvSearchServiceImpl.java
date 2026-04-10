@@ -5,21 +5,19 @@ import com.geekflex.app.common.exception.TmdbApiException;
 import com.geekflex.app.content.dto.tmdb.TmdbTvListResponse;
 import com.geekflex.app.content.dto.tv.TvSearchResponse;
 import com.geekflex.app.content.service.tmdb.TmdbApiService;
+import com.geekflex.app.content.service.tmdb.TmdbImageUrlBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientException;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class TvSearchServiceImpl implements TvSearchService {
-
-    private static final String TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
-    private static final String TMDB_POSTER_SIZE = "w500";
-    private static final String TMDB_BACKDROP_SIZE = "w1280";
 
     private final TmdbApiService tmdbApiService;
 
@@ -32,9 +30,50 @@ public class TvSearchServiceImpl implements TvSearchService {
             return List.of();
         }
 
-        return response.getResults().stream()
+        return sortByRelevance(response.getResults(), normalizedKeyword).stream()
                 .map(this::toTvSearchResponse)
                 .toList();
+    }
+
+    private List<TmdbTvListResponse.TvSummary> sortByRelevance(
+            List<TmdbTvListResponse.TvSummary> tvShows,
+            String keyword
+    ) {
+        return tvShows.stream()
+                .sorted(buildSearchComparator(keyword))
+                .toList();
+    }
+
+    private Comparator<TmdbTvListResponse.TvSummary> buildSearchComparator(String keyword) {
+        return Comparator
+                .comparing((TmdbTvListResponse.TvSummary tv) -> exactMatchPriority(tv, keyword))
+                .thenComparing(tv -> startsWithPriority(tv, keyword))
+                .thenComparing(TmdbTvListResponse.TvSummary::getPopularity,
+                        Comparator.nullsLast(Comparator.reverseOrder()));
+    }
+
+    private int exactMatchPriority(TmdbTvListResponse.TvSummary tv, String keyword) {
+        return isExactMatch(tv, keyword) ? 0 : 1;
+    }
+
+    private int startsWithPriority(TmdbTvListResponse.TvSummary tv, String keyword) {
+        return startsWithMatch(tv, keyword) ? 0 : 1;
+    }
+
+    private boolean isExactMatch(TmdbTvListResponse.TvSummary tv, String keyword) {
+        String name = normalize(tv.getName());
+        String originalName = normalize(tv.getOriginalName());
+        return name.equals(keyword) || originalName.equals(keyword);
+    }
+
+    private boolean startsWithMatch(TmdbTvListResponse.TvSummary tv, String keyword) {
+        String name = normalize(tv.getName());
+        String originalName = normalize(tv.getOriginalName());
+        return name.startsWith(keyword) || originalName.startsWith(keyword);
+    }
+
+    private String normalize(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     private String normalizeKeyword(String keyword) {
@@ -70,23 +109,11 @@ public class TvSearchServiceImpl implements TvSearchService {
                 tv.getOriginalName(),
                 tv.getOverview(),
                 tv.getFirstAirDate(),
-                toFullImageUrl(tv.getPosterPath(), true),
-                toFullImageUrl(tv.getBackdropPath(), false),
+                TmdbImageUrlBuilder.poster(tv.getPosterPath()),
+                TmdbImageUrlBuilder.backdrop(tv.getBackdropPath()),
                 tv.getPopularity(),
                 tv.getVoteAverage(),
                 tv.getVoteCount()
         );
-    }
-
-    private String toFullImageUrl(String path, boolean poster) {
-        if (path == null || path.isEmpty()) {
-            return null;
-        }
-        if (path.startsWith("http")) {
-            return path;
-        }
-
-        String size = poster ? TMDB_POSTER_SIZE : TMDB_BACKDROP_SIZE;
-        return TMDB_IMAGE_BASE_URL + "/" + size + path;
     }
 }

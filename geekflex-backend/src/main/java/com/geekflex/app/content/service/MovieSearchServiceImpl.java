@@ -5,6 +5,7 @@ import com.geekflex.app.common.exception.TmdbApiException;
 import com.geekflex.app.content.dto.movie.MovieSearchResponse;
 import com.geekflex.app.content.dto.tmdb.TmdbMovieListResponse;
 import com.geekflex.app.content.service.tmdb.TmdbApiService;
+import com.geekflex.app.content.service.tmdb.TmdbImageUrlBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 public class MovieSearchServiceImpl implements MovieSearchService {
-
-    private static final String TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
-    private static final String TMDB_POSTER_SIZE = "w500";
-    private static final String TMDB_BACKDROP_SIZE = "w1280";
 
     private final TmdbApiService tmdbApiService;
 
@@ -112,23 +109,11 @@ public class MovieSearchServiceImpl implements MovieSearchService {
                 movie.getOriginalTitle(),
                 movie.getOverview(),
                 movie.getReleaseDate(),
-                toFullImageUrl(movie.getPosterPath(), true),
-                toFullImageUrl(movie.getBackdropPath(), false),
+                TmdbImageUrlBuilder.poster(movie.getPosterPath()),
+                TmdbImageUrlBuilder.backdrop(movie.getBackdropPath()),
                 movie.getPopularity(),
                 movie.getVoteAverage(),
                 movie.getVoteCount()
         );
-    }
-
-    private String toFullImageUrl(String path, boolean poster) {
-        if (path == null || path.isEmpty()) {
-            return null;
-        }
-        if (path.startsWith("http")) {
-            return path;
-        }
-
-        String size = poster ? TMDB_POSTER_SIZE : TMDB_BACKDROP_SIZE;
-        return TMDB_IMAGE_BASE_URL + "/" + size + path;
     }
 }

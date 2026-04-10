@@ -1,4 +1,5 @@
 package com.geekflex.app.content.service;
+
 import com.geekflex.app.content.dto.tmdb.TmdbMovieDetailResponse;
 import com.geekflex.app.content.dto.tmdb.TmdbTvDetailResponse;
 import com.geekflex.app.content.entity.Content;
@@ -6,10 +7,13 @@ import com.geekflex.app.content.entity.ContentType;
 import com.geekflex.app.content.repository.ContentRepository;
 import com.geekflex.app.content.service.factory.ContentFactory;
 import com.geekflex.app.content.service.tmdb.TmdbApiService;
+import com.geekflex.app.content.service.tmdb.TmdbDetailCache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -19,35 +23,40 @@ public class ContentCacheManager {
     private final ContentRepository contentRepository;
     private final TmdbApiService tmdbApiService;
     private final ContentFactory contentFactory;
+    private final TmdbDetailCache tmdbDetailCache;
 
     public Content getOrCreate(Long tmdbId, ContentType type) {
-        // 1. tmdbId 로 먼저 조회
-        return contentRepository.findByTmdbId(tmdbId)
+        return contentRepository.findByTmdbIdAndContentType(tmdbId, type)
                 .orElseGet(() -> {
-                    // 2. 없으면 contentType 에 맞는 TMDB 상세 정보로 Content 생성
-                    Content content;
+                            Content content;
 
-                    if (type == ContentType.MOVIE) {
-                        TmdbMovieDetailResponse detail = tmdbApiService.getMovieDetails(tmdbId);
-                        content = contentFactory.fromTmdbDetail(detail, type);
-                    } else if (type == ContentType.TV) {
-                        TmdbTvDetailResponse detail = tmdbApiService.getTvDetails(tmdbId);
-                        content = contentFactory.fromTmdbTvDetail(detail, type);
-                    } else {
-                        log.warn("지원하지 않는 ContentType: {}", type);
-                        throw new IllegalArgumentException("지원하지 않는 ContentType: " + type);
-                    }
+                            if (type == ContentType.MOVIE) {
+                                TmdbMovieDetailResponse detail = tmdbApiService.getMovieDetails(tmdbId);
+                                content = contentFactory.fromTmdbDetail(detail, type);
+                                // TMDB 응답을 캐시에 저장하여 ContentServiceImpl에서 이중 API 호출 방지
+                                tmdbDetailCache.putMovieDetail(tmdbId, detail);
+                            } else if (type == ContentType.TV) {
+                                TmdbTvDetailResponse detail = tmdbApiService.getTvDetails(tmdbId);
+                                content = contentFactory.fromTmdbTvDetail(detail, type);
+                                tmdbDetailCache.putTvDetail(tmdbId, detail);
+                            } else {
+                                log.warn("지원하지 않는 ContentType: {}", type);
+                                throw new IllegalArgumentException("지원하지 않는 ContentType: " + type);
+                            }
 
-                    // 3. 새 Content 저장 (id = PK, tmdbId 도 컬럼에 함께 저장)
-                    try {
-                        return contentRepository.save(content);
-                    } catch (DataIntegrityViolationException e) {
-                        // 동시 요청으로 이미 다른 트랜잭션이 동일 tmdbId/type 를 INSERT 한 경우
-                        log.warn("동시성으로 인한 중복 INSERT 감지 - tmdbId={}, type={}", tmdbId, type, e);
-                        return contentRepository.findByTmdbId(tmdbId)
-                                .orElseThrow(() -> e);
-                    }
-                });
+                            // 동기화 시각 설정 → ContentServiceImpl의 freshness 체크에서 API 스킵됨
+                            content.setLastSyncedAt(LocalDateTime.now());
+
+                            try {
+                                return contentRepository.save(content);
+                            } catch (DataIntegrityViolationException e) {
+                                log.warn("동시성으로 인한 중복 INSERT 감지 - tmdbId={}, type={}",
+                                        tmdbId, type, e);
+                                return contentRepository.findByTmdbIdAndContentType(tmdbId, type)
+                                        .orElseThrow(() -> e);
+                            }
+                        }
+                );
     }
 }
 

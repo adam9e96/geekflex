@@ -10,6 +10,11 @@ import java.util.List;
 
 public interface ContentService {
     List<ContentResponse> getContentsByTagType(TagType tagType);
+
+    ContentResponse getRandomContent();
+
+    List<ContentResponse> getRandomContentSuggestions();
+
     /**
      * TMDB_ID로 콘텐츠를 조회하되, 없으면 TMDB에서 받아서 DB에 저장 후 반환
      * → 리뷰 작성 시 필수 기능
