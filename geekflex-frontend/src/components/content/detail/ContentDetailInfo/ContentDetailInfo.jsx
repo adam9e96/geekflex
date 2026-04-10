@@ -112,7 +112,7 @@ const ContentDetailInfo = ({ content, contentType = "movie", genres, likeCount }
       <div className={styles.actions}>
         <button
           className={styles.ratingBtn}
-          onClick={() => openRatingModal({ contentId: id, dbId: dbId })}
+          onClick={() => openRatingModal({ contentId: dbId })}
         >
           <i className="fas fa-star"></i>
           평점만 매기기

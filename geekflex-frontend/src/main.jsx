@@ -29,7 +29,7 @@ import AdminPage from "@pages/admin/AdminPage/AdminPage.jsx";
 import Privacy from "@pages/legal/Privacy/Privacy.jsx";
 import Terms from "@pages/legal/Terms/Terms.jsx";
 import About from "@pages/legal/About/About.jsx";
-import MoviesCategoryPage from "@pages/content/MoviesCategoryPage/MoviesCategoryPage.jsx";
+import MoviesCategoryPage from "@pages/content/MoviesCategoryPage/MoviesCategoryPage.jsx";import TvCategoryPage from "@pages/content/TvCategoryPage/TvCategoryPage.jsx";
 import CollectionPage from "@pages/content/CollectionPage/CollectionPage.jsx";
 import CollectionDetailPage from "@pages/content/CollectionDetailPage/CollectionDetailPage.jsx";
 import UserDetailPage from "@pages/user/UserDetailPage/UserDetailPage.jsx";
@@ -84,6 +84,9 @@ createRoot(document.getElementById("root")).render(
 
             {/* 영화 카테고리 페이지 */}
             <Route path="movies/:category" element={<MoviesCategoryPage />} />
+
+            {/* 드라마 카테고리 페이지 */}
+            <Route path="tv-list/:category" element={<TvCategoryPage />} />
 
             {/* 영화 상세 페이지 */}
             <Route path="movie/:id" element={<ContentDetail />} />

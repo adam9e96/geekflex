@@ -28,8 +28,7 @@ export const useReviewStore = create((set) => ({
   // 평점 모달
   ratingModal: {
     isOpen: false,
-    contentId: null, // TMDB ID (API 호출용)
-    dbId: null, // DB ID (리뷰 목록 갱신용)
+    contentId: null, // DB Content PK (리뷰 생성 API용)
     onSuccess: null,
   },
 
@@ -243,12 +242,11 @@ export const useReviewStore = create((set) => ({
     }),
 
   // 평점 모달 액션
-  openRatingModal: ({ contentId, dbId, onSuccess }) =>
+  openRatingModal: ({ contentId, onSuccess }) =>
     set({
       ratingModal: {
         isOpen: true,
         contentId,
-        dbId,
         onSuccess,
       },
     }),
@@ -258,7 +256,7 @@ export const useReviewStore = create((set) => ({
       ratingModal: {
         ...state.ratingModal,
         isOpen: false,
-        onSuccess: null, // 닫을 때 콜백 초기화
+        onSuccess: null,
       },
     })),
 

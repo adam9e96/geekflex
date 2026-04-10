@@ -18,7 +18,7 @@ const RatingModal = () => {
 
   const { createReview, fetchReviews, ratingModal, closeRatingModal } = useReviewStore();
 
-  const { isOpen, contentId, dbId, onSuccess } = ratingModal;
+  const { isOpen, contentId, onSuccess } = ratingModal;
 
   // 모달이 열릴 때 초기화
   useEffect(() => {
@@ -39,7 +39,7 @@ const RatingModal = () => {
     try {
       const requestBody = {
         rating: rating,
-        reviewType: "SHORT", // SHORT 타입으로 전송
+        reviewType: "SHORT",
         comment: null,
       };
 
@@ -51,9 +51,9 @@ const RatingModal = () => {
       // 모달 닫기
       closeRatingModal();
 
-      // 리뷰 목록 업데이트 (Store 사용)
-      if (dbId) {
-        await fetchReviews(dbId);
+      // 리뷰 목록 업데이트
+      if (contentId) {
+        await fetchReviews(contentId);
       }
 
       // 기존 콜백 지원

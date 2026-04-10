@@ -317,7 +317,7 @@ const TvDetailInfo = ({ content, onReviewSuccess, genres, likeCount }) => {
       <div className={styles.actions}>
         <button
           className={styles.ratingBtn}
-          onClick={() => openRatingModal({ contentId: id, dbId: dbId, onSuccess: onReviewSuccess })}
+          onClick={() => openRatingModal({ contentId: dbId, onSuccess: onReviewSuccess })}
         >
           <i className="fas fa-star"></i>
           평점만 매기기

@@ -17,7 +17,7 @@ import styles from "./ReviewWriteForm.module.css";
  * @param {number|string} props.contentId - Content ID (Store 갱신용)
  * @reviewed 2026-01-23 - 검토 완료
  */
-const ReviewWriteForm = ({ tmdbId, contentId }) => {
+const ReviewWriteForm = ({ contentId }) => {
   // 로컬 상태 관리 (폼 입력)
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -29,14 +29,14 @@ const ReviewWriteForm = ({ tmdbId, contentId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!tmdbId || !rating || !comment.trim()) return;
+    if (!contentId || !rating || !comment.trim()) return;
 
     setIsSubmitting(true);
     setSubmitError(null);
 
     try {
       // Store Action 호출
-      await createReview(tmdbId, {
+      await createReview(contentId, {
         rating,
         comment,
       });
@@ -45,10 +45,8 @@ const ReviewWriteForm = ({ tmdbId, contentId }) => {
       setRating(0);
       setComment("");
 
-      // Store를 통해 리뷰 목록 갱신
-      if (contentId) {
-        await fetchReviews(contentId);
-      }
+      // 리뷰 목록 갱신
+      await fetchReviews(contentId);
     } catch (error) {
       console.error("리뷰 제출 에러:", error);
       setSubmitError(error.message || "리뷰 등록에 실패했습니다.");
@@ -140,7 +138,6 @@ const ReviewWriteForm = ({ tmdbId, contentId }) => {
 };
 
 ReviewWriteForm.propTypes = {
-  tmdbId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   contentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 

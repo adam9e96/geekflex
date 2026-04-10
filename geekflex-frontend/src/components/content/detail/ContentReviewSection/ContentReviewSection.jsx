@@ -8,7 +8,7 @@ import styles from "./ContentReviewSection.module.css";
 /**
  * 콘텐츠 리뷰 섹션 컴포넌트
  */
-const ContentReviewSection = ({ tmdbId, contentId }) => {
+const ContentReviewSection = ({ contentId }) => {
   return (
     <div className={styles.section}>
       <h2 className={styles.title}>
@@ -17,7 +17,7 @@ const ContentReviewSection = ({ tmdbId, contentId }) => {
       </h2>
 
       {/* 리뷰 작성 폼 */}
-      <ReviewWriteForm tmdbId={tmdbId} contentId={contentId} />
+      <ReviewWriteForm contentId={contentId} />
 
       {/* 리뷰 목록 */}
       <div className={styles.listContainer}>
@@ -28,7 +28,6 @@ const ContentReviewSection = ({ tmdbId, contentId }) => {
 };
 
 ContentReviewSection.propTypes = {
-  tmdbId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 

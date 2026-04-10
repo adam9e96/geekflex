@@ -137,6 +137,18 @@ export const useCollectionStore = create((set, get) => ({
       });
     } catch (error) {
       console.error("공개 컬렉션 목록 데이터 로딩 실패:", error);
+      if (error.response?.status === 404) {
+        set({
+          publicCollections: [],
+          publicTotalElements: 0,
+          publicTotalPages: 0,
+          publicPage: params.page,
+          isLoadingPublic: false,
+          errorPublic: null,
+        });
+        return;
+      }
+
       set({
         publicCollections: [],
         errorPublic: error.message,

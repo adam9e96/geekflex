@@ -132,6 +132,14 @@ const WriteReview = () => {
         return;
       }
 
+      // DB contentId 확인
+      const dbContentId = content?.contentId;
+      if (!dbContentId) {
+        setSubmitError("콘텐츠 정보를 불러오지 못했습니다. 새로고침 후 다시 시도해주세요.");
+        setIsSubmitting(false);
+        return;
+      }
+
       // FormData 생성
       const formData = new FormData();
       formData.append("rating", rating);
@@ -171,7 +179,7 @@ const WriteReview = () => {
         imageCount: uploadedImages.length,
       });
 
-      const response = await fetch(`/api/v1/reviews/${id}`, {
+      const response = await fetch(`/api/v1/reviews/${dbContentId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,

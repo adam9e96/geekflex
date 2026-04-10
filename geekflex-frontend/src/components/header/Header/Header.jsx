@@ -1,12 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { FaFilm, FaSearch, FaUserPlus, FaSignInAlt, FaSignOutAlt, FaBell } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  FaFilm,
+  FaTv,
+  FaSearch,
+  FaRandom,
+  FaUserPlus,
+  FaSignInAlt,
+  FaSignOutAlt,
+  FaBell,
+} from "react-icons/fa";
 import { useAuthStore } from "@stores/authStore";
 import { useProfileImage } from "@hooks/user/useProfileImage";
 import { useLogout } from "@hooks/auth/useLogout";
 import { useScroll } from "@hooks/useScroll";
-import { MOVIE_DROPDOWN_ITEMS, MAIN_NAV_ITEMS } from "@constants/navigation";
+import { MOVIE_DROPDOWN_ITEMS, TV_DROPDOWN_ITEMS, MAIN_NAV_ITEMS } from "@constants/navigation";
+import { getRandomContent } from "@services/contentService";
 import HeaderProfile from "../HeaderProfile/HeaderProfile";
 import styles from "./Header.module.css";
 
@@ -17,6 +27,8 @@ import styles from "./Header.module.css";
  * - onSearchClick: 통합검색 버튼 클릭 핸들러 (Layout의 handleSearchClick)
  */
 const Header = ({ onNavClick, onSearchClick }) => {
+  const navigate = useNavigate();
+  const [isRandomLoading, setIsRandomLoading] = React.useState(false);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userProfile = useAuthStore((state) => state.userProfile);
 
@@ -37,6 +49,28 @@ const Header = ({ onNavClick, onSearchClick }) => {
   const handleSearchClick = () => {
     if (onSearchClick) {
       onSearchClick();
+    }
+  };
+
+  const handleRandomClick = async () => {
+    if (isRandomLoading) return;
+
+    setIsRandomLoading(true);
+    try {
+      const content = await getRandomContent();
+      const tmdbId = content.tmdbId;
+      const contentType = content.contentType?.toUpperCase();
+
+      if (!tmdbId) {
+        throw new Error("랜덤 작품에 TMDB ID가 없습니다.");
+      }
+
+      navigate(contentType === "TV" ? `/tv/${tmdbId}` : `/movie/${tmdbId}`);
+    } catch (error) {
+      console.error("랜덤 작품 이동 실패:", error);
+      window.alert("랜덤 작품을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsRandomLoading(false);
     }
   };
 
@@ -86,6 +120,30 @@ const Header = ({ onNavClick, onSearchClick }) => {
                 })}
               </ul>
             </li>
+            {/* 드라마 드롭다운 메뉴 */}
+            <li className={styles.dropdown}>
+              <button className={styles.link} aria-haspopup="true" aria-expanded="false">
+                <FaTv />
+                <span>드라마</span>
+              </button>
+              <ul className={styles.menu}>
+                {TV_DROPDOWN_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.category}>
+                      <Link
+                        to={item.path}
+                        className={styles.dropdownLink}
+                        onClick={() => handleNavClick(item.category)}
+                      >
+                        <Icon />
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
             {/* 기타 메뉴 아이템 */}
             {MAIN_NAV_ITEMS.map((item) => {
               const Icon = item.icon;
@@ -116,6 +174,18 @@ const Header = ({ onNavClick, onSearchClick }) => {
           >
             <FaSearch />
             <span>통합검색</span>
+          </button>
+
+          <button
+            className={styles.randomBtn}
+            title="랜덤 작품"
+            aria-label="랜덤 작품"
+            onClick={handleRandomClick}
+            disabled={isRandomLoading}
+            type="button"
+          >
+            <FaRandom />
+            <span>{isRandomLoading ? "선택 중" : "랜덤 작품"}</span>
           </button>
 
           {/* 로그인 상태에 따라 버튼 표시 */}

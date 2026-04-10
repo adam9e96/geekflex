@@ -181,10 +181,7 @@ const TvDetail = () => {
 
         <section className={styles.reviews}>
           <ContentReviewSection
-            tmdbId={id}
             contentId={contentId}
-            isLoggedIn={isAuthenticated}
-            refreshTrigger={reviewRefreshTrigger}
           />
         </section>
       </div>

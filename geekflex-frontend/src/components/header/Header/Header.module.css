@@ -325,6 +325,7 @@
     flex-shrink: 0;
 
     .searchBtn,
+    .randomBtn,
     .notificationBtn {
       display: flex;
       align-items: center;
@@ -381,6 +382,12 @@
     }
 
     .searchBtn span {
+      @media (width <=1024px) {
+        display: none;
+      }
+    }
+
+    .randomBtn span {
       @media (width <=1024px) {
         display: none;
       }

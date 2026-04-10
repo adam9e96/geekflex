@@ -2,6 +2,14 @@ import { authenticatedApi, publicApi, getResponseData } from "@services/apiClien
 
 const COLLECTION_API_BASE = "/api/v1/collections";
 
+const createEmptyCollectionPage = (page, size) => ({
+  content: [],
+  totalElements: 0,
+  totalPages: 0,
+  number: page,
+  size,
+});
+
 /**
  * 컬렉션 서비스
  * 컬렉션 관련 API 호출을 담당합니다.
@@ -20,14 +28,22 @@ export const collectionService = {
    * @param {Object} params - { sortBy, page, size }
    */
   fetchPublicCollections: async ({ sortBy = "latest", page = 0, size = 20 } = {}) => {
-    const response = await publicApi.get(COLLECTION_API_BASE, {
-      params: {
-        sortBy,
-        page,
-        size,
-      },
-    });
-    return getResponseData(response);
+    try {
+      const response = await publicApi.get(COLLECTION_API_BASE, {
+        params: {
+          sortBy,
+          page,
+          size,
+        },
+      });
+      return getResponseData(response);
+    } catch (error) {
+      if (error.response?.status === 404) {
+        return createEmptyCollectionPage(page, size);
+      }
+
+      throw error;
+    }
   },
 
   /**

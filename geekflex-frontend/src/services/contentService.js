@@ -18,3 +18,23 @@ export const getContentDetail = async (tmdbId, contentType = "movie") => {
 
   return getResponseData(response);
 };
+
+/**
+ * 저장된 콘텐츠 중 랜덤 작품 1개를 조회
+ * @returns {Promise<Object>} 랜덤 콘텐츠 정보
+ */
+export const getRandomContent = async () => {
+  const response = await publicApi.get("/api/v1/contents/random");
+
+  return getResponseData(response);
+};
+
+/**
+ * 검색 제안으로 사용할 랜덤 콘텐츠 4개를 조회
+ * @returns {Promise<Array>} 랜덤 콘텐츠 목록
+ */
+export const getRandomContentSuggestions = async () => {
+  const response = await publicApi.get("/api/v1/contents/random-suggestions");
+
+  return getResponseData(response);
+};

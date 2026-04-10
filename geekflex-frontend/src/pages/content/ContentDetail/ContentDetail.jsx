@@ -189,7 +189,7 @@ const ContentDetail = () => {
         </section>
 
         <section className={styles.reviews}>
-          <ContentReviewSection tmdbId={id} contentId={contentId} />
+          <ContentReviewSection contentId={contentId} />
         </section>
       </div>
 

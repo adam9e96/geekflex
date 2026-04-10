@@ -1,4 +1,4 @@
-import { FaFire, FaCalendarAlt, FaStar, FaPlayCircle, FaBookmark } from "react-icons/fa";
+import { FaFire, FaCalendarAlt, FaStar, FaPlayCircle, FaBookmark, FaTv } from "react-icons/fa";
 
 // 2026.02.03 검토완료
 export const MOVIE_DROPDOWN_ITEMS = [
@@ -25,6 +25,33 @@ export const MOVIE_DROPDOWN_ITEMS = [
     category: "now-playing",
     label: "현재 상영중인",
     icon: FaPlayCircle,
+  },
+];
+
+export const TV_DROPDOWN_ITEMS = [
+  {
+    path: "/tv-list/popular",
+    category: "popular",
+    label: "인기 드라마",
+    icon: FaFire,
+  },
+  {
+    path: "/tv-list/on-the-air",
+    category: "on-the-air",
+    label: "방영 중",
+    icon: FaPlayCircle,
+  },
+  {
+    path: "/tv-list/top-rated",
+    category: "top-rated",
+    label: "최고평점",
+    icon: FaStar,
+  },
+  {
+    path: "/tv-list/airing-today",
+    category: "airing-today",
+    label: "오늘 방영",
+    icon: FaCalendarAlt,
   },
 ];
 
