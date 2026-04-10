@@ -1,6 +1,7 @@
 package com.geekflex.app.user.service;
 
 import com.geekflex.app.auth.service.RefreshTokenService;
+import com.geekflex.app.collection.service.CollectionService;
 import com.geekflex.app.common.exception.CannotChangePasswordException;
 import com.geekflex.app.common.exception.CurrentPasswordRequiredException;
 import com.geekflex.app.common.exception.DuplicateEmailException;
@@ -8,13 +9,9 @@ import com.geekflex.app.common.exception.DuplicateNicknameException;
 import com.geekflex.app.common.exception.DuplicateUserIdException;
 import com.geekflex.app.common.exception.IncorrectCurrentPasswordException;
 import com.geekflex.app.common.exception.UserNotFoundException;
-import com.geekflex.app.user.dto.UserDeleteRequest;
-import com.geekflex.app.user.dto.UserIdCheckResponse;
-import com.geekflex.app.user.dto.UserInfoResponse;
-import com.geekflex.app.user.dto.UserJoinRequest;
-import com.geekflex.app.user.dto.UserProfileResponse;
-import com.geekflex.app.user.dto.UserSummaryResponse;
-import com.geekflex.app.user.dto.UserUpdateRequest;
+import com.geekflex.app.review.dto.UserReviewStatsDto;
+import com.geekflex.app.review.service.ReviewQueryService;
+import com.geekflex.app.user.dto.*;
 import com.geekflex.app.user.entity.User;
 import com.geekflex.app.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +42,11 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
+    private final ReviewQueryService reviewQueryService;
+    private final CollectionService collectionService;
 
     @Override
+    @Transactional
     public User saveUser(User user) {
         return userRepository.save(user);
     }
@@ -159,17 +159,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileResponse getUserProfileByPublicId(String publicId) {
-        User user = userRepository.findByPublicId(publicId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    @Transactional
+    public UserDetailResponse signup(UserJoinRequest joinRequest, MultipartFile profileImage) throws IOException {
+        User savedUser = registerUser(joinRequest);
 
-        return UserProfileResponse.builder()
-                .publicId(publicId)
-                .nickname(user.getNickname())
-                .bio(user.getBio())
-                .profileImage(user.getProfileImage())
-                .joinedAt(user.getJoinedAt())
-                .build();
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String imagePath = uploadProfileImage(savedUser, profileImage);
+            savedUser.setProfileImage(imagePath);
+            userRepository.save(savedUser);
+        }
+
+        return UserDetailResponse.from(savedUser);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserProfileResponse getUserProfileWithStats(String publicId) {
+        User user = findUserByPublicId(publicId);
+        UserProfileResponse response = UserProfileResponse.from(user);
+        response.setUserReviewStats(reviewQueryService.getUserReviewStats(publicId));
+        return response;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserInfoDetailResponse getUserInfoDetail(String publicId) {
+        User user = findUserByPublicId(publicId);
+        UserReviewStatsDto reviewStats = reviewQueryService.getUserReviewStats(publicId);
+        var reviews = reviewQueryService.getUserReviewsByPublicId(publicId);
+        var collections = collectionService.getUserCollections(publicId, null);
+        return UserInfoDetailResponse.from(user, reviewStats, reviews, collections);
+    }
+
+    private User findUserByPublicId(String publicId) {
+        return userRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
     @Override
@@ -330,19 +354,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserIdCheckResponse unavailableUserIdResponse(String userId, String message) {
-        return UserIdCheckResponse.builder()
-                .userId(userId)
-                .available(false)
-                .message(message)
-                .build();
+        return UserIdCheckResponse.of(userId, false, message);
     }
 
     private UserIdCheckResponse availableUserIdResponse(String userId) {
-        return UserIdCheckResponse.builder()
-                .userId(userId)
-                .available(true)
-                .message("사용 가능한 아이디입니다.")
-                .build();
+        return UserIdCheckResponse.of(userId, true, "사용 가능한 아이디입니다.");
     }
 
     private void validateRegistrationRequest(UserJoinRequest joinRequest) {

@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 
@@ -29,6 +30,7 @@ public class AuthService {
     private final UserIpLogService userIpLogService;
     private final UserService userService;
 
+    @Transactional
     public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
         UserDetails userDetails = authenticate(loginRequest);
 
@@ -39,9 +41,7 @@ public class AuthService {
         attachRefreshTokenCookie(response, refreshToken, REFRESH_TOKEN_DAYS);
         logLoginIp(userDetails.getUsername(), request);
 
-        return LoginResponse.builder()
-                .accessToken(accessToken)
-                .build();
+        return LoginResponse.of(accessToken);
     }
 
     public void deleteRefreshTokenCookie(HttpServletResponse response) {

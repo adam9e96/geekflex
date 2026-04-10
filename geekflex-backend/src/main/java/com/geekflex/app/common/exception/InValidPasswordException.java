@@ -1,6 +1,6 @@
 package com.geekflex.app.common.exception;
-public class InValidPasswordException extends RuntimeException {
-    public InValidPasswordException(String message) {
+public class InvalidPasswordException extends RuntimeException {
+    public InvalidPasswordException(String message) {
         super(message);
     }
 }

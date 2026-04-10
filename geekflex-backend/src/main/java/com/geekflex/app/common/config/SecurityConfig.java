@@ -80,6 +80,8 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/v1/reviews/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
+                        // Swagger UI
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated() // 기 외 모든 요청은 인증 필요
                 )
                 // 요청마다 JWT로 인증

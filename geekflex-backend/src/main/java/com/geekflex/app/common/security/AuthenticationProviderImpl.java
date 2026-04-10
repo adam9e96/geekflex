@@ -42,22 +42,12 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-//        log.info("1. AuthenticationProviderImpl - 로그인 인증 시도");
-
-        // 1) 로그인 시도 시 전달받은 ID/PW 추출
         String userName = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
-//        log.info("로그인 요청 username={}", userName); // 보안: 비밀번호는 로그에 출력하지 않음
 
-        // 2) UserDetailsService 를 통해 UserDetails 로딩
         UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-//        log.info("4. loadUserByUsername() 완료 → DB에서 사용자 조회 성공");
 
-        // 3) PasswordEncoder 로 비밀번호 일치 여부 확인
         if (passwordEncoder.matches(password, userDetails.getPassword())) {
-//            log.info("비밀번호 일치 → 로그인 성공!");
-
-            // 4) 인증 완료된 Authentication 생성
             return new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,

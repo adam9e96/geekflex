@@ -13,7 +13,7 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    // 저장 또는 갱신
+    @Transactional
     public void saveOrUpdate(String username, String newToken, long daysToExpire) {
         LocalDateTime expiry = LocalDateTime.now().plusDays(daysToExpire);
 

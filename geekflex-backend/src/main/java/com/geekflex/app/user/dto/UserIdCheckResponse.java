@@ -26,6 +26,14 @@ public class UserIdCheckResponse {
      * 메시지
      */
     private String message;
+
+    public static UserIdCheckResponse of(String userId, boolean available, String message) {
+        return UserIdCheckResponse.builder()
+                .userId(userId)
+                .available(available)
+                .message(message)
+                .build();
+    }
 }
 
 

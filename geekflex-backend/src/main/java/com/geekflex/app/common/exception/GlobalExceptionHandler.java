@@ -37,21 +37,21 @@ public class GlobalExceptionHandler {
     // 회원가입 - 아이디 중복 커스텀 예외 처리
     @ExceptionHandler(DuplicateUserIdException.class)
     public ResponseEntity<ApiResponse<?>> handleDuplicateUserId(DuplicateUserIdException ex) {
-        return ResponseEntity.status(409)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage(), Map.of("field", "userId")));
     }
 
     // 회원가입 - 이메일 중복 커스텀 예외 처리
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ApiResponse<?>> handleDuplicateEmail(DuplicateEmailException ex) {
-        return ResponseEntity.status(409)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage(), Map.of("field", "userEmail")));
     }
 
     // 회원가입 - 닉네임 중복 커스텀 예외 처리
     @ExceptionHandler(DuplicateNicknameException.class)
     public ResponseEntity<ApiResponse<Void>> handleDuplicateNickname(DuplicateNicknameException ex) {
-        return ResponseEntity.status(409).body(
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ApiResponse.error(ex.getMessage(), Map.of("field", "nickname"))
         );
     }
@@ -59,36 +59,36 @@ public class GlobalExceptionHandler {
     // 소셜 로그인 사용자는 비밀번호 변경 불가
     @ExceptionHandler(CannotChangePasswordException.class)
     public ResponseEntity<ApiResponse<Void>> handleCannotChangePassword(CannotChangePasswordException ex) {
-        return ResponseEntity.status(409).body(
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ApiResponse.error(ex.getMessage(), Map.of("field", "password"))
         );
     }
 
     @ExceptionHandler(CurrentPasswordRequiredException.class)
     public ResponseEntity<ApiResponse<Void>> handleCurrentPasswordRequiredException(CurrentPasswordRequiredException ex) {
-        return ResponseEntity.status(409).body(
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ApiResponse.error(ex.getMessage(), Map.of("field", "password"))
         );
     }
 
     @ExceptionHandler(IncorrectCurrentPasswordException.class)
     public ResponseEntity<ApiResponse<Void>> handleIncorrectCurrentPasswordException(IncorrectCurrentPasswordException ex) {
-        return ResponseEntity.status(409).body(
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ApiResponse.error(ex.getMessage(), Map.of("field", "password"))
         );
     }
 
-    @ExceptionHandler(InValidPasswordException.class)
-    public ResponseEntity<ApiResponse<Void>> handleInValidPasswordException(InValidPasswordException ex) {
-        return ResponseEntity.status(409).body(
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidPasswordException(InvalidPasswordException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ApiResponse.error(ex.getMessage(), Map.of("field", "password"))
         );
     }
 
+    // 리뷰 - 중복 리뷰 커스텀 예외 처리
     @ExceptionHandler(DuplicateReviewException.class)
-// 리뷰 - 중복 리뷰 커스텀 예외 처리
     public ResponseEntity<ApiResponse<?>> handleDuplicateReview(DuplicateReviewException ex) {
-        return ResponseEntity.status(409).body(ApiResponse.error(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error(ex.getMessage()));
     }
 
     /**
@@ -210,7 +210,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SocialLoginOnlyException.class)
     public ResponseEntity<ApiResponse<Void>> handleSocialLoginOnly(SocialLoginOnlyException ex) {
-        return ResponseEntity.status(400).body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ApiResponse.error(ex.getMessage(), null)
         );
     }
@@ -231,7 +231,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateCollectionItemException.class)
     public ResponseEntity<ApiResponse<?>> handleDuplicateCollectionItem(DuplicateCollectionItemException ex) {
-        return ResponseEntity.status(409)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage(), Map.of("field", "contentId")));
     }
 

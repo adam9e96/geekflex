@@ -9,6 +9,7 @@ import com.geekflex.app.auth.service.AuthService;
 import com.geekflex.app.auth.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,19 +77,17 @@ public class AuthController {
         String newAccessToken = jwtTokenProvider.generateAccessToken(username);
 
         // refreshToken은 쿠키에 이미 있으므로 DTO에 포함하지 않음
-        return ResponseEntity.ok(LoginResponse.builder()
-                .accessToken(newAccessToken)
-                .build());
+        return ResponseEntity.ok(LoginResponse.of(newAccessToken));
     }
 
     @PostMapping("/email/send")
-    public ResponseEntity<Void> sendVerificationEmail(@RequestBody EmailRequest emailRequest) {
+    public ResponseEntity<Void> sendVerificationEmail(@Valid @RequestBody EmailRequest emailRequest) {
         emailService.sendVerificationCode(emailRequest.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/email/verify")
-    public ResponseEntity<Boolean> verifyEmail(@RequestBody EmailVerificationRequest verificationRequest) {
+    public ResponseEntity<Boolean> verifyEmail(@Valid @RequestBody EmailVerificationRequest verificationRequest) {
         boolean isVerified = emailService.verifyCode(verificationRequest.getEmail(), verificationRequest.getCode());
         return ResponseEntity.ok(isVerified);
     }

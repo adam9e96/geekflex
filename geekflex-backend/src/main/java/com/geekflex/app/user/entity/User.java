@@ -46,7 +46,7 @@ public class User {
     @Column(name = "user_email", length = 100, nullable = false, unique = true)
     private String userEmail; // 이메일
 
-    @Column(name = "profile_image", length = 255)
+    @Column(name = "profile_image")
     private String profileImage; // 프로필 이미지
 
     @Column(length = 300)
@@ -61,7 +61,7 @@ public class User {
     @Column(name = "marketing_agreement")
     private boolean marketingAgreement; // 마케팅 정보 수신 동의 여부
 
-    @Column(name = "joined_at", nullable = false, unique = false)
+    @Column(name = "joined_at", nullable = false)
     private LocalDateTime joinedAt;
 
     @Column(name = "updated_at")

@@ -9,6 +9,10 @@ import lombok.Setter;
 public class LoginResponse {
     private String accessToken;
     // refreshToken은 HttpOnly 쿠키로만 전달 (보안상 DTO에 포함하지 않음)
+
+    public static LoginResponse of(String accessToken) {
+        return LoginResponse.builder().accessToken(accessToken).build();
+    }
 }
 
 

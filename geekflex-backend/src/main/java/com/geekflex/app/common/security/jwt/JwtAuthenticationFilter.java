@@ -44,31 +44,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-//        log.info("JWT 인증 필터 실행");
-
-
-        // 1) Authorization 헤더에서 Bearer 토큰 추출
         String header = request.getHeader("Authorization");
-//        log.info("   ➤ Authorization 헤더: {}", header);
 
         String token = null;
         if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7); // 'Bearer ' 이후의 JWT 순수 토큰 부분
+            token = header.substring(7);
         }
 
-        // 2) 토큰이 존재하고 유효한 경우 → Authentication 생성 후 SecurityContext에 저장
         if (token != null && jwtTokenProvider.validateToken(token)) {
-
-            // Claims 에서 username(또는 userId) 추출
-//            String username = jwtTokenProvider.getUsername(token);
-
-            // UsernamePasswordAuthenticationToken으로 인증 객체 생성
             Authentication auth = jwtTokenProvider.getAuthentication(token);
 
             if (auth != null) {
-                // SecurityContextHolder 에 인증 정보 저장
                 SecurityContextHolder.getContext().setAuthentication(auth);
-//                log.info("SecurityContext 인증 정보 설정 완료: {}", auth.getName());
             } else {
                 log.warn("Authentication 생성 실패 → 인증 실패 처리");
             }
