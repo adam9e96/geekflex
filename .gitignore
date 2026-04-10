@@ -1,11 +1,64 @@
 
+_private/
+uploads/
 
-/uploads
-# Ignore database backup files and IDE configuration files
-/db_backup
-/db/.idea
+# Shared local tooling
+.claude/
+.vscode/
+.idea/
+.DS_Store
 
-# Ignore Visual Studio Code settings and extensions
-.vscode
-/docs/포트폴리오
-.claude/settings.local.json
+# Root/local data
+db_backup/
+db/.idea/
+docs/포트폴리오/
+
+# Frontend
+geekflex-frontend/logs/
+geekflex-frontend/*.log
+geekflex-frontend/npm-debug.log*
+geekflex-frontend/yarn-debug.log*
+geekflex-frontend/yarn-error.log*
+geekflex-frontend/pnpm-debug.log*
+geekflex-frontend/lerna-debug.log*
+geekflex-frontend/node_modules/
+geekflex-frontend/dist/
+geekflex-frontend/dist-ssr/
+geekflex-frontend/*.local
+geekflex-frontend/*.suo
+geekflex-frontend/*.ntvs*
+geekflex-frontend/*.njsproj
+geekflex-frontend/*.sln
+geekflex-frontend/*.sw?
+
+# Backend
+geekflex-backend/HELP.md
+geekflex-backend/.gradle/
+geekflex-backend/build/
+!geekflex-backend/gradle/wrapper/gradle-wrapper.jar
+!geekflex-backend/**/src/main/**/build/
+!geekflex-backend/**/src/test/**/build/
+geekflex-backend/.apt_generated
+geekflex-backend/.classpath
+geekflex-backend/.factorypath
+geekflex-backend/.project
+geekflex-backend/.settings/
+geekflex-backend/.springBeans
+geekflex-backend/.sts4-cache
+geekflex-backend/bin/
+!geekflex-backend/**/src/main/**/bin/
+!geekflex-backend/**/src/test/**/bin/
+geekflex-backend/*.iws
+geekflex-backend/*.iml
+geekflex-backend/*.ipr
+geekflex-backend/out/
+!geekflex-backend/**/src/main/**/out/
+!geekflex-backend/**/src/test/**/out/
+geekflex-backend/nbproject/private/
+geekflex-backend/nbbuild/
+geekflex-backend/dist/
+geekflex-backend/nbdist/
+geekflex-backend/.nb-gradle/
+geekflex-backend/.env
+geekflex-backend/.env.local
+geekflex-backend/.env.*.local
