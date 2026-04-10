@@ -14,6 +14,15 @@ public class LikeToggleResponse {
     private boolean liked; // 현재 좋아요 상태 (true: 좋아요됨, false: 좋아요 취소됨)
     private Long targetId; // 타겟 ID (리뷰/댓글 ID 등)
     private TargetType targetType; // 타겟 타입 (REVIEW, COMMENT 등)
+
+    /** 좋아요 토글 결과 응답 DTO를 생성합니다. */
+    public static LikeToggleResponse of(boolean liked, TargetType targetType, Long targetId) {
+        return LikeToggleResponse.builder()
+                .liked(liked)
+                .targetType(targetType)
+                .targetId(targetId)
+                .build();
+    }
 }
 
 

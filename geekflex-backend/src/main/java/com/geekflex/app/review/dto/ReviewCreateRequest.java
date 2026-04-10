@@ -1,17 +1,25 @@
 package com.geekflex.app.review.dto;
+
 import com.geekflex.app.review.entity.ReviewType;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
 public class ReviewCreateRequest {
-//    private Long tmdbId;        // TMDB 아이디로 넘어오면 → 자동 content 생성
-    private Double rating;
-    private ReviewType reviewType;
-    private String comment; // BASIC일 때만 사용
 
-    // 작성한 리뷰 내용은 상세 리뷰에서 별도 엔티티가 처리되므로 기본 Review에서는 제외
+    @NotNull(message = "평점은 필수입니다.")
+    @DecimalMin(value = "0.5", message = "평점은 0.5 이상이어야 합니다.")
+    @DecimalMax(value = "5.0", message = "평점은 5.0 이하여야 합니다.")
+    private Double rating;
+
+    @NotNull(message = "리뷰 타입은 필수입니다.")
+    private ReviewType reviewType;
+
+    private String comment; // BASIC일 때만 사용, SHORT일 때는 null
 }
 
 

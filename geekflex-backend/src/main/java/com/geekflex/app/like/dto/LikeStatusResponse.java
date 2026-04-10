@@ -12,6 +12,10 @@ public class LikeStatusResponse {
 
     // 현재 로그인한 유저가 이 타겟에 좋아요를 눌렀는지 여부
     private boolean liked;
+
+    public static LikeStatusResponse of(boolean liked) {
+        return LikeStatusResponse.builder().liked(liked).build();
+    }
 }
 
 

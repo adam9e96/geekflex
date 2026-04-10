@@ -1,8 +1,7 @@
 package com.geekflex.app.collection.service;
-import com.geekflex.app.collection.dto.CollectionItemCountResponse;
+
 import com.geekflex.app.collection.dto.CollectionItemRequest;
 import com.geekflex.app.content.dto.ContentResponse;
-import com.geekflex.app.review.dto.ReviewCountResponse;
 import com.geekflex.app.collection.entity.Collection;
 import com.geekflex.app.collection.entity.CollectionItem;
 import com.geekflex.app.content.entity.Content;
@@ -122,17 +121,9 @@ public class CollectionItemService {
         List<CollectionItem> items = collectionItemRepository.findByCollectionIdOrderByAddedAtDesc(collectionId);
 
         return items.stream()
-                .map(item -> item.getContent().toDto())
+                .map(item -> ContentResponse.from(item.getContent()))
                 .collect(Collectors.toList());
     }
-//    @Transactional
-//    public Long getMyCollectionItemCounts(String username) {
-//        User user = userService.findUserEntity(username);
-//        return CollectionItemCountResponse.builder()
-//                .CollectionItemCount(collectionItemRepository.countByCollectionId())
-//                .build();
-//    }
-
     // ==========================================
     // Private Helper Methods
     // ==========================================
@@ -166,7 +157,7 @@ public class CollectionItemService {
         if (collection.getIsPublic()) {
             return;
         }
-        if (currentUserId != null && collection.getUserId().equals(currentUserId)) {
+        if (collection.getUserId().equals(currentUserId)) {
             return;
         }
         // 비공개 컬렉션이고 소유자가 아닌 경우 접근 불가

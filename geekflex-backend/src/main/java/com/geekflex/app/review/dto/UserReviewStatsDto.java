@@ -13,6 +13,13 @@ import lombok.NoArgsConstructor;
 public class UserReviewStatsDto {
     private Long totalReviews; // 리뷰 개수
     private Double averageRating; // 평균 리뷰 평점
+
+    public static UserReviewStatsDto of(Long totalReviews, Double averageRating) {
+        return UserReviewStatsDto.builder()
+                .totalReviews(totalReviews)
+                .averageRating(averageRating)
+                .build();
+    }
 }
 
 

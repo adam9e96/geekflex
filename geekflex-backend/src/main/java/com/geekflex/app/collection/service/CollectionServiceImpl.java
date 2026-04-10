@@ -1,5 +1,5 @@
 package com.geekflex.app.collection.service;
-import com.geekflex.app.user.dto.UserSummaryResponse;
+
 import com.geekflex.app.collection.dto.*;
 import com.geekflex.app.content.dto.ContentResponse;
 import com.geekflex.app.collection.entity.Collection;
@@ -8,13 +8,13 @@ import com.geekflex.app.collection.entity.CollectionItem;
 import com.geekflex.app.user.entity.User;
 import com.geekflex.app.common.exception.CollectionAccessDeniedException;
 import com.geekflex.app.common.exception.CollectionNotFoundException;
+import com.geekflex.app.common.exception.UserNotFoundException;
 import com.geekflex.app.like.entity.TargetType;
 import com.geekflex.app.like.repository.LikeRepository;
 import com.geekflex.app.collection.repository.CollectionCommentRepository;
 import com.geekflex.app.collection.repository.CollectionItemRepository;
 import com.geekflex.app.collection.repository.CollectionRepository;
 import com.geekflex.app.user.repository.UserRepository;
-import com.geekflex.app.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -35,7 +35,6 @@ public class CollectionServiceImpl implements CollectionService {
     private final CollectionCommentRepository collectionCommentRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
-    private final UserService userService;
 
     @Override
     @Transactional
@@ -43,7 +42,7 @@ public class CollectionServiceImpl implements CollectionService {
         log.info("컬렉션 생성 요청: username={}, title={}", username, request.getTitle());
 
         // 1. 사용자 조회
-        Long userId = userService.findUserIdByUsername(username);
+        Long userId = findUserIdByUsername(username);
 
         // 2. 컬렉션 생성
         Collection collection = Collection.builder()
@@ -68,7 +67,7 @@ public class CollectionServiceImpl implements CollectionService {
 
         // 1. 컬렉션 조회 및 소유권 확인
         Collection collection = findCollectionById(collectionId); // collectionid로 엔티티 가져오기
-        Long userId = userService.findUserIdByUsername(username); // userId 조회
+        Long userId = findUserIdByUsername(username); // userId 조회
 
         validateOwnership(collection, userId);
 
@@ -99,7 +98,7 @@ public class CollectionServiceImpl implements CollectionService {
 
         // 1. 컬렉션 조회 및 소유권 확인
         Collection collection = findCollectionById(collectionId);
-        Long userId = userService.findUserIdByUsername(username);
+        Long userId = findUserIdByUsername(username);
 
         validateOwnership(collection, userId);
 
@@ -117,14 +116,14 @@ public class CollectionServiceImpl implements CollectionService {
         Collection collection = findCollectionById(collectionId);
 
         // 2. 접근 권한 확인
-        Long currentUserId = username != null ? userService.findUserIdByUsername(username) : null;
+        Long currentUserId = username != null ? findUserIdByUsername(username) : null;
 
         validateAccess(collection, currentUserId);
 
         // 4. 작품 목록 조회
         List<CollectionItem> items = collectionItemRepository.findByCollectionIdOrderByAddedAtDesc(collectionId);
         List<ContentResponse> contentResponses = items.stream()
-                .map(item -> item.getContent().toDto())
+                .map(item -> ContentResponse.from(item.getContent()))
                 .collect(Collectors.toList());
 
         // 5. 댓글 목록 조회
@@ -140,36 +139,18 @@ public class CollectionServiceImpl implements CollectionService {
 
         // 7. 작성자 정보 조회
         User author = userRepository.findById(collection.getUserId())
-                .orElseThrow(() -> new RuntimeException("작성자를 찾을 수 없습니다."));
-        UserSummaryResponse authorResponse = UserSummaryResponse.builder()
-                .nickname(author.getNickname())
-                .profileImage(author.getProfileImage())
-                .userId(author.getUserId())
-                .build();
+                .orElseThrow(() -> new UserNotFoundException("작성자를 찾을 수 없습니다."));
 
         // 8. 응답 DTO 생성
-        return CollectionDetailResponse.builder()
-                .id(collection.getId())
-                .title(collection.getTitle())
-                .description(collection.getDescription())
-                .isPublic(collection.getIsPublic())
-                .viewCount(collection.getViewCount())
-                .likeCount(likeCount)
-                .isLiked(isLiked)
-                .isOwner(currentUserId != null && collection.getUserId().equals(currentUserId))
-                .author(authorResponse)
-                .items(contentResponses)
-                .comments(commentResponses)
-                .createdAt(collection.getCreatedAt())
-                .updatedAt(collection.getUpdatedAt())
-                .build();
+        return CollectionDetailResponse.from(collection, author, currentUserId,
+                likeCount, isLiked, contentResponses, commentResponses);
     }
 
     @Override
     @Transactional
     public void incrementViewCount(Long collectionId, String username) {
         // 현재 userid 뽑아내기 username(user_id or user_email)
-        Long currentUserId = username != null ? userService.findUserIdByUsername(username) : null;
+        Long currentUserId = username != null ? findUserIdByUsername(username) : null;
         collectionRepository.incrementViewCountIfPublicAndNotOwner(collectionId, currentUserId);
     }
 
@@ -178,7 +159,7 @@ public class CollectionServiceImpl implements CollectionService {
     public List<CollectionResponse> getMyCollections(String username) {
         log.info("내 컬렉션 목록 조회: username={}", username);
 
-        Long userId = userService.findUserIdByUsername(username);
+        Long userId = findUserIdByUsername(username);
         List<Collection> collections = collectionRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         return collections.stream()
@@ -217,10 +198,10 @@ public class CollectionServiceImpl implements CollectionService {
         // publicId 또는 userId로 사용자 조회
         User user = userRepository.findByPublicId(userIdOrPublicId)
                 .orElseGet(() -> userRepository.findByUserId(userIdOrPublicId)
-                        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다.")));
+                        .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다.")));
 
         Long targetUserId = user.getId();
-        Long currentUserId = currentUsername != null ? userService.findUserIdByUsername(currentUsername) : null;
+        Long currentUserId = currentUsername != null ? findUserIdByUsername(currentUsername) : null;
 
         List<Collection> collections = collectionRepository.findByUserIdOrderByCreatedAtDesc(targetUserId);
 
@@ -252,6 +233,12 @@ public class CollectionServiceImpl implements CollectionService {
                 });
     }
 
+    private Long findUserIdByUsername(String username) {
+        return userRepository.findByUserIdOrUserEmail(username, username)
+                .map(User::getId)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
     /**
      * 소유권 검증
      */
@@ -270,7 +257,7 @@ public class CollectionServiceImpl implements CollectionService {
         if (collection.getIsPublic()) {
             return;
         }
-        if (currentUserId != null && collection.getUserId().equals(currentUserId)) {
+        if (collection.getUserId().equals(currentUserId)) {
             return;
         }
         // 비공개 컬렉션이고 소유자가 아닌 경우 접근 불가
@@ -294,27 +281,9 @@ public class CollectionServiceImpl implements CollectionService {
 
         // 작성자 정보 조회
         User author = userRepository.findById(authorUserId)
-                .orElseThrow(() -> new RuntimeException("작성자를 찾을 수 없습니다."));
-        // 반환용 DTO
-        UserSummaryResponse authorResponse = UserSummaryResponse.builder()
-                .nickname(author.getNickname())
-                .profileImage(author.getProfileImage())
-                .userId(author.getUserId())
-                .build();
+                .orElseThrow(() -> new UserNotFoundException("작성자를 찾을 수 없습니다."));
 
-        return CollectionResponse.builder()
-                .id(collection.getId())
-                .title(collection.getTitle())
-                .description(collection.getDescription())
-                .isPublic(collection.getIsPublic())
-                .viewCount(collection.getViewCount())
-                .itemCount((int) itemCount)
-                .likeCount(likeCount)
-                .isLiked(isLiked)
-                .author(authorResponse)
-                .createdAt(collection.getCreatedAt())
-                .updatedAt(collection.getUpdatedAt())
-                .build();
+        return CollectionResponse.from(collection, author, (int) itemCount, likeCount, isLiked);
     }
 
     /**
@@ -322,21 +291,8 @@ public class CollectionServiceImpl implements CollectionService {
      */
     private CollectionCommentResponse buildCommentResponse(CollectionComment comment, Long currentUserId) {
         User author = userRepository.findById(comment.getUserId())
-                .orElseThrow(() -> new RuntimeException("댓글 작성자를 찾을 수 없습니다."));
-        UserSummaryResponse authorResponse = UserSummaryResponse.builder()
-                .nickname(author.getNickname())
-                .profileImage(author.getProfileImage())
-                .userId(author.getUserId())
-                .build();
-
-        return CollectionCommentResponse.builder()
-                .id(comment.getId())
-                .content(comment.getContent())
-                .author(authorResponse)
-                .isOwner(currentUserId != null && comment.getUserId().equals(currentUserId))
-                .createdAt(comment.getCreatedAt())
-                .updatedAt(comment.getUpdatedAt())
-                .build();
+                .orElseThrow(() -> new UserNotFoundException("댓글 작성자를 찾을 수 없습니다."));
+        return CollectionCommentResponse.from(comment, author, currentUserId);
     }
 }
 

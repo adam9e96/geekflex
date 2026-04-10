@@ -1,5 +1,5 @@
 package com.geekflex.app.collection.service;
-import com.geekflex.app.user.dto.UserSummaryResponse;
+
 import com.geekflex.app.collection.dto.CollectionCommentRequest;
 import com.geekflex.app.collection.dto.CollectionCommentResponse;
 import com.geekflex.app.collection.entity.Collection;
@@ -7,6 +7,7 @@ import com.geekflex.app.collection.entity.CollectionComment;
 import com.geekflex.app.user.entity.User;
 import com.geekflex.app.common.exception.CollectionAccessDeniedException;
 import com.geekflex.app.common.exception.CollectionNotFoundException;
+import com.geekflex.app.common.exception.UserNotFoundException;
 import com.geekflex.app.collection.repository.CollectionCommentRepository;
 import com.geekflex.app.collection.repository.CollectionRepository;
 import com.geekflex.app.user.repository.UserRepository;
@@ -176,7 +177,7 @@ public class CollectionCommentService {
         if (collection.getIsPublic()) {
             return;
         }
-        if (currentUserId != null && collection.getUserId().equals(currentUserId)) {
+        if (collection.getUserId().equals(currentUserId)) {
             return;
         }
         // 비공개 컬렉션이고 소유자가 아닌 경우 접근 불가
@@ -199,21 +200,8 @@ public class CollectionCommentService {
      */
     private CollectionCommentResponse buildCommentResponse(CollectionComment comment, Long currentUserId) {
         User author = userRepository.findById(comment.getUserId())
-                .orElseThrow(() -> new RuntimeException("댓글 작성자를 찾을 수 없습니다."));
-        UserSummaryResponse authorResponse = UserSummaryResponse.builder()
-                .nickname(author.getNickname())
-                .profileImage(author.getProfileImage())
-                .userId(author.getUserId())
-                .build();
-
-        return CollectionCommentResponse.builder()
-                .id(comment.getId())
-                .content(comment.getContent())
-                .author(authorResponse)
-                .isOwner(currentUserId != null && comment.getUserId().equals(currentUserId))
-                .createdAt(comment.getCreatedAt())
-                .updatedAt(comment.getUpdatedAt())
-                .build();
+                .orElseThrow(() -> new UserNotFoundException("댓글 작성자를 찾을 수 없습니다."));
+        return CollectionCommentResponse.from(comment, author, currentUserId);
     }
 }
 

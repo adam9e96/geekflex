@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LikeCountResponse {
     long count;
+
+    public static LikeCountResponse of(long count) {
+        return LikeCountResponse.builder().count(count).build();
+    }
 }
 
 

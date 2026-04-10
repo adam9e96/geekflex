@@ -87,8 +87,6 @@ public class CollectionController {
     ) {
         log.info("컬렉션 상세 조회: collectionId={}", id);
 
-//        String username = userDetails.getUsername();
-
         String username = userDetails != null ? userDetails.getUsername() : null;
 
         // 조회수 증가 로직을 별도 트랜잭션으로 분리
@@ -143,7 +141,7 @@ public class CollectionController {
 
         collectionService.deleteCollection(id, userDetails.getUsername());
 
-        return ResponseEntity.noContent().build(); // 402 반환
+        return ResponseEntity.noContent().build(); // 204 No Content
     }
 
     /**
@@ -251,23 +249,6 @@ public class CollectionController {
 
         return ResponseEntity.ok(apiResponse);
     }
-    @GetMapping("/{id}/items/count")
-    public ResponseEntity<ApiResponse<Long>> getCollectionItemsCount(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails
-    ){
-        log.info("작품 개수 조회");
-//        long collectionItemCount = collectionItemService
-
-
-        return null;
-    }
-
-
-    /**
-     * 컬렉션의 작품
-     */
-
     // ==========================================
     // 댓글 관리 엔드포인트
     // ==========================================

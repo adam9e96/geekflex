@@ -1,4 +1,5 @@
 package com.geekflex.app.like.controller;
+
 import com.geekflex.app.common.dto.ApiResponse;
 import com.geekflex.app.like.dto.LikeCountResponse;
 import com.geekflex.app.like.dto.LikeStatusResponse;
@@ -7,11 +8,11 @@ import com.geekflex.app.like.entity.TargetType;
 import com.geekflex.app.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -19,121 +20,69 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LikeController {
 
-        private final LikeService likeService;
+    private final LikeService likeService;
 
-        /**
-         * 좋아요 토글 API (POST)
-         * /api/v1/likes/{targetType}/{targetId}
-         *
-         * @param targetType  타겟 타입 (REVIEW, COMMENT 등)
-         * @param targetId    타겟 ID (리뷰/댓글 ID 등)
-         * @param userDetails 인증된 사용자 정보
-         * @return 좋아요 상태 및 개수 정보
-         */
-        @PostMapping("/{targetType}/{targetId}")
-        public ResponseEntity<ApiResponse<LikeToggleResponse>> toggleLike(
-                        @PathVariable TargetType targetType,
-                        @PathVariable Long targetId,
-                        @AuthenticationPrincipal UserDetails userDetails) {
-                log.info("좋아요 토글 요청: targetType={}, targetId={}, username={}",
-                                targetType, targetId, userDetails != null ? userDetails.getUsername() : "null");
+    /**
+     * 좋아요 토글 API
+     * 인증된 사용자만 호출 가능합니다.
+     */
+    @PostMapping("/{targetType}/{targetId}")
+    public ApiResponse<LikeToggleResponse> toggleLike(
+            @PathVariable TargetType targetType,
+            @PathVariable Long targetId,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-                if (userDetails == null) {
-                        log.warn("인증되지 않은 사용자의 좋아요 토글 시도: targetType={}, targetId={}", targetType, targetId);
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                        .body(ApiResponse.error("인증이 필요합니다."));
-                }
+        LikeToggleResponse response = likeService.toggleLike(
+                userDetails.getUsername(), targetType, targetId);
 
-                try {
-                        LikeToggleResponse response = likeService.toggleLike(userDetails.getUsername(), targetType,
-                                        targetId);
+        String message = response.isLiked() ? "좋아요가 추가되었습니다." : "좋아요가 취소되었습니다.";
+        return ApiResponse.success(response, message);
+    }
 
-                        // liked 상태에 따라 메시지 설정
-                        String message = response.isLiked()
-                                        ? "좋아요가 추가되었습니다."
-                                        : "좋아요가 취소되었습니다.";
+    /**
+     * 좋아요 상태 조회 API
+     * 비로그인 사용자도 조회 가능합니다. (liked=false 반환)
+     */
+    @GetMapping("/{targetType}/{targetId}")
+    public ApiResponse<LikeStatusResponse> getLikeStatus(
+            @PathVariable TargetType targetType,
+            @PathVariable Long targetId,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-                        ApiResponse<LikeToggleResponse> apiResponse = ApiResponse.<LikeToggleResponse>builder()
-                                        .success(true)
-                                        .message(message)
-                                        .data(response)
-                                        .build();
+        String username = (userDetails != null) ? userDetails.getUsername() : null;
+        LikeStatusResponse response = likeService.getLikeStatus(username, targetType, targetId);
+        return ApiResponse.success(response);
+    }
 
-                        return ResponseEntity.ok(apiResponse);
-                } catch (Exception e) {
-                        log.error("좋아요 토글 처리 중 오류 발생: targetType={}, targetId={}", targetType, targetId, e);
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                        .body(ApiResponse.error("좋아요 처리 중 오류가 발생했습니다."));
-                }
-        }
+    /**
+     * 좋아요 개수 조회 API
+     */
+    @GetMapping("/{targetType}/{targetId}/all")
+    public ApiResponse<LikeCountResponse> getAllLike(
+            @PathVariable TargetType targetType,
+            @PathVariable Long targetId) {
 
-        /**
-         * 좋아요 상태 조회 API (GET)
-         * /api/v1/likes/{targetType}/{targetId}
-         */
-        @GetMapping("/{targetType}/{targetId}")
-        public ResponseEntity<ApiResponse<LikeStatusResponse>> getLikeStatus(
-                        @PathVariable TargetType targetType,
-                        @PathVariable Long targetId,
-                        @AuthenticationPrincipal UserDetails userDetails) {
-                String username = (userDetails != null) ? userDetails.getUsername() : null;
+        LikeCountResponse response = likeService.countLikes(targetType, targetId);
+        return ApiResponse.success(response);
+    }
 
-                LikeStatusResponse likeStatus = likeService.getLikeStatus(username, targetType, targetId);
+    /**
+     * 일괄 좋아요 상태 조회 API
+     * 비로그인 사용자도 조회 가능합니다. (빈 목록 반환)
+     */
+    @GetMapping("/{targetType}")
+    public ApiResponse<List<Long>> getLikeStatuses(
+            @PathVariable TargetType targetType,
+            @RequestParam(value = "reviewIds", required = false) List<Long> reviewIds,
+            @RequestParam(value = "targetIds", required = false) List<Long> targetIds,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-                ApiResponse<LikeStatusResponse> apiResponse = ApiResponse.<LikeStatusResponse>builder()
-                                .success(true)
-                                .message("좋아요 상태 조회에 성공했습니다.")
-                                .data(likeStatus)
-                                .build();
+        List<Long> ids = (reviewIds != null && !reviewIds.isEmpty()) ? reviewIds : targetIds;
+        String username = (userDetails != null) ? userDetails.getUsername() : null;
 
-                return ResponseEntity.ok(apiResponse);
-        }
-
-        /**
-         * 좋아요 개수 조회 API (GET)
-         * /api/v1/likes/{targetType}/{targetId}/all
-         */
-        @GetMapping("/{targetType}/{targetId}/all")
-        public ResponseEntity<ApiResponse<LikeCountResponse>> getAllLike(
-                        @PathVariable TargetType targetType,
-                        @PathVariable Long targetId) {
-                LikeCountResponse likeCount = likeService.countLikes(targetType, targetId);
-
-                ApiResponse<LikeCountResponse> apiResponse = ApiResponse.<LikeCountResponse>builder()
-                                .success(true)
-                                .message("좋아요 개수 조회에 성공했습니다.")
-                                .data(likeCount)
-                                .build();
-
-                return ResponseEntity.ok(apiResponse);
-        }
-
-        /**
-         * 일괄 좋아요 상태 조회 API (GET)
-         * /api/v1/likes/{targetType}?reviewIds=1,2,3
-         * (참고: 프론트엔드에서 reviewIds 파라미터로 보냄)
-         */
-        @GetMapping("/{targetType}")
-        public ResponseEntity<ApiResponse<java.util.List<Long>>> getLikeStatuses(
-                        @PathVariable TargetType targetType,
-                        @RequestParam(value = "reviewIds", required = false) java.util.List<Long> reviewIds,
-                        @RequestParam(value = "targetIds", required = false) java.util.List<Long> targetIds,
-                        @AuthenticationPrincipal UserDetails userDetails) {
-                // 파라미터 호환성 처리: reviewIds 또는 targetIds 중 하나 사용
-                java.util.List<Long> ids = (reviewIds != null && !reviewIds.isEmpty()) ? reviewIds : targetIds;
-
-                String username = (userDetails != null) ? userDetails.getUsername() : null;
-
-                java.util.List<Long> likedIds = likeService.getLikeStatuses(username, targetType, ids);
-
-                ApiResponse<java.util.List<Long>> apiResponse = ApiResponse.<java.util.List<Long>>builder()
-                                .success(true)
-                                .message("좋아요 상태 일괄 조회에 성공했습니다.")
-                                .data(likedIds)
-                                .build();
-
-                return ResponseEntity.ok(apiResponse);
-        }
+        List<Long> likedIds = likeService.getLikeStatuses(username, targetType, ids);
+        return ApiResponse.success(likedIds);
+    }
 
 }
 
