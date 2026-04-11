@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaFolderPlus, FaShare } from "react-icons/fa";
@@ -40,6 +40,10 @@ const ContentDetail = () => {
   const fetchLikeStatus = useContentDetailStore((state) => state.fetchLikeStatus);
 
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [id, location.key]);
 
   // 콘텐츠 상세 정보 가져오기
   useEffect(() => {

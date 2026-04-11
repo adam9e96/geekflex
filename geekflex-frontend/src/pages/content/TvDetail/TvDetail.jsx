@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useLayoutEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaFolderPlus, FaShare } from "react-icons/fa";
@@ -29,6 +29,10 @@ const TvDetail = () => {
 
   const [reviewRefreshTrigger, setReviewRefreshTrigger] = useState(0);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [id]);
 
   // TV 콘텐츠 상세 정보 가져오기
   useEffect(() => {
