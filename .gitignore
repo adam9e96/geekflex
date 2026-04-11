@@ -1,6 +1,9 @@
 
 _private/
 uploads/
+.env
+.env.*
+!.env.example
 
 # Shared local tooling
 .claude/
