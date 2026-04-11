@@ -13,6 +13,8 @@ public interface ContentListTagRepository extends JpaRepository<ContentListTag, 
     // TagType 기준으로 리스트 가져오기
     List<ContentListTag> findByTagType(TagType tagType);
 
+    boolean existsByTagType(TagType tagType);
+
     // 캐싱 갱신 시 이전 데이터 삭제
     // @Modifying과 @Query를 사용하여 명시적으로 삭제 쿼리 실행
     // clearAutomatically = true: 삭제 후 영속성 컨텍스트를 자동으로 비움
