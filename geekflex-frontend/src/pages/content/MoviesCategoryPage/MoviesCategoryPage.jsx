@@ -4,6 +4,7 @@ import LoadingSpinner from "@components/ui/LoadingSpinner/LoadingSpinner";
 import EmptyState from "@components/ui/EmptyState/EmptyState.jsx";
 import SectionHeader from "@components/ui/SectionHeader/SectionHeader.jsx";
 import ContentCard from "@components/home/ContentCard.jsx";
+import { buildApiUrl } from "@services/apiClient";
 import styles from "./MoviesCategoryPage.module.css";
 
 /**
@@ -59,7 +60,7 @@ const MoviesCategoryPage = () => {
         setError(null);
 
         // 카테고리별 엔드포인트로 요청
-        const response = await fetch(config.endpoint, {
+        const response = await fetch(buildApiUrl(config.endpoint), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

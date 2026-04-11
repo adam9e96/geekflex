@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { getAccessToken } from "@utils/auth";
+import { buildApiUrl } from "@services/apiClient";
 
 /**
  * 유저 검색 커스텀 훅
@@ -49,7 +50,7 @@ export const useUserSearch = () => {
       });
 
       // 직접 fetch 사용
-      const response = await fetch(url, {
+      const response = await fetch(buildApiUrl(url), {
         method: "GET",
         headers,
         credentials: "include", // refreshToken 쿠키 자동 전송

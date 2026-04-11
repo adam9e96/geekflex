@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAccessToken } from "@utils/auth";
+import { buildApiUrl } from "@services/apiClient";
 import LoadingSpinner from "@components/ui/LoadingSpinner/LoadingSpinner";
 import EmptyState from "@components/ui/EmptyState/EmptyState.jsx";
 import AddContentToCollectionModal from "@components/content/collections/AddContentToCollectionModal/AddContentToCollectionModal";
@@ -41,7 +42,7 @@ const CollectionDetailPage = () => {
           return;
         }
 
-        const response = await fetch("/api/v1/users/me/summary", {
+        const response = await fetch(buildApiUrl("/api/v1/users/me/summary"), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getAccessToken } from "@utils/auth";
+import { buildApiUrl } from "@services/apiClient";
 
 /**
  * 컬렉션 삭제를 위한 커스텀 훅
@@ -25,7 +26,7 @@ const useDeleteCollection = () => {
         throw new Error("로그인이 필요합니다.");
       }
 
-      const response = await fetch(`/api/v1/collections/${collectionId}`, {
+      const response = await fetch(buildApiUrl(`/api/v1/collections/${collectionId}`), {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

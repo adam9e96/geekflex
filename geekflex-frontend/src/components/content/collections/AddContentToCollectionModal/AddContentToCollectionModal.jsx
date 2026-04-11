@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { getAccessToken } from "@utils/auth";
 import { useMovieSearch } from "@hooks/content/useMovieSearch";
 import { useTvSearch } from "@hooks/content/useTvSearch";
+import { buildApiUrl } from "@services/apiClient";
 import styles from "./AddContentToCollectionModal.module.css";
 
 /**
@@ -84,7 +85,7 @@ const AddContentToCollectionModal = ({ isOpen, onClose, onAddSuccess, collection
 
           const saveUrl = `/api/v1/${contentType}/${tmdbId}`;
 
-          const saveResponse = await fetch(saveUrl, {
+          const saveResponse = await fetch(buildApiUrl(saveUrl), {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -108,7 +109,7 @@ const AddContentToCollectionModal = ({ isOpen, onClose, onAddSuccess, collection
           }
         }
 
-        const response = await fetch(`/api/v1/collections/${collectionId}/items`, {
+        const response = await fetch(buildApiUrl(`/api/v1/collections/${collectionId}/items`), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

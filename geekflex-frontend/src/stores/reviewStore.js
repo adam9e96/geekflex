@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getAccessToken } from "../utils/auth"; // 경로 확인 필요
+import { buildApiUrl } from "@services/apiClient";
 
 /**
  * 리뷰 관련 상태 관리 스토어
@@ -57,7 +58,7 @@ export const useReviewStore = create((set) => ({
       }
 
       // 먼저 /api/v1/users/me/summary 시도
-      let response = await fetch("/api/v1/users/me/summary", {
+      let response = await fetch(buildApiUrl("/api/v1/users/me/summary"), {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -73,7 +74,7 @@ export const useReviewStore = create((set) => ({
       }
 
       // 실패 시 /api/v1/users/me 시도
-      response = await fetch("/api/v1/users/me", {
+      response = await fetch(buildApiUrl("/api/v1/users/me"), {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -101,7 +102,7 @@ export const useReviewStore = create((set) => ({
 
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch(`/api/v1/reviews/content/${contentId}`, {
+      const response = await fetch(buildApiUrl(`/api/v1/reviews/content/${contentId}`), {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -126,7 +127,7 @@ export const useReviewStore = create((set) => ({
     const accessToken = getAccessToken();
     if (!accessToken) throw new Error("로그인이 필요합니다.");
 
-    const response = await fetch(`/api/v1/reviews/${contentId}`, {
+    const response = await fetch(buildApiUrl(`/api/v1/reviews/${contentId}`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -156,7 +157,7 @@ export const useReviewStore = create((set) => ({
     const accessToken = getAccessToken();
     if (!accessToken) throw new Error("로그인이 필요합니다.");
 
-    const response = await fetch(`/api/v1/reviews/${reviewId}`, {
+    const response = await fetch(buildApiUrl(`/api/v1/reviews/${reviewId}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -177,7 +178,7 @@ export const useReviewStore = create((set) => ({
     const accessToken = getAccessToken();
     if (!accessToken) throw new Error("로그인이 필요합니다.");
 
-    const response = await fetch(`/api/v1/reviews/${reviewId}`, {
+    const response = await fetch(buildApiUrl(`/api/v1/reviews/${reviewId}`), {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

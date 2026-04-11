@@ -4,6 +4,7 @@ import LoadingSpinner from "@components/ui/LoadingSpinner/LoadingSpinner";
 import EmptyState from "@components/ui/EmptyState/EmptyState.jsx";
 import SectionHeader from "@components/ui/SectionHeader/SectionHeader.jsx";
 import ContentCard from "@components/home/ContentCard.jsx";
+import { buildApiUrl } from "@services/apiClient";
 import styles from "../MoviesCategoryPage/MoviesCategoryPage.module.css";
 
 /**
@@ -55,7 +56,7 @@ const TvCategoryPage = () => {
         setIsLoading(true);
         setError(null);
 
-        const response = await fetch(config.endpoint, {
+        const response = await fetch(buildApiUrl(config.endpoint), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

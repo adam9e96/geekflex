@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SectionHeader from "@components/ui/SectionHeader/SectionHeader.jsx";
 import LoadingSpinner from "@components/ui/LoadingSpinner/LoadingSpinner";
 import EmptyState from "@components/ui/EmptyState/EmptyState.jsx";
+import { buildApiUrl } from "@services/apiClient";
 import ContentCard from "../ContentCard";
 import styles from "../HomeSection.module.css";
 
@@ -25,7 +26,7 @@ const NowPlayingMovies = () => {
         setError(null);
 
         // GET /api/v1/movies/upcoming 요청
-        const response = await fetch("/api/v1/movies/upcoming", {
+        const response = await fetch(buildApiUrl("/api/v1/movies/upcoming"), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

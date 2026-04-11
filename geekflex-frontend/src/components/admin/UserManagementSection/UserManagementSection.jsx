@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@utils/auth";
 import LoadingSpinner from "@components/ui/LoadingSpinner/LoadingSpinner";
 import ErrorMessage from "@components/ui/ErrorMessage/ErrorMessage";
+import { buildApiUrl } from "@services/apiClient";
 import styles from "./UserManagementSection.module.css";
 
 /**
@@ -44,7 +45,7 @@ const UserManagementSection = () => {
         params.append("search", searchTerm);
       }
 
-      const response = await fetch(`/api/v1/admin/users?${params.toString()}`, {
+      const response = await fetch(buildApiUrl(`/api/v1/admin/users?${params.toString()}`), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +88,7 @@ const UserManagementSection = () => {
         throw new Error("로그인이 필요합니다.");
       }
 
-      const response = await fetch(`/api/v1/admin/users/${userId}/${action}`, {
+      const response = await fetch(buildApiUrl(`/api/v1/admin/users/${userId}/${action}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +123,7 @@ const UserManagementSection = () => {
         throw new Error("로그인이 필요합니다.");
       }
 
-      const response = await fetch(`/api/v1/admin/users/${userId}`, {
+      const response = await fetch(buildApiUrl(`/api/v1/admin/users/${userId}`), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

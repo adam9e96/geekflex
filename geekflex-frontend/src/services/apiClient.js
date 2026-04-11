@@ -13,7 +13,13 @@ import { getErrorMessage } from "@utils/errorUtils";
  * @type {string}
  * @since 2025-12-27
  */
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+
+export const buildApiUrl = (path = "") => {
+  if (!path) return API_BASE_URL;
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${API_BASE_URL}${path}`;
+};
 
 /**
  * 공개 API 인스턴스 (인증 불필요)

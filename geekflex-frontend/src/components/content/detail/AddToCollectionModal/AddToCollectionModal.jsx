@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { getAccessToken } from "@utils/auth";
 import useCollection from "@hooks/content/useCollection";
+import { buildApiUrl } from "@services/apiClient";
 import styles from "./AddToCollectionModal.module.css";
 
 /**
@@ -40,7 +41,7 @@ const AddToCollectionModal = ({ isOpen, onClose, contentId }) => {
         throw new Error("로그인이 필요합니다.");
       }
 
-      const response = await fetch(`/api/v1/collections/${collectionId}/items`, {
+      const response = await fetch(buildApiUrl(`/api/v1/collections/${collectionId}/items`), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@utils/auth";
+import { buildApiUrl } from "@services/apiClient";
 
 /**
  * 컬렉션 목록을 가져오는 커스텀 훅
@@ -27,7 +28,7 @@ const useCollection = () => {
         return;
       }
 
-      const response = await fetch("/api/v1/collections/me", {
+      const response = await fetch(buildApiUrl("/api/v1/collections/me"), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

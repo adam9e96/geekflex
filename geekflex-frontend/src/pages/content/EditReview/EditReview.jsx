@@ -6,6 +6,7 @@ import useContentDetail from "@hooks/content/useContentDetail";
 import StarRating from "@components/review/StarRating/StarRating.jsx";
 import { getAccessToken } from "@utils/auth";
 import { getPosterUrl } from "@utils/content/movieUtils";
+import { buildApiUrl } from "@services/apiClient";
 import styles from "./EditReview.module.css";
 
 /**
@@ -60,7 +61,7 @@ const EditReview = () => {
           return;
         }
 
-        const response = await fetch(`/api/v1/reviews/${reviewId}`, {
+        const response = await fetch(buildApiUrl(`/api/v1/reviews/${reviewId}`), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -267,7 +268,7 @@ const EditReview = () => {
         removedImageCount: removedImageUrls.length,
       });
 
-      const response = await fetch(`/api/v1/reviews/${reviewId}`, {
+      const response = await fetch(buildApiUrl(`/api/v1/reviews/${reviewId}`), {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${accessToken}`,

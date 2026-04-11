@@ -6,6 +6,7 @@ import useContentDetail from "@hooks/content/useContentDetail";
 import StarRating from "@components/review/StarRating/StarRating.jsx";
 import { getAccessToken } from "@utils/auth";
 import { getPosterUrl } from "@utils/content/movieUtils";
+import { buildApiUrl } from "@services/apiClient";
 import styles from "./WriteReview.module.css";
 
 /**
@@ -179,7 +180,7 @@ const WriteReview = () => {
         imageCount: uploadedImages.length,
       });
 
-      const response = await fetch(`/api/v1/reviews/${dbContentId}`, {
+      const response = await fetch(buildApiUrl(`/api/v1/reviews/${dbContentId}`), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { getAccessToken } from "@utils/auth";
+import { buildApiUrl } from "@services/apiClient";
 
 /**
  * 사용자 요약 정보를 가져오는 커스텀 훅
@@ -36,7 +37,7 @@ export const useUserSummary = () => {
       });
 
       // 직접 fetch 사용
-      const response = await fetch("/api/v1/users/me/summary", {
+      const response = await fetch(buildApiUrl("/api/v1/users/me/summary"), {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

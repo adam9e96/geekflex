@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "@utils/auth";
+import { buildApiUrl } from "@services/apiClient";
 import BackButton from "@components/ui/BackButton/BackButton";
 import styles from "./MyReviewsPage.module.css";
 
@@ -32,7 +33,7 @@ const MyReviewsPage = () => {
         }
 
         // 내가 작성한 리뷰 목록 조회
-        const response = await fetch(`/api/v1/reviews/me?page=${currentPage}&size=${size}`, {
+        const response = await fetch(buildApiUrl(`/api/v1/reviews/me?page=${currentPage}&size=${size}`), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { getAccessToken } from "@utils/auth";
+import { buildApiUrl } from "@services/apiClient";
 
 /**
  * 리뷰 좋아요 기능 관리 커스텀 훅
@@ -56,7 +57,7 @@ export const useLike = (isLoggedIn) => {
         // 여러 리뷰의 좋아요 상태를 한 번에 확인
         // API: GET /api/v1/likes/REVIEW?reviewIds=1,2,3
         const reviewIdsParam = reviewIds.join(",");
-        const response = await fetch(`/api/v1/likes/REVIEW?reviewIds=${reviewIdsParam}`, {
+        const response = await fetch(buildApiUrl(`/api/v1/likes/REVIEW?reviewIds=${reviewIdsParam}`), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -128,7 +129,7 @@ export const useLike = (isLoggedIn) => {
       try {
         // 좋아요 토글 API 호출
         // POST /api/v1/likes/REVIEW/{reviewId}
-        const response = await fetch(`/api/v1/likes/REVIEW/${reviewId}`, {
+        const response = await fetch(buildApiUrl(`/api/v1/likes/REVIEW/${reviewId}`), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
