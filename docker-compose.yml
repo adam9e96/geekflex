@@ -6,8 +6,6 @@ services:
     container_name: geekflex-prod-db
     hostname: geekflex-db
     restart: unless-stopped
-    ports:
-      - "${GEEKFLEX_DB_PORT:-3306}:3306"
     environment:
       MARIADB_ROOT_PASSWORD: ${GEEKFLEX_DB_ROOT_PASSWORD}
       MARIADB_DATABASE: ${GEEKFLEX_DB_NAME:-geekflex_db}
@@ -33,8 +31,6 @@ services:
     image: redis:latest
     container_name: geekflex-prod-redis
     hostname: geekflex-redis
-    ports:
-      - "${GEEKFLEX_REDIS_PORT:-6379}:6379"
     command: redis-server --requirepass "${GEEKFLEX_REDIS_PASSWORD}" --appendonly yes
     volumes:
       - geekflex_redis_data:/data
@@ -61,17 +57,16 @@ services:
     ports:
       - "${GEEKFLEX_BACKEND_PORT:-8080}:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://geekflex-db:3306/${GEEKFLEX_DB_NAME:-geekflex_db}
-      SPRING_DATASOURCE_USERNAME: ${GEEKFLEX_DB_USER:-geekflex_user}
-      SPRING_DATASOURCE_PASSWORD: ${GEEKFLEX_DB_PASSWORD}
-      SPRING_DATA_REDIS_HOST: geekflex-redis
-      SPRING_DATA_REDIS_PORT: 6379
-      SPRING_DATA_REDIS_PASSWORD: ${GEEKFLEX_REDIS_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
       GeekFlex_DB_PASSWORD: ${GEEKFLEX_DB_PASSWORD}
       GeekFlex_RESEND_API_KEY: ${GeekFlex_RESEND_API_KEY}
       GeekFlex_TMDB_API_KEY: ${GeekFlex_TMDB_API_KEY}
       GeekFlex_TMDB_ACCESS_TOKEN: ${GeekFlex_TMDB_ACCESS_TOKEN}
       GeekFlex_JWT_SECRET_KEY: ${GeekFlex_JWT_SECRET_KEY}
+      GEEKFLEX_DB_NAME: ${GEEKFLEX_DB_NAME:-geekflex_db}
+      GEEKFLEX_DB_USER: ${GEEKFLEX_DB_USER:-geekflex_user}
+      GEEKFLEX_DB_PASSWORD: ${GEEKFLEX_DB_PASSWORD}
+      GEEKFLEX_REDIS_PASSWORD: ${GEEKFLEX_REDIS_PASSWORD}
       GeekFlex_FILE_UPLOAD_DIR: ${GeekFlex_FILE_UPLOAD_DIR:-/app/uploads/users}
     volumes:
       - geekflex_uploads_data:/app/uploads

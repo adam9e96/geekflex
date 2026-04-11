@@ -53,7 +53,10 @@ public class UserDetailsImpl implements UserDetails {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
 
-        // 필요 시 ROLE_ADMIN 등도 추가 가능
+        if (user.getRole().equals(Role.ADMIN)) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+
         return authorities;
     }
 

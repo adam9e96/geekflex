@@ -20,7 +20,7 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password: qwer3033!@
+      password: ${GEEKFLEX_REDIS_PASSWORD:}
       timeout: 3000ms
 
   # JPA Settings
@@ -64,3 +64,7 @@ file:
 server:
   port: 8080
   address: 0.0.0.0
+
+app:
+  cors:
+    allowed-origins: http://192.168.0.42:5037,http://192.168.50.218:5037,http://localhost:5173,http://localhost:3000,http://localhost:5037,http://192.168.50.153:8070,http://localhost:8070,http://192.168.0.42:8070,https://geekflex.vercel.app

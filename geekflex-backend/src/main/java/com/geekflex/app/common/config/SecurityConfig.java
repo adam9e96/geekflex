@@ -3,6 +3,7 @@ import com.geekflex.app.common.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -16,7 +17,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +28,9 @@ public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${app.cors.allowed-origins:http://192.168.0.42:5037,http://192.168.50.218:5037,http://localhost:5173,http://localhost:3000,http://localhost:5037,http://192.168.50.153:8070,http://localhost:8070,http://192.168.0.42:8070,https://geekflex.vercel.app}")
+    private String allowedOrigins;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -35,17 +41,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(
-                "http://192.168.0.42:5037",
-                "http://192.168.50.218:5037",
-                "http://localhost:5173",
-                "http://localhost:3000",
-                "http://localhost:5037",
-                "http://192.168.50.153:8070",
-                "http://localhost:8070",
-                "http://192.168.0.42:8070",
-                "https://geekflex.vercel.app"
-        ));
+        config.setAllowedOrigins(Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isBlank())
+                .collect(Collectors.toList()));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 
@@ -72,6 +71,7 @@ public class SecurityConfig {
                 // 접근 권한 설정
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/user/me").authenticated() // 마이페이지 (이건 인증 필요)
                         .requestMatchers("/api/v1/user/summary").authenticated()
                         .requestMatchers("/", "/user/login", "/user/signup").permitAll()
