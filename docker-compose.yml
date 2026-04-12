@@ -1,6 +1,24 @@
 name: geekflex-prod
 
 services:
+  geekflex-nginx:
+    image: nginx:stable-alpine
+    container_name: geekflex-prod-nginx
+    hostname: geekflex-nginx
+    restart: unless-stopped
+    depends_on:
+      geekflex-backend:
+        condition: service_started
+    ports:
+      - "${GEEKFLEX_NGINX_PORT:-80}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - geekflex_uploads_data:/app/uploads:ro
+    networks:
+      geekflex-net:
+        aliases:
+          - geekflex-nginx
+
   geekflex-db:
     image: mariadb:latest
     container_name: geekflex-prod-db
