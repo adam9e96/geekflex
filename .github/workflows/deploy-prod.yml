@@ -24,8 +24,11 @@ jobs:
             cd ~/apps/geekflex
             git pull origin main
             cd geekflex-frontend
-            npm ci
-            npm run build
+            docker run --rm \
+              -v "$PWD:/app" \
+              -w /app \
+              node:24-alpine \
+              sh -lc "npm ci && npm run build"
             cd ..
             docker compose up -d --build
             docker compose ps
