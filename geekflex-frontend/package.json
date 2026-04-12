@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5037 --host",
-    "release": "vite --port 8070 --host",
     "build": "vite build",
+    "prod": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:styles": "stylelint \"src/**/*.{css,scss}\"",

@@ -23,5 +23,9 @@ jobs:
             set -e
             cd ~/apps/geekflex
             git pull origin main
+            cd geekflex-frontend
+            npm ci
+            npm run build
+            cd ..
             docker compose up -d --build
             docker compose ps
