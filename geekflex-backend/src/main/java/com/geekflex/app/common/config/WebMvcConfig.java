@@ -12,21 +12,29 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Set resource location to parent directory of uploadDir
-        // Use Paths API to correctly handle parent extraction across OS (Windows/Linux)
-        String resourceLocation = java.nio.file.Paths.get(uploadDir)
+        String usersResourceLocation = java.nio.file.Paths.get(uploadDir)
                 .toUri()
                 .toString();
 
-        // Ensure trailing slash for directory resource
-        if (!resourceLocation.endsWith("/")) {
-            resourceLocation += "/";
+        if (!usersResourceLocation.endsWith("/")) {
+            usersResourceLocation += "/";
         }
 
-        // Serve files from the actual local uploads directory when requests come to
-        // /uploads/users/**
         registry.addResourceHandler("/uploads/users/**")
-                .addResourceLocations(resourceLocation);
+                .addResourceLocations(usersResourceLocation);
+
+        java.nio.file.Path userUploadPath = java.nio.file.Paths.get(uploadDir);
+        java.nio.file.Path uploadsRoot = userUploadPath.getParent() != null ? userUploadPath.getParent() : userUploadPath;
+        String collectionsResourceLocation = uploadsRoot.resolve("collections")
+                .toUri()
+                .toString();
+
+        if (!collectionsResourceLocation.endsWith("/")) {
+            collectionsResourceLocation += "/";
+        }
+
+        registry.addResourceHandler("/uploads/collections/**")
+                .addResourceLocations(collectionsResourceLocation);
     }
 }
 

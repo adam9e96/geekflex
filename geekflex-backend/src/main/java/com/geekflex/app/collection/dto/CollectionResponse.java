@@ -17,6 +17,8 @@ public class CollectionResponse {
     private String title;
     private String description;
     private Boolean isPublic;
+    private String thumbnailUrl;
+    private Long coverContentId;
     private Integer viewCount;
     private Integer itemCount; // 포함된 작품 수
     private Long likeCount; // 좋아요 수
@@ -27,12 +29,15 @@ public class CollectionResponse {
 
     /** Collection 엔티티와 집계 데이터로부터 응답 DTO를 생성합니다. */
     public static CollectionResponse from(Collection collection, User author,
+                                          String thumbnailUrl,
                                           int itemCount, Long likeCount, Boolean isLiked) {
         return CollectionResponse.builder()
                 .id(collection.getId())
                 .title(collection.getTitle())
                 .description(collection.getDescription())
                 .isPublic(collection.getIsPublic())
+                .thumbnailUrl(thumbnailUrl)
+                .coverContentId(collection.getCoverContentId())
                 .viewCount(collection.getViewCount())
                 .itemCount(itemCount)
                 .likeCount(likeCount)

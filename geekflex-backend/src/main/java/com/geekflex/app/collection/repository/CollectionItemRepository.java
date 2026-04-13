@@ -3,6 +3,7 @@ import com.geekflex.app.collection.entity.CollectionItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CollectionItemRepository extends JpaRepository<CollectionItem, Long> {
     // 컬렉션의 작품 목록 조회
@@ -16,6 +17,10 @@ public interface CollectionItemRepository extends JpaRepository<CollectionItem, 
 
     // 특정 작품 삭제
     void deleteByCollectionIdAndContentId(Long collectionId, Long contentId);
+
+    Optional<CollectionItem> findByCollectionIdAndContentId(Long collectionId, Long contentId);
+
+    Optional<CollectionItem> findFirstByCollectionIdOrderByAddedAtDesc(Long collectionId);
 }
 
 

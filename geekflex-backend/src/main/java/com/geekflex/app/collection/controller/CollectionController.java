@@ -15,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Log4j2
@@ -123,6 +125,79 @@ public class CollectionController {
         ApiResponse<CollectionResponse> apiResponse = ApiResponse.<CollectionResponse>builder()
                 .success(true)
                 .message("컬렉션이 수정되었습니다.")
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * 컬렉션 표지 이미지 업로드
+     */
+    @PostMapping("/{id}/cover/upload")
+    public ResponseEntity<ApiResponse<CollectionResponse>> uploadCoverImage(
+            @PathVariable Long id,
+            @RequestPart("coverImage") MultipartFile coverImage,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) throws IOException {
+        log.info("컬렉션 표지 업로드 요청: collectionId={}, fileName={}", id, coverImage.getOriginalFilename());
+
+        CollectionResponse response = collectionService.uploadCoverImage(
+                id,
+                userDetails.getUsername(),
+                coverImage
+        );
+
+        ApiResponse<CollectionResponse> apiResponse = ApiResponse.<CollectionResponse>builder()
+                .success(true)
+                .message("컬렉션 표지가 업로드되었습니다.")
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * 컬렉션 내 콘텐츠를 표지로 선택
+     */
+    @PutMapping("/{id}/cover/content")
+    public ResponseEntity<ApiResponse<CollectionResponse>> selectCoverContent(
+            @PathVariable Long id,
+            @RequestBody @Valid CollectionCoverContentRequest request,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) throws IOException {
+        log.info("컬렉션 콘텐츠 표지 선택 요청: collectionId={}, contentId={}", id, request.getContentId());
+
+        CollectionResponse response = collectionService.selectCoverContent(
+                id,
+                userDetails.getUsername(),
+                request
+        );
+
+        ApiResponse<CollectionResponse> apiResponse = ApiResponse.<CollectionResponse>builder()
+                .success(true)
+                .message("컬렉션 표지가 변경되었습니다.")
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * 컬렉션 표지 제거
+     */
+    @DeleteMapping("/{id}/cover")
+    public ResponseEntity<ApiResponse<CollectionResponse>> removeCover(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) throws IOException {
+        log.info("컬렉션 표지 제거 요청: collectionId={}", id);
+
+        CollectionResponse response = collectionService.removeCover(id, userDetails.getUsername());
+
+        ApiResponse<CollectionResponse> apiResponse = ApiResponse.<CollectionResponse>builder()
+                .success(true)
+                .message("컬렉션 표지가 제거되었습니다.")
                 .data(response)
                 .build();
 

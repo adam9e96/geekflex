@@ -125,6 +125,29 @@
   min-height: 100px;
 }
 
+.createCollectionModalHelp {
+  margin: var(--spacing-sm) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+.createCollectionModalPreview {
+  margin-top: var(--spacing-md);
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card);
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+}
+
 .createCollectionModalCheckboxLabel {
   display: flex;
   flex-direction: column;

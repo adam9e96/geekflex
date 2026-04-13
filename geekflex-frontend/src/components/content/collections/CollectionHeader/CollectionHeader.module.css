@@ -123,10 +123,39 @@
   border-left: 3px solid var(--color-primary);
 }
 
+.managementPanel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  margin-top: auto;
+  padding: var(--spacing-md);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 6%) 0%, rgb(255 255 255 / 3%) 100%);
+  backdrop-filter: blur(12px);
+}
+
+.managementLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+
+  i {
+    color: var(--color-primary);
+  }
+}
+
 .actions {
   display: flex;
   gap: var(--spacing-md);
-  margin-top: auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .editBtn,
@@ -134,31 +163,44 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border-radius: var(--radius-full);
+  min-height: 44px;
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-fast);
   border: 1px solid transparent;
+  white-space: nowrap;
+
+  i {
+    font-size: 0.9rem;
+  }
 }
 
 .editBtn {
-  background: rgb(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgb(245 197 24 / 18%) 0%, rgb(245 197 24 / 8%) 100%);
   color: var(--text-primary);
+  border-color: rgb(245 197 24 / 24%);
+  box-shadow: 0 10px 20px rgb(0 0 0 / 18%);
 
   &:hover {
-    background: rgb(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    border-color: rgb(245 197 24 / 42%);
+    box-shadow: 0 14px 28px rgb(0 0 0 / 24%);
   }
 }
 
 .deleteBtn {
-  background: rgb(255, 0, 0, 0.1);
-  color: var(--color-error);
+  background: linear-gradient(135deg, rgb(231 76 60 / 18%) 0%, rgb(231 76 60 / 10%) 100%);
+  color: #ff9c90;
+  border-color: rgb(231 76 60 / 28%);
+  box-shadow: 0 10px 20px rgb(0 0 0 / 18%);
 
   &:hover {
-    background: rgb(255, 0, 0, 0.2);
-    border-color: rgb(255, 0, 0, 0.3);
+    transform: translateY(-2px);
+    border-color: rgb(231 76 60 / 48%);
+    box-shadow: 0 14px 28px rgb(0 0 0 / 24%);
   }
 }
 
@@ -197,6 +239,23 @@
   }
 
   .actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .managementPanel {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .managementLabel {
+    justify-content: center;
+  }
+
+  .editBtn,
+  .deleteBtn {
+    width: 100%;
     justify-content: center;
   }
 }

@@ -262,45 +262,63 @@
   gap: var(--spacing-xs);
   z-index: 10;
   opacity: 0;
-  transition: opacity var(--transition-fast);
+  transform: translateY(-4px);
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .collectionCardWrapper:hover .collectionCardActions {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .collectionCardEditBtn,
 .collectionCardDeleteBtn {
-  width: 32px;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.35rem;
+  min-height: 36px;
+  padding: 0 0.8rem;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   cursor: pointer;
   transition: all var(--transition-fast);
-  font-size: var(--font-size-sm);
-  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 28%);
+  backdrop-filter: blur(8px);
+
+  span {
+    line-height: 1;
+  }
 }
 
 .collectionCardEditBtn {
-  background: rgb(74 144 226 / 90%);
-  color: #fff;
+  background: rgb(255 255 255 / 92%);
+  color: #111;
 
   &:hover {
-    background: rgb(74 144 226 / 100%);
-    transform: scale(1.1);
+    background: #fff;
+    transform: translateY(-1px);
   }
 }
 
 .collectionCardDeleteBtn {
-  background: rgb(231 76 60 / 90%);
-  color: #fff;
+  background: rgb(122 19 14 / 88%);
+  color: #ffe3df;
 
   &:hover {
-    background: rgb(231 76 60 / 100%);
-    transform: scale(1.1);
+    background: rgb(146 24 18 / 96%);
+    transform: translateY(-1px);
+  }
+}
+
+@media (width <=768px) {
+  .collectionCardActions {
+    opacity: 1;
+    transform: none;
   }
 }
 

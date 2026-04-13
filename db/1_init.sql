@@ -125,6 +125,8 @@ create table collections
     title       varchar(200) not null,
     description text         null,
     is_public   boolean  default true comment 'true 공개,false 비공개',
+    cover_image_path varchar(500) null comment '업로드한 컬렉션 표지 경로',
+    cover_content_id bigint null comment '표지로 선택한 콘텐츠 PK',
     view_count  int      default 0 comment '컬렉션 조회수',
     created_at  datetime default current_timestamp,
     foreign key (user_id) references users (id)

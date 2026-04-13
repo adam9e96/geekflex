@@ -32,6 +32,12 @@ public class Collection {
     @Column(name = "is_public", nullable = false)
     private Boolean isPublic;
 
+    @Column(name = "cover_image_path", length = 500)
+    private String coverImagePath;
+
+    @Column(name = "cover_content_id")
+    private Long coverContentId;
+
     @Column(name = "view_count", nullable = false)
     private Integer viewCount = 0;
 

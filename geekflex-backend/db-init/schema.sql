@@ -103,6 +103,8 @@ CREATE TABLE collections
     title       VARCHAR(200) NOT NULL,
     description TEXT,
     is_public   BOOLEAN      NOT NULL,
+    cover_image_path VARCHAR(500),
+    cover_content_id BIGINT,
     view_count  INT          NOT NULL DEFAULT 0,
     created_at  DATETIME     NOT NULL,
     updated_at  DATETIME,

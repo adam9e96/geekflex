@@ -15,26 +15,41 @@ import com.geekflex.app.collection.repository.CollectionCommentRepository;
 import com.geekflex.app.collection.repository.CollectionItemRepository;
 import com.geekflex.app.collection.repository.CollectionRepository;
 import com.geekflex.app.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class CollectionServiceImpl implements CollectionService {
 
+    private static final List<String> ALLOWED_IMAGE_EXTENSIONS = List.of(".jpg", ".jpeg", ".png", ".webp");
+    private static final String COLLECTION_UPLOAD_PREFIX = "/uploads/collections/";
+
     private final CollectionRepository collectionRepository;
     private final CollectionItemRepository collectionItemRepository;
     private final CollectionCommentRepository collectionCommentRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     @Override
     @Transactional
@@ -93,6 +108,76 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
+    public CollectionResponse uploadCoverImage(Long collectionId, String username, MultipartFile coverImage) throws IOException {
+        log.info("컬렉션 표지 업로드 요청: collectionId={}, username={}", collectionId, username);
+
+        if (coverImage == null || coverImage.isEmpty()) {
+            throw new IllegalArgumentException("업로드할 표지 이미지를 선택해주세요.");
+        }
+
+        Collection collection = findCollectionById(collectionId);
+        Long userId = findUserIdByUsername(username);
+        validateOwnership(collection, userId);
+
+        String extension = extractFileExtension(coverImage.getOriginalFilename());
+        validateImageExtension(extension);
+
+        deleteUploadedCoverIfPresent(collection);
+
+        Path collectionFolder = createCollectionUploadDirectory(collectionId);
+        String fileName = UUID.randomUUID() + extension.toLowerCase();
+        Path targetFile = collectionFolder.resolve(fileName);
+
+        Files.copy(coverImage.getInputStream(), targetFile, StandardCopyOption.REPLACE_EXISTING);
+
+        collection.setCoverImagePath(COLLECTION_UPLOAD_PREFIX + collectionId + "/" + fileName);
+        collection.setCoverContentId(null);
+
+        Collection updated = collectionRepository.save(collection);
+        return buildCollectionResponse(updated, userId, userId);
+    }
+
+    @Override
+    @Transactional
+    public CollectionResponse selectCoverContent(Long collectionId, String username, CollectionCoverContentRequest request) throws IOException {
+        log.info("컬렉션 콘텐츠 표지 선택 요청: collectionId={}, username={}, contentId={}", collectionId, username, request.getContentId());
+
+        Collection collection = findCollectionById(collectionId);
+        Long userId = findUserIdByUsername(username);
+        validateOwnership(collection, userId);
+
+        CollectionItem selectedItem = collectionItemRepository.findByCollectionIdAndContentId(collectionId, request.getContentId())
+                .orElseThrow(() -> new IllegalArgumentException("선택한 콘텐츠가 컬렉션에 존재하지 않습니다."));
+
+        deleteUploadedCoverIfPresent(collection);
+
+        collection.setCoverImagePath(null);
+        collection.setCoverContentId(selectedItem.getContent().getId());
+
+        Collection updated = collectionRepository.save(collection);
+        return buildCollectionResponse(updated, userId, userId);
+    }
+
+    @Override
+    @Transactional
+    public CollectionResponse removeCover(Long collectionId, String username) throws IOException {
+        log.info("컬렉션 표지 제거 요청: collectionId={}, username={}", collectionId, username);
+
+        Collection collection = findCollectionById(collectionId);
+        Long userId = findUserIdByUsername(username);
+        validateOwnership(collection, userId);
+
+        deleteUploadedCoverIfPresent(collection);
+
+        collection.setCoverImagePath(null);
+        collection.setCoverContentId(null);
+
+        Collection updated = collectionRepository.save(collection);
+        return buildCollectionResponse(updated, userId, userId);
+    }
+
+    @Override
+    @Transactional
     public void deleteCollection(Long collectionId, String username) {
         log.info("컬렉션 삭제 요청: collectionId={}, username={}", collectionId, username);
 
@@ -103,6 +188,13 @@ public class CollectionServiceImpl implements CollectionService {
         validateOwnership(collection, userId);
 
         // 2. 컬렉션 삭제 (CASCADE로 관련 데이터 자동 삭제)
+        try {
+            deleteUploadedCoverIfPresent(collection);
+            deleteCollectionDirectory(collectionId);
+        } catch (IOException e) {
+            log.warn("컬렉션 표지 파일 정리 실패: collectionId={}", collectionId, e);
+        }
+
         collectionRepository.delete(collection);
         log.info("컬렉션 삭제 완료: collectionId={}", collectionId);
     }
@@ -143,6 +235,7 @@ public class CollectionServiceImpl implements CollectionService {
 
         // 8. 응답 DTO 생성
         return CollectionDetailResponse.from(collection, author, currentUserId,
+                buildThumbnailUrl(collection),
                 likeCount, isLiked, contentResponses, commentResponses);
     }
 
@@ -283,7 +376,7 @@ public class CollectionServiceImpl implements CollectionService {
         User author = userRepository.findById(authorUserId)
                 .orElseThrow(() -> new UserNotFoundException("작성자를 찾을 수 없습니다."));
 
-        return CollectionResponse.from(collection, author, (int) itemCount, likeCount, isLiked);
+        return CollectionResponse.from(collection, author, buildThumbnailUrl(collection), (int) itemCount, likeCount, isLiked);
     }
 
     /**
@@ -293,6 +386,97 @@ public class CollectionServiceImpl implements CollectionService {
         User author = userRepository.findById(comment.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("댓글 작성자를 찾을 수 없습니다."));
         return CollectionCommentResponse.from(comment, author, currentUserId);
+    }
+
+    private String buildThumbnailUrl(Collection collection) {
+        if (collection.getCoverImagePath() != null && !collection.getCoverImagePath().isBlank()) {
+            return collection.getCoverImagePath();
+        }
+
+        if (collection.getCoverContentId() != null) {
+            return collectionItemRepository.findByCollectionIdAndContentId(collection.getId(), collection.getCoverContentId())
+                    .map(CollectionItem::getContent)
+                    .map(ContentResponse::from)
+                    .map(content -> content.getPosterUrl() != null ? content.getPosterUrl() : content.getBackdropUrl())
+                    .orElseGet(() -> buildFallbackThumbnailUrl(collection.getId()));
+        }
+
+        return buildFallbackThumbnailUrl(collection.getId());
+    }
+
+    private String buildFallbackThumbnailUrl(Long collectionId) {
+        return collectionItemRepository.findFirstByCollectionIdOrderByAddedAtDesc(collectionId)
+                .map(CollectionItem::getContent)
+                .map(ContentResponse::from)
+                .map(content -> content.getPosterUrl() != null ? content.getPosterUrl() : content.getBackdropUrl())
+                .orElse(null);
+    }
+
+    private Path getUploadsRootDirectory() {
+        Path userUploadRoot = Paths.get(uploadDir);
+        Path uploadsRoot = userUploadRoot.getParent();
+        return uploadsRoot != null ? uploadsRoot : userUploadRoot;
+    }
+
+    private Path createCollectionUploadDirectory(Long collectionId) throws IOException {
+        Path collectionFolder = getUploadsRootDirectory().resolve("collections").resolve(String.valueOf(collectionId));
+        if (!Files.exists(collectionFolder)) {
+            Files.createDirectories(collectionFolder);
+        }
+        return collectionFolder;
+    }
+
+    private void deleteUploadedCoverIfPresent(Collection collection) throws IOException {
+        String coverImagePath = collection.getCoverImagePath();
+        if (coverImagePath == null || coverImagePath.isBlank()) {
+            return;
+        }
+
+        if (!coverImagePath.startsWith(COLLECTION_UPLOAD_PREFIX)) {
+            log.warn("예상하지 못한 컬렉션 표지 경로 형식: {}", coverImagePath);
+            return;
+        }
+
+        String relativePath = coverImagePath.substring("/uploads/".length());
+        Path imageFile = getUploadsRootDirectory().resolve(relativePath);
+        Files.deleteIfExists(imageFile);
+    }
+
+    private void deleteCollectionDirectory(Long collectionId) throws IOException {
+        Path collectionFolder = getUploadsRootDirectory().resolve("collections").resolve(String.valueOf(collectionId));
+        if (!Files.exists(collectionFolder)) {
+            return;
+        }
+
+        try (Stream<Path> stream = Files.walk(collectionFolder)) {
+            stream.sorted((left, right) -> right.getNameCount() - left.getNameCount())
+                    .forEach(path -> {
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof IOException ioException) {
+                throw ioException;
+            }
+            throw e;
+        }
+    }
+
+    private String extractFileExtension(String filename) {
+        if (filename == null) {
+            return "";
+        }
+        int dotIndex = filename.lastIndexOf('.');
+        return dotIndex == -1 ? "" : filename.substring(dotIndex);
+    }
+
+    private void validateImageExtension(String extension) {
+        if (!ALLOWED_IMAGE_EXTENSIONS.contains(extension.toLowerCase())) {
+            throw new IllegalArgumentException("지원하지 않는 이미지 형식입니다.");
+        }
     }
 }
 

@@ -19,6 +19,8 @@ public class CollectionDetailResponse {
     private String title;
     private String description;
     private Boolean isPublic;
+    private String thumbnailUrl;
+    private Long coverContentId;
     private Integer viewCount;
     private Long likeCount;
     private Boolean isLiked;
@@ -31,6 +33,7 @@ public class CollectionDetailResponse {
 
     /** Collection 엔티티와 상세 데이터로부터 응답 DTO를 생성합니다. */
     public static CollectionDetailResponse from(Collection collection, User author, Long currentUserId,
+                                                 String thumbnailUrl,
                                                  Long likeCount, Boolean isLiked,
                                                  List<ContentResponse> items,
                                                  List<CollectionCommentResponse> comments) {
@@ -39,6 +42,8 @@ public class CollectionDetailResponse {
                 .title(collection.getTitle())
                 .description(collection.getDescription())
                 .isPublic(collection.getIsPublic())
+                .thumbnailUrl(thumbnailUrl)
+                .coverContentId(collection.getCoverContentId())
                 .viewCount(collection.getViewCount())
                 .likeCount(likeCount)
                 .isLiked(isLiked)

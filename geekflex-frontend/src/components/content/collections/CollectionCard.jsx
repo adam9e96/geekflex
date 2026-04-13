@@ -111,9 +111,12 @@ const CollectionCard = ({ collection, isOwner, onEdit, onDelete }) => {
               e.preventDefault();
               onEdit(e, collection);
             }}
+            aria-label="컬렉션 수정"
             title="수정"
+            type="button"
           >
             <i className="fas fa-edit"></i>
+            <span>수정</span>
           </button>
           <button
             className={styles.collectionCardDeleteBtn}
@@ -121,9 +124,12 @@ const CollectionCard = ({ collection, isOwner, onEdit, onDelete }) => {
               e.preventDefault();
               onDelete(e, collection);
             }}
+            aria-label="컬렉션 삭제"
             title="삭제"
+            type="button"
           >
             <i className="fas fa-trash"></i>
+            <span>삭제</span>
           </button>
         </div>
       )}

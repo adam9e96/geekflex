@@ -70,6 +70,43 @@ export const collectionService = {
   },
 
   /**
+   * 컬렉션 표지 업로드
+   * @param {number|string} collectionId
+   * @param {File} file
+   */
+  uploadCollectionCover: async (collectionId, file) => {
+    const formData = new FormData();
+    formData.append("coverImage", file);
+
+    const response = await authenticatedApi.post(
+      `${COLLECTION_API_BASE}/${collectionId}/cover/upload`,
+      formData,
+    );
+    return getResponseData(response);
+  },
+
+  /**
+   * 컬렉션 내 콘텐츠를 표지로 선택
+   * @param {number|string} collectionId
+   * @param {number|string} contentId
+   */
+  selectCollectionCoverFromContent: async (collectionId, contentId) => {
+    const response = await authenticatedApi.put(`${COLLECTION_API_BASE}/${collectionId}/cover/content`, {
+      contentId,
+    });
+    return getResponseData(response);
+  },
+
+  /**
+   * 컬렉션 표지 제거
+   * @param {number|string} collectionId
+   */
+  removeCollectionCover: async (collectionId) => {
+    const response = await authenticatedApi.delete(`${COLLECTION_API_BASE}/${collectionId}/cover`);
+    return getResponseData(response);
+  },
+
+  /**
    * 컬렉션 수정
    * @param {number|string} collectionId
    * @param {Object} data - { title, description, isPublic }

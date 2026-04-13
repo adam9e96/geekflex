@@ -129,13 +129,21 @@ const CollectionHeader = ({ collection, totalRuntime, isCreator, onEdit, onDelet
           {collection.description && <p className={styles.description}>{collection.description}</p>}
 
           {isCreator && (
-            <div className={styles.actions}>
-              <button onClick={onEdit} className={styles.editBtn}>
-                <i className="fas fa-edit"></i> 수정
-              </button>
-              <button onClick={onDelete} className={styles.deleteBtn}>
-                <i className="fas fa-trash-alt"></i> 삭제
-              </button>
+            <div className={styles.managementPanel}>
+              <div className={styles.managementLabel}>
+                <i className="fas fa-sliders-h"></i>
+                <span>컬렉션 관리</span>
+              </div>
+              <div className={styles.actions}>
+                <button onClick={onEdit} className={styles.editBtn} type="button">
+                  <i className="fas fa-pen"></i>
+                  컬렉션 수정
+                </button>
+                <button onClick={onDelete} className={styles.deleteBtn} type="button">
+                  <i className="fas fa-trash-alt"></i>
+                  컬렉션 삭제
+                </button>
+              </div>
             </div>
           )}
         </div>

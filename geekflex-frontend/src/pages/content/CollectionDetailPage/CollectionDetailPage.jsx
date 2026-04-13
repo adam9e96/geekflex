@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAccessToken } from "@utils/auth";
 import { buildApiUrl } from "@services/apiClient";
+import { collectionService } from "@services/collectionService";
 import LoadingSpinner from "@components/ui/LoadingSpinner/LoadingSpinner";
 import EmptyState from "@components/ui/EmptyState/EmptyState.jsx";
 import AddContentToCollectionModal from "@components/content/collections/AddContentToCollectionModal/AddContentToCollectionModal";
@@ -26,6 +27,9 @@ const CollectionDetailPage = () => {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [coverActionMessage, setCoverActionMessage] = useState("");
+  const [coverActionError, setCoverActionError] = useState("");
+  const [isCoverActionLoading, setIsCoverActionLoading] = useState(false);
 
   // 현재 사용자 ID 가져오기
   useEffect(() => {
@@ -123,6 +127,68 @@ const CollectionDetailPage = () => {
     }
   };
 
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !id) {
+      return;
+    }
+
+    try {
+      setIsCoverActionLoading(true);
+      setCoverActionError("");
+      setCoverActionMessage("");
+      await collectionService.uploadCollectionCover(id, file);
+      setCoverActionMessage("표지 이미지가 업로드되었습니다.");
+      refetch();
+    } catch (uploadError) {
+      console.error("컬렉션 표지 업로드 실패:", uploadError);
+      setCoverActionError(uploadError.message || "표지 업로드에 실패했습니다.");
+    } finally {
+      e.target.value = "";
+      setIsCoverActionLoading(false);
+    }
+  };
+
+  const handleSelectCoverContent = async (contentId) => {
+    if (!id || !contentId) {
+      return;
+    }
+
+    try {
+      setIsCoverActionLoading(true);
+      setCoverActionError("");
+      setCoverActionMessage("");
+      await collectionService.selectCollectionCoverFromContent(id, contentId);
+      setCoverActionMessage("선택한 콘텐츠를 컬렉션 표지로 설정했습니다.");
+      refetch();
+    } catch (selectError) {
+      console.error("컬렉션 표지 선택 실패:", selectError);
+      setCoverActionError(selectError.message || "표지 설정에 실패했습니다.");
+    } finally {
+      setIsCoverActionLoading(false);
+    }
+  };
+
+  const handleRemoveCover = async () => {
+    if (!id) {
+      return;
+    }
+
+    try {
+      setIsCoverActionLoading(true);
+      setCoverActionError("");
+      setCoverActionMessage("");
+      await collectionService.removeCollectionCover(id);
+      setCoverActionMessage("업로드한 표지를 제거했습니다. 이제 첫 번째 콘텐츠 포스터가 기본 표지로 사용됩니다.");
+      refetch();
+    } catch (removeError) {
+      console.error("컬렉션 표지 제거 실패:", removeError);
+      setCoverActionError(removeError.message || "표지 제거에 실패했습니다.");
+    } finally {
+      setIsCoverActionLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       {isLoading ? (
@@ -158,11 +224,98 @@ const CollectionDetailPage = () => {
 
           {/* 작품 추가 버튼 (제작자만 표시) */}
           {isCreator && (
-            <div className={styles.addContentSection}>
-              <button className={styles.addContentBtn} onClick={() => setIsAddModalOpen(true)}>
-                <i className="fas fa-plus"></i>새 작품 추가
-              </button>
-            </div>
+            <>
+              <div className={styles.coverPanel}>
+                <div className={styles.coverPanelHeader}>
+                  <div>
+                    <h2 className={styles.coverPanelTitle}>컬렉션 표지 관리</h2>
+                    <p className={styles.coverPanelDescription}>
+                      이미지를 업로드하거나, 아래 작품 중 하나를 골라 컬렉션 대표 이미지로 설정할 수 있습니다.
+                    </p>
+                  </div>
+                  {collection.thumbnailUrl && (
+                    <div className={styles.currentCoverPreview}>
+                      <img src={collection.thumbnailUrl} alt={`${collection.title} 표지`} />
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.coverActions}>
+                  <label className={styles.coverUploadBtn}>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={handleCoverUpload}
+                      disabled={isCoverActionLoading}
+                    />
+                    <i className="fas fa-upload"></i>
+                    표지 업로드
+                  </label>
+                  <button
+                    type="button"
+                    className={styles.coverRemoveBtn}
+                    onClick={handleRemoveCover}
+                    disabled={isCoverActionLoading}
+                  >
+                    <i className="fas fa-eraser"></i>
+                    표지 초기화
+                  </button>
+                </div>
+
+                {coverActionMessage && (
+                  <div className={styles.coverActionSuccess}>
+                    <i className="fas fa-check-circle"></i>
+                    <span>{coverActionMessage}</span>
+                  </div>
+                )}
+
+                {coverActionError && (
+                  <div className={styles.coverActionError}>
+                    <i className="fas fa-exclamation-circle"></i>
+                    <span>{coverActionError}</span>
+                  </div>
+                )}
+
+                {Array.isArray(contents) && contents.length > 0 && (
+                  <div className={styles.coverSelectionGrid}>
+                    {contents.map((content) => {
+                      const imageUrl = content.posterUrl || content.backdropUrl;
+                      const isSelected = String(collection.coverContentId) === String(content.id);
+
+                      return (
+                        <button
+                          key={`cover-${content.id}`}
+                          type="button"
+                          className={`${styles.coverCandidate} ${isSelected ? styles.coverCandidateSelected : ""}`}
+                          onClick={() => handleSelectCoverContent(content.id)}
+                          disabled={isCoverActionLoading}
+                        >
+                          <div className={styles.coverCandidateImage}>
+                            {imageUrl ? (
+                              <img src={imageUrl} alt={content.title} />
+                            ) : (
+                              <div className={styles.coverCandidatePlaceholder}>
+                                <i className="fas fa-film"></i>
+                              </div>
+                            )}
+                          </div>
+                          <span className={styles.coverCandidateTitle}>{content.title}</span>
+                          <span className={styles.coverCandidateAction}>
+                            {isSelected ? "현재 표지" : "이 작품으로 표지 설정"}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.addContentSection}>
+                <button className={styles.addContentBtn} onClick={() => setIsAddModalOpen(true)}>
+                  <i className="fas fa-plus"></i>새 작품 추가
+                </button>
+              </div>
+            </>
           )}
 
           <CollectionContentList contents={contents} />

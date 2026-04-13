@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import useCreateCollection from "@hooks/content/useCreateCollection";
+import { collectionService } from "@services/collectionService";
 import styles from "./CreateCollectionModal.module.css";
 
 /**
@@ -15,6 +16,8 @@ const CreateCollectionModal = ({ isOpen, onClose, onSuccess }) => {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [coverImage, setCoverImage] = useState(null);
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState("");
 
   useEffect(() => {
     if (isOpen) {
@@ -26,9 +29,25 @@ const CreateCollectionModal = ({ isOpen, onClose, onSuccess }) => {
         });
         setError(null);
         setSuccess(false);
+        setCoverImage(null);
+        setCoverPreviewUrl("");
       }, 0);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!coverImage) {
+      setCoverPreviewUrl("");
+      return undefined;
+    }
+
+    const objectUrl = URL.createObjectURL(coverImage);
+    setCoverPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [coverImage]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,6 +55,14 @@ const CreateCollectionModal = ({ isOpen, onClose, onSuccess }) => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    if (error) {
+      setError(null);
+    }
+  };
+
+  const handleCoverImageChange = (e) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setCoverImage(selectedFile);
     if (error) {
       setError(null);
     }
@@ -55,6 +82,18 @@ const CreateCollectionModal = ({ isOpen, onClose, onSuccess }) => {
         description: formData.description.trim() || null,
         isPublic: formData.isPublic,
       });
+
+      if (coverImage && createdCollection?.id) {
+        try {
+          await collectionService.uploadCollectionCover(createdCollection.id, coverImage);
+        } catch (uploadError) {
+          console.error("컬렉션 표지 업로드 실패:", uploadError);
+          setError(
+            uploadError.message ||
+              "컬렉션은 생성되었지만 표지 업로드에 실패했습니다. 상세 페이지에서 다시 설정할 수 있습니다.",
+          );
+        }
+      }
 
       setSuccess(true);
 
@@ -117,6 +156,29 @@ const CreateCollectionModal = ({ isOpen, onClose, onSuccess }) => {
                 maxLength={500}
                 disabled={isLoading || success}
               />
+            </div>
+
+            <div className={styles.createCollectionModalField}>
+              <label htmlFor="coverImage" className={styles.createCollectionModalLabel}>
+                표지 이미지
+              </label>
+              <input
+                id="coverImage"
+                name="coverImage"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleCoverImageChange}
+                className={styles.createCollectionModalInput}
+                disabled={isLoading || success}
+              />
+              <p className={styles.createCollectionModalHelp}>
+                선택하지 않으면 첫 번째 콘텐츠 포스터가 대표 이미지로 사용됩니다.
+              </p>
+              {coverPreviewUrl && (
+                <div className={styles.createCollectionModalPreview}>
+                  <img src={coverPreviewUrl} alt="표지 미리보기" />
+                </div>
+              )}
             </div>
 
             <div className={styles.createCollectionModalField}>

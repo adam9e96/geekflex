@@ -2,10 +2,13 @@ package com.geekflex.app.collection.service;
 import com.geekflex.app.collection.dto.CollectionCreateRequest;
 import com.geekflex.app.collection.dto.CollectionDetailResponse;
 import com.geekflex.app.collection.dto.CollectionResponse;
+import com.geekflex.app.collection.dto.CollectionCoverContentRequest;
 import com.geekflex.app.collection.dto.CollectionUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CollectionService {
@@ -18,6 +21,21 @@ public interface CollectionService {
      * 컬렉션 수정
      */
     CollectionResponse updateCollection(Long collectionId, String username, CollectionUpdateRequest request);
+
+    /**
+     * 컬렉션 표지 이미지 업로드
+     */
+    CollectionResponse uploadCoverImage(Long collectionId, String username, MultipartFile coverImage) throws IOException;
+
+    /**
+     * 컬렉션 내 콘텐츠를 표지로 선택
+     */
+    CollectionResponse selectCoverContent(Long collectionId, String username, CollectionCoverContentRequest request) throws IOException;
+
+    /**
+     * 컬렉션 표지 제거
+     */
+    CollectionResponse removeCover(Long collectionId, String username) throws IOException;
 
     /**
      * 컬렉션 삭제
