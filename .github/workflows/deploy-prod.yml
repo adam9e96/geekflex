@@ -56,4 +56,25 @@ jobs:
             docker compose up -d --build
             docker compose restart geekflex-nginx
             docker compose ps
-            curl --fail http://localhost/api/v1/movies/popular
+            for i in $(seq 1 20); do
+              if curl --fail --silent http://localhost/api/health > /dev/null; then
+                break
+              fi
+              if [ "$i" -eq 20 ]; then
+                echo "Backend health check did not become ready in time"
+                docker compose logs --tail=200 geekflex-backend geekflex-nginx
+                exit 1
+              fi
+              sleep 3
+            done
+            for i in $(seq 1 20); do
+              if curl --fail --silent http://localhost/api/v1/movies/popular > /dev/null; then
+                break
+              fi
+              if [ "$i" -eq 20 ]; then
+                echo "API verification failed after retries"
+                docker compose logs --tail=200 geekflex-backend geekflex-nginx
+                exit 1
+              fi
+              sleep 3
+            done
