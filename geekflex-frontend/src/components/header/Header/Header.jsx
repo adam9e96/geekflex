@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaFilm,
   FaTv,
@@ -10,6 +10,8 @@ import {
   FaSignInAlt,
   FaSignOutAlt,
   FaBell,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
 import { useAuthStore } from "@stores/authStore";
 import { useProfileImage } from "@hooks/user/useProfileImage";
@@ -28,7 +30,9 @@ import styles from "./Header.module.css";
  */
 const Header = ({ onNavClick, onSearchClick }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isRandomLoading, setIsRandomLoading] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userProfile = useAuthStore((state) => state.userProfile);
 
@@ -76,13 +80,23 @@ const Header = ({ onNavClick, onSearchClick }) => {
 
   const nickname = userProfile?.nickname;
 
+  React.useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
   // 프로필 이미지 오류 시 콜백
   const handleProfileImageError = () => {
     setImageError(true);
   };
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ""}`}>
+    <header
+      className={`${styles.header} ${isScrolled || isMobileMenuOpen ? styles.scrolled : ""}`}
+    >
       <div className={styles.container}>
         {/* 왼쪽: 로고 */}
         <div className={styles.leftSection}>
@@ -190,7 +204,7 @@ const Header = ({ onNavClick, onSearchClick }) => {
 
           {/* 로그인 상태에 따라 버튼 표시 */}
           {isAuthenticated ? (
-            <>
+            <div className={styles.desktopAuth}>
               {/* 알림 버튼 */}
               <button className={styles.notificationBtn} aria-label="알림" type="button">
                 <div className={styles.notificationContent}>
@@ -213,9 +227,9 @@ const Header = ({ onNavClick, onSearchClick }) => {
                 <FaSignOutAlt />
                 <span>로그아웃</span>
               </button>
-            </>
+            </div>
           ) : (
-            <>
+            <div className={styles.desktopAuth}>
               {/* 회원가입 버튼 2026.02.03 검토완료 */}
               <Link to="/signup" className={styles.registerBtn}>
                 <FaUserPlus />
@@ -227,8 +241,133 @@ const Header = ({ onNavClick, onSearchClick }) => {
                 <FaSignInAlt />
                 <span>로그인</span>
               </Link>
-            </>
+            </div>
           )}
+
+          <button
+            className={styles.mobileMenuBtn}
+            type="button"
+            aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-header-menu"
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          >
+            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="mobile-header-menu"
+        className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.mobileMenuOpen : ""}`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        <div className={styles.mobileMenuInner}>
+          <section className={styles.mobileMenuSection} aria-label="영화 메뉴">
+            <h2>
+              <FaFilm />
+              <span>영화</span>
+            </h2>
+            <div className={styles.mobileMenuGrid}>
+              {MOVIE_DROPDOWN_ITEMS.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.category}
+                    to={item.path}
+                    className={styles.mobileMenuLink}
+                    onClick={() => {
+                      handleNavClick(item.category);
+                      closeMobileMenu();
+                    }}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className={styles.mobileMenuSection} aria-label="드라마 메뉴">
+            <h2>
+              <FaTv />
+              <span>드라마</span>
+            </h2>
+            <div className={styles.mobileMenuGrid}>
+              {TV_DROPDOWN_ITEMS.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.category}
+                    to={item.path}
+                    className={styles.mobileMenuLink}
+                    onClick={() => {
+                      handleNavClick(item.category);
+                      closeMobileMenu();
+                    }}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className={styles.mobileMenuSection} aria-label="기타 메뉴">
+            <div className={styles.mobileMenuGrid}>
+              {MAIN_NAV_ITEMS.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.path}
+                    className={styles.mobileMenuLink}
+                    onClick={() => {
+                      handleNavClick(item.category);
+                      closeMobileMenu();
+                    }}
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          <div className={styles.mobileAuth}>
+            {isAuthenticated ? (
+              <>
+                <Link to="/mypage" className={styles.mobileAuthLink} onClick={closeMobileMenu}>
+                  {nickname ? `${nickname} 마이페이지` : "마이페이지"}
+                </Link>
+                <button
+                  type="button"
+                  className={styles.mobileAuthButton}
+                  onClick={() => {
+                    closeMobileMenu();
+                    handleLogout();
+                  }}
+                >
+                  <FaSignOutAlt />
+                  <span>로그아웃</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/signup" className={styles.mobileAuthLink} onClick={closeMobileMenu}>
+                  <FaUserPlus />
+                  <span>회원가입</span>
+                </Link>
+                <Link to="/login" className={styles.mobileAuthPrimary} onClick={closeMobileMenu}>
+                  <FaSignInAlt />
+                  <span>로그인</span>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>

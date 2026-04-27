@@ -37,15 +37,21 @@ const CreateCollectionModal = ({ isOpen, onClose, onSuccess }) => {
 
   useEffect(() => {
     if (!coverImage) {
-      setCoverPreviewUrl("");
       return undefined;
     }
 
-    const objectUrl = URL.createObjectURL(coverImage);
-    setCoverPreviewUrl(objectUrl);
+    let isCurrent = true;
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (isCurrent) {
+        setCoverPreviewUrl(typeof reader.result === "string" ? reader.result : "");
+      }
+    };
+    reader.readAsDataURL(coverImage);
 
     return () => {
-      URL.revokeObjectURL(objectUrl);
+      isCurrent = false;
     };
   }, [coverImage]);
 
@@ -63,6 +69,9 @@ const CreateCollectionModal = ({ isOpen, onClose, onSuccess }) => {
   const handleCoverImageChange = (e) => {
     const selectedFile = e.target.files?.[0] || null;
     setCoverImage(selectedFile);
+    if (!selectedFile) {
+      setCoverPreviewUrl("");
+    }
     if (error) {
       setError(null);
     }

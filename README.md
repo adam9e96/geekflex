@@ -1,88 +1,172 @@
-# GEEKFLEX – Geek Culture Platform
+# GEEKFLEX - Geek Culture Platform
 
-![Tech Stack](https://img.shields.io/badge/React-19.2.3-61DAFB?style=flat&logo=react&logoColor=black) ![Tech Stack](https://img.shields.io/badge/Spring_Boot-3.5.9-6DB33F?style=flat&logo=springboot&logoColor=white) ![Tech Stack](https://img.shields.io/badge/Java-21-007396?style=flat&logo=java&logoColor=white) ![Tech Stack](https://img.shields.io/badge/QueryDSL-5.1.0-007396?style=flat&logo=java&logoColor=white) ![Tech Stack](https://img.shields.io/badge/JJWT-0.13.0-000000?style=flat&logo=jsonwebtokens&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2.3-61DAFB?style=flat&logo=react&logoColor=black)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.9-6DB33F?style=flat&logo=springboot&logoColor=white)
+![Java](https://img.shields.io/badge/Java-21-007396?style=flat&logo=openjdk&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7.3.0-646CFF?style=flat&logo=vite&logoColor=white)
+![QueryDSL](https://img.shields.io/badge/QueryDSL-5.1.0-007396?style=flat)
+![JJWT](https://img.shields.io/badge/JJWT-0.13.0-000000?style=flat&logo=jsonwebtokens&logoColor=white)
 
-## 📌 프로젝트 소개
+## 프로젝트 소개
 
-**GeekFlex**는 TMDB API 기반의 방대한 콘텐츠 데이터에 사용자의 취향을 더한 차세대 미디어 플랫폼입니다.
-단순한 정보 검색을 넘어, 사용자가 직접 평론가가 되어 심도 있는 리뷰를 남기고, 나만의 테마로 컬렉션을 구성하여 공유하는 **능동적인 콘텐츠 소비 경험**을 제공합니다.
+**GeekFlex**는 TMDB 기반 영화/TV 콘텐츠 탐색, 리뷰 작성, 컬렉션 큐레이션, 사용자 상호작용을 하나의 흐름으로 묶은 미디어 플랫폼입니다.
 
-BFF(Backend for Frontend) 아키텍처를 적용하여 보안성을 강화했으며, QueryDSL을 활용한 고성능 동적 검색 시스템과 JWT + Redis 기반의 견고한 인증 시스템을 구축하여 **실무 수준의 기술적 완성도**를 구현했습니다.
+- 배포 주소: [https://geekflex.adam9e96.dev/](https://geekflex.adam9e96.dev/)
 
-## 📅 프로젝트 개요
+단순한 콘텐츠 조회를 넘어 다음 경험을 제공합니다.
 
-- **개발 기간**: 2025.10 ~ 2025.11 (약3주)
-- **개발 인원**: 1명 (Full Stack)
-- **주요 역할**: 기획, DB 설계, API 구현, 프론트엔드 개발
+- 영화/드라마 상세 정보 탐색
+- 리뷰 작성 및 수정
+- 컬렉션 생성, 공개 설정, 커버 이미지 업로드
+- 좋아요와 댓글 기반 상호작용
+- 마이페이지, 사용자 프로필, 사용자 검색
+- 이메일 인증 및 비밀번호 재설정
 
-## 핵심 기능
+## 프로젝트 구조
 
-### 1. 실시간 콘텐츠 동기화 (TMDB API & BFF)
+```text
+geekflex/
+|- geekflex-backend/   # Spring Boot API 서버
+|- geekflex-frontend/  # React + Vite 웹 앱
+|- nginx/              # 배포용 Nginx 설정
+|- docker-compose.yml  # 통합 실행 구성
+|- .env.example        # 환경변수 예시
+```
 
-- **17만+ 데이터 연동**: TMDB API와 실시간 연동하여 최신 영화/드라마 메타데이터 및 고화질 포스터 제공
-- **데이터 경량화**: 프론트엔드에 필요한 데이터만 선별하여 전송하는 DTO 매핑 전략으로 로딩 속도 최적화
-- **반응형 UX**: PC, 태블릿, 모바일 등 모든 디바이스에서 최적화된 뷰 제공
+## 주요 기능
 
-### 2. 고성능 동적 검색 (QueryDSL)
+### 콘텐츠 탐색
 
-- **정교한 필터링**: 장르, 연도, 평점 등 복잡한 조건도 즉시 처리하는 동적 쿼리 구현
-- **검색 정확도 알고리즘**: 단순 매칭이 아닌 `정확 일치 > 시작 > 포함` 순의 가중치 기반 정렬 로직 적용
-- **Type-Safe**: 컴파일 시점에 쿼리 문법 오류를 잡아내는 안정적인 검색 시스템 구축
+- TMDB API 기반 영화/TV 메타데이터 조회
+- 영화/드라마 상세 페이지 제공
+- 검색 결과를 정확도 우선으로 정렬하는 동적 검색 로직
+- 캐시 기반 상세 데이터 재사용
 
-### 3. 보안 시스템 (Security & Auth)
+### 리뷰와 반응
 
-- **3-Layer Security**: JWT Access Token + HttpOnly Cookie Refresh Token + Redis Blacklist 전략으로 XSS 및 토큰 탈취 방지
-- **이메일 본인인증**: SMTP와 Redis TTL(5분)을 활용한 안전하고 빠른 회원가입 프로세스
-- **RBAC**: Spring Security 권한 기반의 철저한 API 접근 제어
+- 콘텐츠 리뷰 작성, 수정, 삭제
+- 별점 기반 평가
+- 좋아요 토글 및 좋아요 수 조회
+- 사용자별 리뷰 목록 조회
 
-### 4. 나만의 취향 큐레이션 (Collections)
+### 컬렉션 큐레이션
 
-- **테마별 아카이빙**: '우울할 때 보는 영화', '여름방학 정주행 드라마' 등 나만의 테마 컬렉션 생성
-- **소셜 인터랙션**: 다른 유저의 컬렉션을 구경하고 좋아요/댓글로 소통하는 커뮤니티 기능
-- **공유 및 확장**: 공개/비공개 설정을 통해 개인 기록용 또는 공유용으로 유연하게 활용 가능
+- 테마형 컬렉션 생성 및 수정
+- 컬렉션 공개/비공개 설정
+- 컬렉션에 콘텐츠 추가/삭제
+- 컬렉션 커버 이미지 업로드
+- 댓글 기반 커뮤니티 상호작용
 
-## 🛠 기술 스택
+### 사용자 기능
+
+- 회원가입, 로그인, 로그아웃
+- 이메일 인증
+- 비밀번호 재설정
+- 프로필 이미지 업로드
+- 마이페이지 및 사용자 상세 페이지
+- 사용자 검색
+
+### 운영 기능
+
+- 관리자 페이지 제공
+- API 캐시/스케줄러 관리 기능 포함
+- 헬스체크 엔드포인트 제공: `/api/health`
+
+## 기술 스택
 
 ### Frontend
 
-- **Core**: React 19.2.3, Vite 7.3.0
-- **State Management**: Zustand 5.0.9 (전역 상태 관리 최적화)
-- **Styling**: Tailwind CSS 4.1.18 (유틸리티 퍼스트 CSS)
-- **Network**: Axios 1.13.2 (Interceptor를 통한 토큰 재발급 자동화)
-- **Routing**: React Router DOM 7.11.0
+- React 19.2.3
+- Vite 7.3.0
+- React Router DOM 7.11.0
+- Zustand 5.0.9
+- Axios 1.13.5
+- Tailwind CSS 4.1.18
+- ESLint / Prettier / Stylelint
 
 ### Backend
 
-- **Framework**: Spring Boot 3.5.9, Spring WebFlux
-- **Language**: Java 21 (LTS)
-- **Database**: MariaDB, Redis (캐싱 및 토큰 관리)
-- **ORM**: JPA (Hibernate), QueryDSL 5.1.0
-- **Security**: Spring Security, JWT (jjwt 0.13.0)
+- Java 21
+- Spring Boot 3.5.9
+- Spring Web MVC + WebClient
+- Spring Security
+- Spring Data JPA
+- QueryDSL 5.1.0
+- MariaDB
+- Redis
+- JJWT 0.13.0
+- springdoc-openapi
 
-### DevOps & Tools
+### Infra / Tools
 
-- **Build**: Gradle
-- **Version Control**: GitHub
-- **API Test**: Postman
-- **Management**: DataGrip, Notion
+- Docker Compose
+- Nginx
+- Gradle
+- GitHub
+- Postman
+- Notion
 
-## 🚀 설치 및 실행 방법
+## 실행 방식
 
-### Prerequisites
+GeekFlex는 크게 두 가지 방식으로 실행할 수 있습니다.
+
+- 로컬 개발 실행: 프론트와 백엔드를 각각 실행하기
+- Docker Compose 실행: Nginx, DB, Redis, Backend를 함께 실행하기
+
+## 사전 준비
+
+### 공통
 
 - Java 21+
 - Node.js 18+
-- MariaDB & Redis
 
-### 1. Backend Setting
+### 로컬 백엔드 실행 시 추가
+
+- MariaDB
+- Redis
+
+## 환경변수 설정
+
+루트 디렉터리에서 `.env.example`을 참고해 `.env` 파일을 생성합니다.
 
 ```bash
-cd GeekFlex
-# application.yml 설정 (DB, Mail, JWT 등)
+cp .env.example .env
+```
+
+주요 환경변수:
+
+- `GEEKFLEX_DB_ROOT_PASSWORD`
+- `GEEKFLEX_DB_NAME`
+- `GEEKFLEX_DB_USER`
+- `GEEKFLEX_DB_PASSWORD`
+- `GEEKFLEX_REDIS_PASSWORD`
+- `GEEKFLEX_BACKEND_PORT`
+- `GeekFlex_RESEND_API_KEY`
+- `GeekFlex_TMDB_API_KEY`
+- `GeekFlex_TMDB_ACCESS_TOKEN`
+- `GeekFlex_JWT_SECRET_KEY`
+- `GeekFlex_FILE_UPLOAD_DIR`
+
+파일 업로드 경로는 기본적으로 `/app/uploads/users` 기준으로 동작합니다.
+
+## 로컬 개발 실행
+
+### 1. Backend
+
+```bash
+cd geekflex-backend
 ./gradlew bootRun
 ```
 
-### 2. Frontend Setting
+기본 설정 기준:
+
+- Backend Port: `8080`
+- MariaDB: `localhost:3306`
+- Redis: `localhost:6379`
+
+백엔드는 `application.yml` 기준으로 실행되며, 업로드 파일 정적 경로와 CORS 설정이 포함되어 있습니다.
+
+### 2. Frontend
 
 ```bash
 cd geekflex-frontend
@@ -90,8 +174,73 @@ npm install
 npm run dev
 ```
 
-## 📧 Contact
+기본 개발 서버 포트:
 
-- **Developer**: Adam
-- **Email**: adam9e96@gmail.com
-- **GitHub**: [https://github.com/adam9e96/geekflex](https://github.com/adam9e96/geekflex)
+- Frontend Port: `5037`
+
+## Docker Compose 실행
+
+루트 디렉터리에서 아래 순서로 실행합니다.
+
+### 1. 프론트 빌드
+
+```bash
+cd geekflex-frontend
+npm install
+npm run build
+cd ..
+```
+
+### 2. 전체 서비스 실행
+
+```bash
+docker compose up -d --build
+```
+
+실행 구성:
+
+- `geekflex-nginx`
+- `geekflex-db`
+- `geekflex-redis`
+- `geekflex-backend`
+
+참고 사항:
+
+- Nginx는 `geekflex-frontend/dist`를 정적 파일로 서빙합니다.
+- MariaDB 초기 스키마는 `geekflex-backend/db-init/schema.sql`에서 로드됩니다.
+- Backend는 `prod` 프로필로 실행됩니다.
+- 배포 프로필에서는 Swagger UI와 API Docs가 비활성화됩니다.
+
+## 품질 확인 명령어
+
+### Frontend
+
+```bash
+cd geekflex-frontend
+npm run lint
+npm run lint:styles
+npm run format:check
+```
+
+### Backend
+
+```bash
+cd geekflex-backend
+./gradlew test
+```
+
+## API / 운영 참고
+
+- 서비스 URL: [https://geekflex.adam9e96.dev/](https://geekflex.adam9e96.dev/)
+- Health Check: `GET /api/health`
+- 업로드 정적 경로:
+  - `/uploads/users/**`
+  - `/uploads/collections/**`
+- 운영 프로필: `application-prod.yml`
+- Railway 배포용 설정 파일도 포함되어 있습니다: `application-railway.yml`
+
+## Contact
+
+- Developer: adam9e96
+- Email: `adam9e96@gmail.com`
+- GitHub: [https://github.com/adam9e96/geekflex](https://github.com/adam9e96/geekflex)

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -72,10 +73,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/user/me").authenticated() // 마이페이지 (이건 인증 필요)
-                        .requestMatchers("/api/v1/user/summary").authenticated()
+                        .requestMatchers("/api/v1/users/me/**").authenticated()
+                        .requestMatchers("/api/v1/users/me").authenticated()
+                        .requestMatchers("/api/v1/users/search").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/collections/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/collections/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/collections/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/collections/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/reviews/me/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/reviews/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/reviews/**").authenticated()
                         .requestMatchers("/", "/user/login", "/user/signup").permitAll()
-                        .requestMatchers("/api/v1/user/**").authenticated()
                         .requestMatchers("/api/v1/likes/**").permitAll() // 좋아요 요청
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/v1/reviews/**").permitAll()
@@ -93,10 +102,10 @@ public class SecurityConfig {
                 // 예외 처리 핸들러 설정
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, authEx) -> {
-                            throw authEx; // 인증 실패 -> GlobalExceptionHandler 로 전달
+                            res.sendError(401, authEx.getMessage());
                         })
                         .accessDeniedHandler((req, res, accessEx) -> {
-                            throw accessEx; // 권한 없음 -> GlobalExceptionHandler 로 전달
+                            res.sendError(403, accessEx.getMessage());
                         })
                 );
         return http.build();

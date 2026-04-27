@@ -27,7 +27,6 @@ const TvDetail = () => {
   const likeCount = useContentDetailStore((state) => state.likeCount);
   const fetchContentDetail = useContentDetailStore((state) => state.fetchContentDetail);
 
-  const [reviewRefreshTrigger, setReviewRefreshTrigger] = useState(0);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
 
   useLayoutEffect(() => {
@@ -62,10 +61,6 @@ const TvDetail = () => {
     if (!content) return null;
     return content.contentId || content.id || content.content_id || null;
   }, [content]);
-
-  const handleReviewSuccess = () => {
-    setReviewRefreshTrigger((prev) => prev + 1);
-  };
 
   // 공유 기능
   const handleShare = async () => {
@@ -177,7 +172,6 @@ const TvDetail = () => {
         <section className={styles.details}>
           <TvDetailInfo
             content={content}
-            onReviewSuccess={handleReviewSuccess}
             genres={genres}
             likeCount={likeCount}
           />

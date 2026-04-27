@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import ContentCard from "@components/home/ContentCard";
 import { collectionService } from "@services/collectionService";
 import { getRandomContent, getRandomContentSuggestions } from "@services/contentService";
@@ -193,6 +194,12 @@ const ContentRail = ({ title, moreLink, items }) => (
     </div>
   </section>
 );
+
+ContentRail.propTypes = {
+  title: PropTypes.string.isRequired,
+  moreLink: PropTypes.string.isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 const fetchContentList = async (path) => {
   const response = await publicApi.get(path);

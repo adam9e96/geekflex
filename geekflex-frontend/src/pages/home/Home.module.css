@@ -55,7 +55,7 @@
 .spotlightText {
   width: min(680px, 100%);
   margin: 28px 0 0;
-  color: #eeeeee;
+  color: #eee;
   font-size: clamp(1rem, 1.4vw, 1.25rem);
   line-height: 1.75;
   display: -webkit-box;
