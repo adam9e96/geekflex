@@ -66,3 +66,4 @@ geekflex-backend/.nb-gradle/
 geekflex-backend/.env
 geekflex-backend/.env.local
 geekflex-backend/.env.*.local
+/screenshots

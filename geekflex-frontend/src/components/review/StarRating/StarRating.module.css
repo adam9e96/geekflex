@@ -16,6 +16,11 @@
   transition: transform 0.2s ease;
 }
 
+.interactive .starWrapper {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+}
+
 .star {
   color: #d1d5db;
 
@@ -36,6 +41,14 @@
 }
 
 /* Size classes */
+.text-4xl {
+  font-size: 2.5rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+}
+
 .text-2xl {
   font-size: 1.5rem;
 }
