@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk AS build
+FROM azul/zulu-openjdk:21-latest AS build
 
 WORKDIR /workspace
 
@@ -10,7 +10,7 @@ COPY src src
 RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 RUN ./gradlew bootJar --no-daemon
 
-FROM eclipse-temurin:21-jre
+FROM azul/zulu-openjdk:21-jre-latest
 
 WORKDIR /app
 

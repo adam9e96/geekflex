@@ -24,7 +24,7 @@ spring:
 
 app:
   cors:
-    allowed-origins: https://geekflex.adam9e96.dev,https://geekflex.vercel.app
+    allowed-origins: https://geekflex.adam9e96.dev
 
 springdoc:
   api-docs:

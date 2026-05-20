@@ -2,7 +2,7 @@ name: geekflex-prod
 
 services:
   geekflex-nginx:
-    image: nginx:stable-alpine
+    image: nginx:latest
     container_name: geekflex-prod-nginx
     hostname: geekflex-nginx
     restart: unless-stopped
@@ -73,8 +73,6 @@ services:
         condition: service_healthy
       geekflex-redis:
         condition: service_started
-    ports:
-      - "${GEEKFLEX_BACKEND_PORT:-8080}:8080"
     environment:
       SPRING_PROFILES_ACTIVE: prod
       GeekFlex_DB_PASSWORD: ${GEEKFLEX_DB_PASSWORD}

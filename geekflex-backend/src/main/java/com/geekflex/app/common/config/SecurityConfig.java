@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Value("${app.cors.allowed-origins:http://192.168.0.42:5037,http://192.168.50.218:5037,http://localhost:5173,http://localhost:3000,http://localhost:5037,http://192.168.50.153:8070,http://localhost:8070,http://192.168.0.42:8070,https://geekflex.vercel.app}")
+    @Value("${app.cors.allowed-origins:http://192.168.0.42:5037,http://192.168.50.218:5037,http://localhost:5173,http://localhost:3000,http://localhost:5037,http://192.168.50.153:8070,http://localhost:8070,http://192.168.0.42:8070,https://geekflex.adam9e96.dev}")
     private String allowedOrigins;
 
     @Bean

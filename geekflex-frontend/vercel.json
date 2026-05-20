@@ -1,7 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "https://geekflex-production.up.railway.app/api/:path*" },
-    { "source": "/uploads/:path*", "destination": "https://geekflex-production.up.railway.app/uploads/:path*" },
-    { "source": "/(.*)", "destination": "/" }
-  ]
-}

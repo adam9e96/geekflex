@@ -50,14 +50,14 @@ jobs:
             docker run --rm \
               -v "$PWD:/app" \
               -w /app \
-              node:24-alpine \
+              node:alpine \
               sh -lc "npm ci && npm run build"
             cd ..
             docker compose up -d --build
             docker compose restart geekflex-nginx
             docker compose ps
             for i in $(seq 1 20); do
-              if curl --fail --silent http://localhost/api/health > /dev/null; then
+              if curl --fail --silent http://localhost:18080/api/health > /dev/null; then
                 break
               fi
               if [ "$i" -eq 20 ]; then
@@ -68,7 +68,7 @@ jobs:
               sleep 3
             done
             for i in $(seq 1 20); do
-              if curl --fail --silent http://localhost/api/v1/movies/popular > /dev/null; then
+              if curl --fail --silent http://localhost:18080/api/v1/movies/popular > /dev/null; then
                 break
               fi
               if [ "$i" -eq 20 ]; then
