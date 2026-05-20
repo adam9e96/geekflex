@@ -37,44 +37,37 @@ jobs:
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USER }}
-          key: ${{ secrets.VM_SSH_KEY }}
-          port: ${{ secrets.VM_PORT || '22' }}
+          host: ${{ secrets.GEEKFLEX_VM_HOST }}
+          username: ${{ secrets.GEEKFLEX_VM_USER }}
+          key: ${{ secrets.GEEKFLEX_VM_SSH_KEY }}
+          port: ${{ secrets.GEEKFLEX_VM_PORT }}
           script_stop: true
           script: |
             set -e
-            cd ~/apps/geekflex
-            git pull origin main
-            cd geekflex-frontend
-            docker run --rm \
-              -v "$PWD:/app" \
-              -w /app \
-              node:alpine \
-              sh -lc "npm ci && npm run build"
-            cd ..
-            docker compose up -d --build
-            docker compose restart geekflex-nginx
-            docker compose ps
+            cd /srv/docker/geekflex
+            git pull --ff-only origin main
+            docker compose -f docker-compose.prod.yml up -d --build
+            docker compose -f docker-compose.prod.yml ps
             for i in $(seq 1 20); do
-              if curl --fail --silent http://localhost:18080/api/health > /dev/null; then
+              if docker exec portfolio-proxy-nginx wget --quiet --output-document=- --header='Host: geekflex.adam9e96.dev' http://127.0.0.1/api/health > /dev/null; then
                 break
               fi
               if [ "$i" -eq 20 ]; then
                 echo "Backend health check did not become ready in time"
-                docker compose logs --tail=200 geekflex-backend geekflex-nginx
+                docker compose -f docker-compose.prod.yml logs --tail=200 geekflex-backend geekflex-nginx
                 exit 1
               fi
               sleep 3
             done
             for i in $(seq 1 20); do
-              if curl --fail --silent http://localhost:18080/api/v1/movies/popular > /dev/null; then
+              if docker exec portfolio-proxy-nginx wget --quiet --output-document=- --header='Host: geekflex.adam9e96.dev' http://127.0.0.1/api/v1/movies/popular > /dev/null; then
                 break
               fi
               if [ "$i" -eq 20 ]; then
                 echo "API verification failed after retries"
-                docker compose logs --tail=200 geekflex-backend geekflex-nginx
+                docker compose -f docker-compose.prod.yml logs --tail=200 geekflex-backend geekflex-nginx
                 exit 1
               fi
               sleep 3
             done
+            curl --fail --silent https://geekflex.adam9e96.dev/api/health > /dev/null

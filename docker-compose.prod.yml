@@ -1,0 +1,130 @@
+name: geekflex-prod
+
+services:
+  geekflex-frontend-build:
+    image: node:24-alpine
+    container_name: geekflex-prod-frontend-build
+    working_dir: /app
+    command: sh -lc "npm ci && npm run build"
+    volumes:
+      - ./geekflex-frontend:/app
+
+  geekflex-nginx:
+    image: nginx:latest
+    container_name: geekflex-prod-nginx
+    hostname: geekflex-nginx
+    restart: unless-stopped
+    depends_on:
+      geekflex-frontend-build:
+        condition: service_completed_successfully
+      geekflex-backend:
+        condition: service_healthy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./geekflex-frontend/dist:/usr/share/nginx/html:ro
+      - geekflex_uploads_data:/app/uploads:ro
+    networks:
+      geekflex-prod-net:
+        aliases:
+          - geekflex-nginx
+      web:
+        aliases:
+          - geekflex-nginx
+
+  geekflex-db:
+    image: mariadb:latest
+    container_name: geekflex-prod-db
+    hostname: geekflex-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${GEEKFLEX_DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${GEEKFLEX_DB_NAME:-geekflex_db}
+      MARIADB_USER: ${GEEKFLEX_DB_USER:-geekflex_user}
+      MARIADB_PASSWORD: ${GEEKFLEX_DB_PASSWORD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - geekflex_mariadb_data:/var/lib/mysql
+      - ./geekflex-backend/db-init/schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
+    networks:
+      geekflex-prod-net:
+        aliases:
+          - geekflex-db
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-p${GEEKFLEX_DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  geekflex-redis:
+    image: redis:latest
+    container_name: geekflex-prod-redis
+    hostname: geekflex-redis
+    restart: unless-stopped
+    environment:
+      GEEKFLEX_REDIS_PASSWORD: ${GEEKFLEX_REDIS_PASSWORD}
+    command: redis-server --requirepass "${GEEKFLEX_REDIS_PASSWORD}" --appendonly yes
+    volumes:
+      - geekflex_redis_data:/data
+    networks:
+      geekflex-prod-net:
+        aliases:
+          - geekflex-redis
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${GEEKFLEX_REDIS_PASSWORD}\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  geekflex-backend:
+    build:
+      context: ./geekflex-backend
+      dockerfile: Dockerfile
+    container_name: geekflex-prod-backend
+    hostname: geekflex-backend
+    restart: unless-stopped
+    depends_on:
+      geekflex-db:
+        condition: service_healthy
+      geekflex-redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      GeekFlex_DB_PASSWORD: ${GEEKFLEX_DB_PASSWORD}
+      GeekFlex_RESEND_API_KEY: ${GeekFlex_RESEND_API_KEY}
+      GeekFlex_TMDB_API_KEY: ${GeekFlex_TMDB_API_KEY}
+      GeekFlex_TMDB_ACCESS_TOKEN: ${GeekFlex_TMDB_ACCESS_TOKEN}
+      GeekFlex_JWT_SECRET_KEY: ${GeekFlex_JWT_SECRET_KEY}
+      GEEKFLEX_DB_NAME: ${GEEKFLEX_DB_NAME:-geekflex_db}
+      GEEKFLEX_DB_USER: ${GEEKFLEX_DB_USER:-geekflex_user}
+      GEEKFLEX_DB_PASSWORD: ${GEEKFLEX_DB_PASSWORD}
+      GEEKFLEX_REDIS_PASSWORD: ${GEEKFLEX_REDIS_PASSWORD}
+      GeekFlex_FILE_UPLOAD_DIR: ${GeekFlex_FILE_UPLOAD_DIR:-/app/uploads/users}
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8080/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    volumes:
+      - geekflex_uploads_data:/app/uploads
+    networks:
+      geekflex-prod-net:
+        aliases:
+          - geekflex-backend
+
+networks:
+  geekflex-prod-net:
+    driver: bridge
+  web:
+    external: true
+
+volumes:
+  geekflex_mariadb_data:
+  geekflex_redis_data:
+  geekflex_uploads_data:
