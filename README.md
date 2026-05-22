@@ -208,7 +208,9 @@ GeekFlex_FILE_UPLOAD_DIR
 
    - Frontend Port: `5037`
 
-### Docker Compose 실행
+### Docker Compose 실행 (WSL2 / 로컬 테스트)
+
+기본 Compose 파일인 `docker-compose.yml`은 WSL2와 로컬 테스트용입니다. Nginx가 `GEEKFLEX_NGINX_PORT` 호스트 포트를 직접 열고, 사전에 빌드된 프론트 정적 파일을 서빙합니다.
 
 1. **프론트 빌드**
 
@@ -235,7 +237,7 @@ GeekFlex_FILE_UPLOAD_DIR
 참고 사항:
 
 - Nginx는 `geekflex-frontend/dist`를 정적 파일로 서빙합니다.
-- 로컬/VM 테스트 진입점은 `http://localhost:18080`입니다.
+- 로컬 테스트 진입점은 `.env` 예시 기준 `http://localhost:18080`입니다.
 - MariaDB 초기 스키마는 `geekflex-backend/db-init/schema.sql`에서 로드됩니다.
 - Backend는 `prod` 프로필로 실행됩니다.
 
@@ -257,24 +259,27 @@ GeekFlex_FILE_UPLOAD_DIR
 ```text
 Cloudflare Tunnel
   geekflex.adam9e96.dev
-    -> localhost:18080
-      -> geekflex-nginx
-        -> React static files
-        -> geekflex-backend
-        -> uploads volume
+    -> portfolio-proxy-nginx
+      -> web Docker network
+        -> geekflex-nginx
+          -> React static files
+          -> geekflex-backend
+          -> uploads volume
 ```
 
 ![GeekFlex deployment architecture](<doc/geekflex_doc/GeekFlex_인프라_포트폴리오(배포및CI_CD중점).png>)
 
-운영 서버에서는 Docker Compose로 Nginx, Spring Boot Backend, MariaDB, Redis를 함께 실행합니다. Nginx는 React 정적 파일을 서빙하고, `/api/` 요청을 백엔드로 프록시하며, `/uploads/` 경로로 업로드 파일을 제공합니다.
+운영 서버에서는 `docker-compose.prod.yml`로 Nginx, Spring Boot Backend, MariaDB, Redis를 함께 실행합니다. 운영 Compose는 프론트 빌드 컨테이너를 먼저 실행하고, GeekFlex Nginx를 VM 공용 `web` Docker 네트워크에 연결합니다. 외부 리버스 프록시는 이 네트워크를 통해 `/api/` 요청과 정적 파일 요청을 GeekFlex Nginx로 전달합니다.
 
 ```bash
-docker compose up -d --build
+docker compose -f docker-compose.prod.yml up -d --build
 ```
 
 ### 운영 포인트
 
-- Cloudflare Tunnel: `geekflex.adam9e96.dev -> http://localhost:18080`
+- GitHub Actions 운영 배포도 `docker-compose.prod.yml`을 지정해 실행
+- VM 운영 Compose는 외부 `web` Docker 네트워크가 필요
+- Cloudflare Tunnel: `geekflex.adam9e96.dev -> portfolio-proxy-nginx -> geekflex-nginx`
 - Health Check: `GET /api/health`
 - 업로드 경로: `/uploads/users/**`, `/uploads/collections/**`
 - 업로드 정적 파일: 7일 `Cache-Control`

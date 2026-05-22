@@ -1,6 +1,9 @@
+# Ubuntu VM 운영 배포에서 사용하는 Compose 구성.
+# 외부 프록시가 web 네트워크에서 GeekFlex Nginx로 요청을 전달.
 name: geekflex-prod
 
 services:
+  # 운영 배포 시 프론트 정적 파일을 먼저 생성한 뒤 Nginx를 시작
   geekflex-frontend-build:
     image: node:24-alpine
     container_name: geekflex-prod-frontend-build
@@ -27,6 +30,7 @@ services:
       geekflex-prod-net:
         aliases:
           - geekflex-nginx
+      # VM 공용 리버스 프록시와 연결하는 외부 네트워크
       web:
         aliases:
           - geekflex-nginx
@@ -71,6 +75,7 @@ services:
       geekflex-prod-net:
         aliases:
           - geekflex-redis
+    # 백엔드는 Redis가 실제 응답 가능한 상태가 된 뒤 시작.
     healthcheck:
       test: ["CMD-SHELL", "redis-cli -a \"$${GEEKFLEX_REDIS_PASSWORD}\" ping | grep -q PONG"]
       interval: 10s
@@ -119,8 +124,10 @@ services:
           - geekflex-backend
 
 networks:
+  # GeekFlex 서비스 내부 통신용 운영 네트워크
   geekflex-prod-net:
     driver: bridge
+  # portfolio-proxy-nginx가 이미 참여 중인 VM 공용 네트워크
   web:
     external: true
 
